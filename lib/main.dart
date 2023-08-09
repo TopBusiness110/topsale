@@ -15,8 +15,8 @@ final locator = GetIt.instance;//unused variable
 
 Future<void> main() async {
 
-  //     WidgetsFlutterBinding.ensureInitialized();
-  //     await EasyLocalization.ensureInitialized();
+      WidgetsFlutterBinding.ensureInitialized();
+      await EasyLocalization.ensureInitialized();
   // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   //
   // await Firebase.initializeApp(
@@ -29,13 +29,13 @@ Future<void> main() async {
             builder: (context, orientation, deviceType) {
                return DevicePreview(
                    builder: (context) =>EasyLocalization(
-                    supportedLocales: [Locale('ar',''),Locale('en','')],
+                    supportedLocales: const [Locale('ar',''),Locale('en','')],
                        path: 'assets/lang',
                        saveLocale: true,
-                       startLocale: Locale("ar",""),
-                       fallbackLocale: Locale("ar",""),
+                       startLocale: const Locale("ar",""),
+                       fallbackLocale: const Locale("ar",""),
                        child: Phoenix(
-                         child: TopSale(),
+                         child: const TopSale(),
                        ),
                    ) ,
                );

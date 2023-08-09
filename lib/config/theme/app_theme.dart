@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../core/utils/app_colors.dart';
 import '../../core/utils/app_strings.dart';
@@ -12,8 +13,18 @@ ThemeData appTheme() {
     brightness: Brightness.light,
     // scaffoldBackgroundColor: AppColors.scaffoldBackground,
     fontFamily: AppStrings.fontFamily,
-    textTheme: const TextTheme(
-      bodyMedium: TextStyle(
+    textTheme:  TextTheme(
+      displayLarge:  TextStyle(
+          fontSize: 19.sp,
+          fontWeight: FontWeight.w600,
+          color: AppColors.white
+      ),
+      displayMedium: TextStyle(
+        height: 1.5,
+        fontSize: 18.0,
+        // fontWeight: FontWeight.bold,
+      ),
+      bodyMedium:TextStyle(
         height: 1.5,
         fontSize: 18.0,
         // fontWeight: FontWeight.bold,

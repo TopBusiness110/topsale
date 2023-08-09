@@ -1,43 +1,42 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
-import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
 import 'package:topsale/core/api/status_code.dart';
-import 'package:topsale/injector.dart' as injector;
 
 import '../error/exceptions.dart';
-
 import 'app_interceptors.dart';
 import 'base_api_consumer.dart';
 import 'end_points.dart';
+import 'package:topsale/injector.dart' as injector;
 
 class DioConsumer implements BaseApiConsumer {
-  final Dio dioClient;
+  final Dio client;
 
-  DioConsumer({required this.dioClient}) {
-    (dioClient.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+  DioConsumer({required this.client}) {
+    (client.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
         (HttpClient client) {
       client.badCertificateCallback =
           (X509Certificate cert, String host, int port) => true;
       return client;
     };
 
-    dioClient.options
+    client.options
       ..baseUrl = EndPoints.baseUrl
       ..responseType = ResponseType.plain
       ..followRedirects = false
-      ..receiveTimeout = Duration(milliseconds: 1000 * 60)
-      ..connectTimeout = Duration(milliseconds: 1000 * 60)
-      ..sendTimeout = Duration(milliseconds: 1000 * 60)
+      ..receiveTimeout = 1000 * 60
+      ..connectTimeout = 1000 * 60
+      ..sendTimeout = 1000 * 60
       ..validateStatus = (status) {
         return status! < StatusCode.internalServerError;
       };
 
-    dioClient.interceptors.add(injector.serviceLocator<AppInterceptors>());
+    client.interceptors.add(injector.serviceLocator<AppInterceptors>());
     if (kDebugMode) {
-      dioClient.interceptors.add(injector.serviceLocator<LogInterceptor>());
+      client.interceptors.add(injector.serviceLocator<LogInterceptor>());
     }
   }
 
@@ -45,7 +44,7 @@ class DioConsumer implements BaseApiConsumer {
   Future get(String path,
       {Map<String, dynamic>? queryParameters, Options? options}) async {
     try {
-      final response = await dioClient.get(
+      final response = await client.get(
         path,
         queryParameters: queryParameters,
         options: options,
@@ -63,7 +62,7 @@ class DioConsumer implements BaseApiConsumer {
         Map<String, dynamic>? queryParameters,
         Options? options}) async {
     try {
-      final response = await dioClient.post(
+      final response = await client.post(
         path,
         data: formDataIsEnabled ? FormData.fromMap(body!) : body,
         queryParameters: queryParameters,
@@ -81,7 +80,7 @@ class DioConsumer implements BaseApiConsumer {
         Map<String, dynamic>? queryParameters,
         Options? options}) async {
     try {
-      final response = await dioClient.put(
+      final response = await client.put(
         path,
         data: body,
         queryParameters: queryParameters,
@@ -98,32 +97,31 @@ class DioConsumer implements BaseApiConsumer {
     return responseJson;
   }
 
-  dynamic _handleDioError(DioException error) {
-
-    // switch (error.type) {
-    //   case DioExceptionType.connectionTimeout:
-    //   case DioExceptionType.sendTimeout:
-    //   case DioExceptionType.receiveTimeout:
-    //     throw const FetchDataException();
-    //   case DioExceptionType.badResponse:
-    //     switch (error.response?.statusCode) {
-    //       case StatusCode.badRequest:
-    //         throw const BadRequestException();
-    //       case StatusCode.unauthorized:
-    //         throw const UnauthorizedException();
-    //       case StatusCode.forbidden:
-    //       case StatusCode.notFound:
-    //         throw const NotFoundException();
-    //       case StatusCode.conflict:
-    //         throw const ConflictException();
-    //       case StatusCode.internalServerError:
-    //         throw const InternalServerErrorException();
-    //     }
-    //     break;
-    //   case DioExceptionType.cancel:
-    //   case DioExceptionType.unknown:
-    //     throw  NoInternetConnectionException();
-    // }
+  dynamic _handleDioError(DioError error) {
+    switch (error.type) {
+      case DioErrorType.connectTimeout:
+      case DioErrorType.sendTimeout:
+      case DioErrorType.receiveTimeout:
+        throw const FetchDataException();
+      case DioErrorType.response:
+        switch (error.response?.statusCode) {
+          case StatusCode.badRequest:
+            throw const BadRequestException();
+          case StatusCode.unauthorized:
+            throw const UnauthorizedException();
+          case StatusCode.forbidden:
+          case StatusCode.notFound:
+            throw const NotFoundException();
+          case StatusCode.conflict:
+            throw const ConflictException();
+          case StatusCode.internalServerError:
+            throw const InternalServerErrorException();
+        }
+        break;
+      case DioErrorType.cancel:
+      case DioErrorType.other:
+        throw const NoInternetConnectionException();
+    }
   }
 
   @override
@@ -133,7 +131,7 @@ class DioConsumer implements BaseApiConsumer {
         Map<String, dynamic>? queryParameters,
         Options? options}) async {
     try {
-      final response = await dioClient.post(
+      final response = await client.post(
         path,
         data: formDataIsEnabled ? FormData.fromMap(body!) : body,
         queryParameters: queryParameters,
@@ -152,7 +150,7 @@ class DioConsumer implements BaseApiConsumer {
         Map<String, dynamic>? queryParameters,
         Options? options}) async {
     try {
-      final response = await dioClient.delete(
+      final response = await client.delete(
         path,
         data: formDataIsEnabled ? FormData.fromMap(body!) : body,
         queryParameters: queryParameters,
