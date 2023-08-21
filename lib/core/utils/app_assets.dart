@@ -1,5 +1,6 @@
 
 const String imagePath = 'assets/images';
+const String productsImagePath = 'assets/images/products';
 const String iconPath = 'assets/icon';
 const String lottiePath = 'assets/lottie';
 
@@ -18,6 +19,14 @@ class ImageAssets {
   static const String order = "$imagePath/order.png";
   static const String packageDelivery = "$imagePath/package-delivery.png";
   static const String mobile = "$imagePath/mobile.png";
+  //*********************products*****************************
+  static const String mobileImage = "$productsImagePath/mobile.png";
+  static const String mobile2Image = "$productsImagePath/mobile2.png";
+  static const String hairDrierImage = "$productsImagePath/hair_drier.png";
+  static const String laptopImage = "$productsImagePath/labtop.png";
+  static const String laptop2Image = "$productsImagePath/labtop2.png";
+  static const String lightImage = "$productsImagePath/light.png";
+  static const String thermalCupImage = "$productsImagePath/thermal_cup.png";
   //*************************************************************
    static const String copyRightsIcon = "$iconPath/copyrights.svg";
    static const String logo_icon = "$iconPath/logo.svg";

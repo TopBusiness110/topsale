@@ -31,7 +31,8 @@ class _SplashScreenState extends State<SplashScreen> {
             child: Image.asset(ImageAssets.splash),
           ),
           const Spacer(),
-          SvgPicture.asset(ImageAssets.copyRightsIcon),
+          Image.asset("assets/images/copy_rights.png"),
+        //  SvgPicture.asset(ImageAssets.copyRightsIcon),
           SizedBox(height: 3.h,)
         ],
       ),

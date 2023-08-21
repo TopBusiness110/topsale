@@ -90,7 +90,8 @@ class _OnBoardingState extends State<OnBoarding> {
                                 type: WormType.underground,
                               ),
                             ),
-                          ),),
+                          ),
+                      ),
 
 
 
@@ -99,7 +100,7 @@ class _OnBoardingState extends State<OnBoarding> {
                 ),
               ),
 
-              Positioned(
+              const Positioned(
                   bottom: 10,
                   left: 0,
                   right: 0,

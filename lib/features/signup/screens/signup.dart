@@ -17,7 +17,7 @@ class SignUpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       resizeToAvoidBottomInset: false,
+       resizeToAvoidBottomInset: true,
       backgroundColor: AppColors.primary,
       body: Stack(
         children: [
@@ -99,11 +99,13 @@ class SignUpScreen extends StatelessWidget {
                         ],
                       )),
                 ),
+                SizedBox(height: 20,),
+                BottomCopyRightsWidget()
               ],
             ),
           ),
 
-          BottomCopyRightsWidget()
+
         ],
       ),
     );

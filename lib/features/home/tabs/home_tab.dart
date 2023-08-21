@@ -5,6 +5,7 @@ import 'package:sizer/sizer.dart';
 import 'package:topsale/features/home/cubit/home_cubit.dart';
 
 import '../../../config/routes/app_routes.dart';
+import '../../../core/models/selected_products.dart';
 import '../../../core/utils/app_colors.dart';
 import '../components/home_list_item.dart';
 
@@ -45,7 +46,13 @@ class HomeTab extends StatelessWidget{
                    Navigator.pushNamed(context, Routes.productsRoute);
                  }
                  else   if(index==1){
-                   Navigator.pushNamed(context, Routes.createSalesOrderRoute);
+                   Navigator.pushNamed(context, Routes.createSalesOrderRoute,arguments: SelectedProducts([]));
+                 }
+                 else   if(index==2){
+                   Navigator.pushNamed(context, Routes.returnsRoute);
+                 }
+                 else   if(index==3){
+                   Navigator.pushNamed(context, Routes.customerPaymentsRoute);
                  }
                },
                  child: HomeListItem(title:cubit.titles[index] ,imagePath: cubit.imagesPath[index],));

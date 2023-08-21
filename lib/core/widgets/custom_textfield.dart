@@ -50,7 +50,7 @@ class CustomTextField extends StatelessWidget {
         obscureText: isPassword,
         enabled: isEnable,
         textAlign: TextAlign.start,
-        style: TextStyle(fontSize: 14),
+        style: const TextStyle(fontSize: 14,color: AppColors.white),
         decoration: InputDecoration(
           contentPadding: contentPadding,
           hintStyle: TextStyle(

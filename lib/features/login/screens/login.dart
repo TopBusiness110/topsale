@@ -1,12 +1,15 @@
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:sizer/sizer.dart';
 import 'package:topsale/config/routes/app_routes.dart';
 import 'package:topsale/core/utils/app_assets.dart';
 import 'package:topsale/core/utils/app_colors.dart';
 import 'package:topsale/core/widgets/custom_button.dart';
 import 'package:topsale/core/widgets/custom_container.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/widgets/bottom_copy_rights_widget.dart';
 import '../../../core/widgets/copy_right_widget.dart';
@@ -106,20 +109,41 @@ class LoginScreen extends StatelessWidget{
                       child: TextButton(
                         child: Text('contact_us',
                           style: Theme.of(context).textTheme.bodyMedium,).tr(),
-                        onPressed: (){},
+                        onPressed: () async {
+                          whatsapp();
+
+                        },
                       ),),
                   ),
-                SizedBox(height: 5.h,)
+                SizedBox(height: 5.h,),
+                  BottomCopyRightsWidget()
 
                 // Spacer(),
 
                 ],
               ),
             ),
-            BottomCopyRightsWidget()
+            // BottomCopyRightsWidget()
           ],
         ),
       ),
     );
+  }
+  whatsapp() async{
+    var contact = "+201011827324";
+    var androidUrl = "whatsapp://send?phone=$contact&text=Hi, I need some help about top sale application";
+    var iosUrl = "https://wa.me/$contact?text=${Uri.parse('Hi, I need some help about top sale application')}";
+
+    try{
+      if(Platform.isIOS){
+        await launchUrl(Uri.parse(iosUrl));
+      }
+      else{
+
+        await launchUrl(Uri.parse(androidUrl));
+      }
+    } on Exception{
+     // EasyLoading.showError('WhatsApp is not installed.');
+    }
   }
 }

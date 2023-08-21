@@ -1,20 +1,24 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sizer/sizer.dart';
 import 'package:topsale/config/routes/app_routes.dart';
 import 'package:topsale/core/preferences/preferences.dart';
 import 'package:topsale/core/utils/app_strings.dart';
+import 'package:topsale/features/cart/cart_cubit.dart';
 import 'package:topsale/features/create_sales_order/cubit/create_sales_order_cubit.dart';
+import 'package:topsale/features/customer_payments/cubit/customer_payments_cubit.dart';
 import 'package:topsale/features/home/cubit/home_cubit.dart';
 import 'package:topsale/features/new_product/cubit/new_product_cubit.dart';
+import 'package:topsale/features/payments/cubit/payments_cubit.dart';
 import 'package:topsale/features/products/cubit/products_cubit.dart';
 import 'package:topsale/features/signup/cubit/signup_cubit.dart';
 
 import 'core/utils/app_colors.dart';
+import 'features/ receipt/cubit/receipt_cubit.dart';
 import 'features/forgot_password/cubit/forgot_password_cubit.dart';
 import 'features/login/cubit/login_cubit.dart';
 import 'features/onboarding/cubit/onboarding_cubit.dart';
+import 'features/returns/cubit/returns_cubit.dart';
 import 'injector.dart'as injector;
 
 class TopSale extends StatelessWidget{
@@ -37,6 +41,12 @@ class TopSale extends StatelessWidget{
        BlocProvider(create: (context) => injector.serviceLocator<ProductsCubit>()),
        BlocProvider(create: (context) => injector.serviceLocator<NewProductCubit>()),
        BlocProvider(create: (context) => injector.serviceLocator<CreateSalesOrderCubit>()),
+       BlocProvider(create: (context) => injector.serviceLocator<PaymentsCubit>()),
+       BlocProvider(create: (context) => injector.serviceLocator<ReceiptCubit>()),
+       BlocProvider(create: (context) => injector.serviceLocator<ReturnsCubit>()),
+       BlocProvider(create: (context) => injector.serviceLocator<CustomerPaymentsCubit>()),
+       BlocProvider(create: (context) => injector.serviceLocator<CartCubit>()),
+
       ], child:  MaterialApp(
          supportedLocales: context.supportedLocales,
         locale: context.locale,

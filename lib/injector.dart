@@ -5,17 +5,21 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:topsale/core/api/dio_consumer.dart';
 import 'package:topsale/core/remote/service_api.dart';
+import 'package:topsale/features/%20receipt/cubit/receipt_cubit.dart';
+import 'package:topsale/features/cart/cart_cubit.dart';
 import 'package:topsale/features/create_sales_order/cubit/create_sales_order_cubit.dart';
-import 'package:topsale/features/create_sales_order/screens/create_sales_order.dart';
+import 'package:topsale/features/customer_payments/cubit/customer_payments_cubit.dart';
 import 'package:topsale/features/home/cubit/home_cubit.dart';
 import 'package:topsale/features/login/cubit/login_cubit.dart';
 import 'package:topsale/features/new_product/cubit/new_product_cubit.dart';
 import 'package:topsale/features/onboarding/cubit/onboarding_cubit.dart';
+import 'package:topsale/features/payments/cubit/payments_cubit.dart';
 import 'package:topsale/features/products/cubit/products_cubit.dart';
 import 'package:topsale/features/signup/cubit/signup_cubit.dart';
 
 import 'core/api/base_api_consumer.dart';
 import 'features/forgot_password/cubit/forgot_password_cubit.dart';
+import 'features/returns/cubit/returns_cubit.dart';
 
 final serviceLocator = GetIt.instance;
 //*************** Blocs *****************
@@ -65,6 +69,32 @@ Future<void> setUp()async{
         //serviceLocator(),
       )
   );
+  serviceLocator.registerFactory(
+          () => PaymentsCubit(
+        //serviceLocator(),
+      )
+  );
+  serviceLocator.registerFactory(
+          () => ReceiptCubit(
+        //serviceLocator(),
+      )
+  );
+  serviceLocator.registerFactory(
+          () => ReturnsCubit(
+        //serviceLocator(),
+      )
+  );
+  serviceLocator.registerFactory(
+          () => CustomerPaymentsCubit(
+        //serviceLocator(),
+      )
+  );
+  serviceLocator.registerFactory(
+          () => CartCubit(
+        //serviceLocator(),
+      )
+  );
+
 
   //*********************************************
   // ! External
