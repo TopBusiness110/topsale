@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 import 'package:sizer/sizer.dart';
 import 'package:topsale/features/home/cubit/itinerary_cubit/itinerary_cubit.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -9,9 +11,20 @@ import '../../../core/models/shipment_model.dart';
 import '../../../core/utils/app_assets.dart';
 import '../../../core/utils/app_colors.dart';
 //خط السير
-class ItineraryTab extends StatelessWidget {
+class ItineraryTab extends StatefulWidget {
   const ItineraryTab({super.key});
 
+  @override
+  State<ItineraryTab> createState() => _ItineraryTabState();
+}
+
+class _ItineraryTabState extends State<ItineraryTab> {
+  LocationData? currentLocation ;
+  @override
+  void initState() {
+    getCurrentLocation();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ItineraryCubit, ItineraryState>(
@@ -44,7 +57,9 @@ class ItineraryTab extends StatelessWidget {
             itemBuilder: (context, index) {
             return InkWell(
               onTap: () {
-                Navigator.pushNamed(context, Routes.itineraryRoute);
+                print("_______________________________________________________");
+                print(shipments[index].products?[0].code);
+                Navigator.pushNamed(context, Routes.itineraryDetailsRoute,arguments: shipments[index]);
               },
               child: Container(
                 alignment: Alignment.centerRight,
@@ -86,10 +101,15 @@ class ItineraryTab extends StatelessWidget {
                        ),
                      ),
                         const SizedBox(width: 20,),
-                        const CircleAvatar(
-                          radius: 15,
-                          backgroundColor: AppColors.lightBlue,
-                          child: Icon(Icons.location_on_outlined,color: AppColors.white,size: 20,),
+                        InkWell(
+                          onTap: () {
+                            Navigator.pushNamed(context, Routes.googleMapRoute,arguments: LatLng(shipments[index].clientLat!, shipments[index].clientLng!));
+                          },
+                          child: const CircleAvatar(
+                            radius: 15,
+                            backgroundColor: AppColors.lightBlue,
+                            child: Icon(Icons.location_on_outlined,color: AppColors.white,size: 20,),
+                          ),
                         ),
                       ],
                     ),
@@ -107,5 +127,15 @@ class ItineraryTab extends StatelessWidget {
     );
   },
 );
+  }
+
+  getCurrentLocation()async{
+
+    Location location = Location();
+    location.getLocation().then((value) {
+      currentLocation=value;
+
+    });
+
   }
 }

@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:topsale/core/models/selected_products.dart';
 import 'package:topsale/features/%20receipt/screens/receipt_screen.dart';
 import 'package:topsale/features/catch_receipt/screens/catch_receipt_screen.dart';
@@ -10,6 +11,8 @@ import 'package:topsale/features/dismissal_notice_details/screens/dismissal_noti
 import 'package:topsale/features/expectet_clients_list/screens/expected_clients_list_screen.dart';
 import 'package:topsale/features/forgot_password/screens/forgot_password1.dart';
 import 'package:topsale/features/forgot_password/screens/forgot_password2.dart';
+import 'package:topsale/features/google_map/screens/google_map_screen.dart';
+import 'package:topsale/features/google_map_routing/google_map_routing_screen.dart';
 import 'package:topsale/features/home/tabs/expected_clients_tab.dart';
 import 'package:topsale/features/itinerary_details/screens/itinerary_details_screen.dart';
 import 'package:topsale/features/login/screens/login.dart';
@@ -23,6 +26,7 @@ import 'package:topsale/features/reports/screens/reports_screen.dart';
 import 'package:topsale/features/returns/screens/returns_screen.dart';
 import 'package:topsale/features/signup/screens/signup.dart';
 import '../../core/models/product_model.dart';
+import '../../core/models/shipment_model.dart';
 import '../../core/utils/app_strings.dart';
 import '../../features/catch_receipt/models/catch_receipt_model.dart';
 import '../../features/forgot_password/screens/forgot_password3.dart';
@@ -51,9 +55,11 @@ class Routes{
   static const String  editAccountRoute = '/ editAccount';
   static const String  reportsRoute = '/ reports';
   static const String  expectedClientsListRoute = '/ xpectedClientsList';
-  static const String  itineraryRoute = '/ itinerary';
+  static const String  itineraryDetailsRoute = '/ itineraryDetails';
   static const String  dismissalNoticeDetailsRoute = '/ dismissalNoticeDetails';
   static const String  expectedClientsTabRoute = '/ ExpectedClientsTab';
+  static const String  googleMapRoute = '/ googleMap';
+  static const String  googleMapRoutingRoute = '/ googleMapRoutingScreen';
 
 }
 
@@ -138,8 +144,9 @@ class AppRoutes{
      case Routes.expectedClientsListRoute:
        return MaterialPageRoute(builder: (context) => const ExpectedClientsListScreen(),);
 
-     case Routes.itineraryRoute:
-       return MaterialPageRoute(builder: (context) => const ItineraryDetailsScreen(),);
+     case Routes.itineraryDetailsRoute:
+       final shipmentModel = settings.arguments as ShipmentModel;
+       return MaterialPageRoute(builder: (context) =>  ItineraryDetailsScreen(shipmentModel: shipmentModel),);
 
      case Routes.dismissalNoticeDetailsRoute:
        final productsList = settings.arguments as  List<ProductModel>;
@@ -147,6 +154,16 @@ class AppRoutes{
 
      case Routes.expectedClientsTabRoute:
        return MaterialPageRoute(builder: (context) =>  ExpectedClientsTab(),);
+
+     case Routes.googleMapRoute:
+     final latlng = settings.arguments as LatLng;
+
+     return MaterialPageRoute(builder: (context) =>  GoogleMapScreen(latLng: latlng),);
+
+     case Routes.googleMapRoutingRoute:
+       final latlng = settings.arguments as LatLng;
+
+       return MaterialPageRoute(builder: (context) =>  GoogleMapRoutingScreen( destinationlatLng: latlng,),);
 
 
 

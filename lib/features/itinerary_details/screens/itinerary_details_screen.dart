@@ -1,14 +1,30 @@
 import 'package:easy_localization/easy_localization.dart' as easy;
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 import 'package:sizer/sizer.dart';
+import 'package:topsale/config/routes/app_routes.dart';
+import 'package:topsale/core/models/shipment_model.dart';
 import 'package:topsale/core/widgets/custom_button.dart';
 
 import '../../../core/utils/app_colors.dart';
 import '../../../core/widgets/custom_arrow_back.dart';
 
-class ItineraryDetailsScreen extends StatelessWidget {
-  const ItineraryDetailsScreen({super.key});
+class ItineraryDetailsScreen extends StatefulWidget {
+  final ShipmentModel shipmentModel ;
+  const ItineraryDetailsScreen({super.key,required this.shipmentModel});
 
+  @override
+  State<ItineraryDetailsScreen> createState() => _ItineraryDetailsScreenState();
+}
+
+class _ItineraryDetailsScreenState extends State<ItineraryDetailsScreen> {
+  LocationData? currentLocation ;
+  @override
+  void initState() {
+    getCurrentLocation();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,12 +64,14 @@ class ItineraryDetailsScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "حامل هاتف معدني",
+                           // "${shipmentModel.products?[index].name}",
+                            "${widget.shipmentModel.clientName}",
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                           Text(
                             //cubit.matches.isEmpty?
-                            "120قطعة",
+                           // "${ shipmentModel.products?[index].userOrderedQuantity}",
+                            "${ widget.shipmentModel.address}",
                             textDirection: TextDirection.ltr,
                             style: Theme.of(context).textTheme.bodySmall!.copyWith(
                               color: AppColors.white.withOpacity(0.5)
@@ -73,15 +91,25 @@ class ItineraryDetailsScreen extends StatelessWidget {
                     thickness: 1,
                   );
                 },
-                itemCount: 3),
+                itemCount: widget.shipmentModel.products?.length??1),
           ),
         ),
            // SizedBox(height: 5,),
             Container(
+              height: 200,
+              margin: EdgeInsets.symmetric(horizontal: 8),
               decoration: BoxDecoration(
-                shape:BoxShape.rectangle, 
+                shape:BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(15)
               ),
-              child: Image.asset("assets/images/map.png"),
+              child: GoogleMap(
+                initialCameraPosition: CameraPosition(target: LatLng(widget.shipmentModel.clientLat!,widget.shipmentModel.clientLng!),zoom: 13.5),
+                markers: {
+                  Marker(markerId: MarkerId("client location"),
+                  position: LatLng(widget.shipmentModel.clientLat!,widget.shipmentModel.clientLng!))
+                },
+              )
+              //Image.asset("assets/images/map.png"),
             ),
             SizedBox(height: 10,),
             Row(
@@ -92,7 +120,9 @@ class ItineraryDetailsScreen extends StatelessWidget {
                   width: 30.w,
                     height: 4.5.h,
                     backgroundColor: AppColors.lightBlue, textColor: AppColors.white,
-                    text: "start_trip".tr(), onPressed: (){}),
+                    text: "start_trip".tr(), onPressed: (){
+                    Navigator.pushNamed(context, Routes.googleMapRoutingRoute,arguments:LatLng(widget.shipmentModel.clientLat!, widget.shipmentModel.clientLng!) );
+                }),
                 CustomButton(
                     fontSize: 14,
                     width: 30.w,
@@ -108,9 +138,18 @@ class ItineraryDetailsScreen extends StatelessWidget {
               ],
             ),
             SizedBox(height: 10,),
-            
+
       ]),
     );
+  }
+  getCurrentLocation()async{
+
+    Location location = Location();
+    location.getLocation().then((value) {
+      currentLocation=value;
+
+    });
+
   }
 }
 
