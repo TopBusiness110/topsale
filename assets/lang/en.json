@@ -66,6 +66,32 @@
   "sure_about_sales_order": "Are you sure you want to confirm the sales order?",
   "sales_order_success": "The sales order has been created successfully",
   "select_client_name": "Please select the client name",
-  "return": "Return"
+  "return": "Return",
+  "expected_clients": "potential clients",
+  "choose_store": "Choose Store",
+  "to_store": "To Store",
+  "memo": "Memo",
+  "date": "Pick Date",
+  "my_account": "My Account",
+  "terms_conditions": "Terms and Conditions",
+  "reports": "Reports",
+  "delete_account": "Delete Account",
+  "logout": "Logout",
+  "name": "Name",
+  "opportunity": " The Opportunity",
+  "edit_account": "Edit Account",
+  "sure_delete_account": "Are you sure you want to delete the account?",
+  "yes_delete": "Yes Delete",
+  "clients": "Clients",
+  "expected_clients_list": "Expected Clients List",
+  "itinerary_details": "Itinerary Details",
+  "start_trip": "Start Trip",
+  "end_trip": "End Trip",
+  "cancel": "Cancel",
+  "from_stock": "From Stock",
+  "to_stock": "To Stock",
+  "add_expected_client": "Add Expected Client"
+
+
 
 }

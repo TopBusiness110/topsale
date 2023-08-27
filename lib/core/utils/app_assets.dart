@@ -1,12 +1,14 @@
 
 const String imagePath = 'assets/images';
 const String productsImagePath = 'assets/images/products';
+const String moreImagePath = 'assets/images/more';
 const String iconPath = 'assets/icon';
 const String lottiePath = 'assets/lottie';
 
-class ImageAssets {
+class AssetsManager {
 
   static const String splash = "$imagePath/splash.png";
+  static const String aly = "$imagePath/aly.png";
   static const String onboardingImageBg = "$imagePath/onboarding_image_bg.png";
   static const String onBoarding1 = "$imagePath/on_boarding1.png";
   static const String onBoarding2 = "$imagePath/on_boarding2.png";
@@ -19,6 +21,13 @@ class ImageAssets {
   static const String order = "$imagePath/order.png";
   static const String packageDelivery = "$imagePath/package-delivery.png";
   static const String mobile = "$imagePath/mobile.png";
+  static const String expectedClientsImage = "$imagePath/expected_clients.png";
+
+  static const String globe3 = "$moreImagePath/globe3.png";
+  static const String logout = "$moreImagePath/logout.png";
+  static const String reports = "$moreImagePath/reports.png";
+  static const String termsConditionsDelete = "$moreImagePath/terms_conditions_delete.png";
+  static const String myAccount = "$moreImagePath/my_account.png";
   //*********************products*****************************
   static const String mobileImage = "$productsImagePath/mobile.png";
   static const String mobile2Image = "$productsImagePath/mobile2.png";
@@ -31,9 +40,11 @@ class ImageAssets {
    static const String copyRightsIcon = "$iconPath/copyrights.svg";
    static const String logo_icon = "$iconPath/logo.svg";
    static const String homeIcon = "$iconPath/home.svg";
+   static const String globeIcon = "$iconPath/globe.svg";
    static const String ordersIcon = "$iconPath/orders.svg";
    static const String itineraryIcon = "$iconPath/itinerary.svg";
    static const String moreIcon = "$iconPath/more.svg";
+   static const String editIcon = "$iconPath/edit.png";
 
   //**************************************************************************
   // static const String copyRightIcon = "$iconsPath/copyrighticon.svg";

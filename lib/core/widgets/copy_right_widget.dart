@@ -12,6 +12,6 @@ class CopyRightsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return  Align(
         alignment: Alignment.bottomCenter,
-        child:SvgPicture.asset(ImageAssets.copyRightsIcon,color: AppColors.white,));
+        child:SvgPicture.asset(AssetsManager.copyRightsIcon,color: AppColors.white,));
   }
 }

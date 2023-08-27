@@ -1,15 +1,23 @@
+import 'dart:ffi';
+
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart' as easy;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart'as intl;
 import 'package:sizer/sizer.dart';
 import 'package:topsale/features/customer_payments/cubit/customer_payments_cubit.dart';
 
 import '../../../config/routes/app_routes.dart';
+import '../../../core/methods/clients.dart';
+import '../../../core/models/client_model.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/widgets/custom_arrow_back.dart';
 import '../../../core/widgets/custom_button.dart';
 import '../../../core/widgets/custom_textfield.dart';
+import '../../../core/widgets/toast.dart';
+import '../../catch_receipt/models/catch_receipt_model.dart';
 
 class CustomerPaymentsScreen extends StatelessWidget {
   const CustomerPaymentsScreen({super.key});
@@ -41,20 +49,20 @@ class CustomerPaymentsScreen extends StatelessWidget {
                   ],
                 ),
          //   Spacer(),
-            SizedBox(height: 25.h,),
+            SizedBox(height: 20.h,),
             Container(
               width: double.infinity,
-              height: 60.h,
+              height: 65.h,
               decoration: const BoxDecoration(
                 color: AppColors.blue2,
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(64) ,topRight: Radius.circular(64))
               ),
               child: Column(
                 children: [
-                  SizedBox(height: 5.h,),
+                  SizedBox(height: 3.h,),
                   InkWell(
                    onTap: () {
-                     showClientsPopup(context,cubit.clients);
+                     showClientsPopup(context, clients);
                    },
                     child: Container(
                       width: 80.w,
@@ -79,7 +87,7 @@ class CustomerPaymentsScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 5.h,),
+                  SizedBox(height: 3.h,),
                   //drop down button
                   Container(
                     width: 80.w,
@@ -95,7 +103,7 @@ class CustomerPaymentsScreen extends StatelessWidget {
                             decoration: BoxDecoration(
                               color: AppColors.primary,
                             )),
-                        value: cubit.selectedValue,
+                        value: cubit.selectedPaymentValue,
                         onChanged: (value) {
                           cubit.selectPaymentMethod(value);
                         },
@@ -128,10 +136,12 @@ class CustomerPaymentsScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 5.h,),
+                  SizedBox(height: 3.h,),
                   SizedBox(
                     width: 90.w,
-                    child: CustomTextField(title: 'المبلغ'.tr(),
+                    child: CustomTextField(
+                      controller: cubit.amountController,
+                      title: 'المبلغ'.tr(),
                       textColor: AppColors.white.withOpacity(0.3),
                       textInputType: TextInputType.number,
                       backgroundColor: AppColors.primary,
@@ -139,7 +149,43 @@ class CustomerPaymentsScreen extends StatelessWidget {
                       isPassword: false,
                     ),
                   ),
-                  SizedBox(height: 10.h,),
+
+                  SizedBox(height: 3.h,),
+                  SizedBox(
+                    width: 90.w,
+                    child: CustomTextField(title: 'memo'.tr(),
+                      controller: cubit.memoController,
+                      textColor: AppColors.white.withOpacity(0.3),
+                      textInputType: TextInputType.text,
+                      backgroundColor: AppColors.primary,
+                      minLine: 1,
+                      isPassword: false,
+                    ),
+                  ),
+
+                  SizedBox(height: 3.h,),
+                  SizedBox(
+                    width: 90.w,
+                    child: CustomTextField(
+                      readOnly: true,
+                      controller: cubit.datePickedController,
+                      title: 'date'.tr(),
+                      textColor: AppColors.white.withOpacity(0.3),
+                      textInputType: TextInputType.text,
+                      backgroundColor: AppColors.primary,
+                      minLine: 1,
+                      isPassword: false,
+                      onTap: () async{
+                        DateTime? pickedDate = await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime.now(), lastDate: DateTime(2050));
+
+                      String?  formattedDate = easy.DateFormat('MM/d/yyyy').format(pickedDate!);
+                          cubit.datePickedController.text = formattedDate;
+
+                      },
+                    ),
+                  ),
+
+                  SizedBox(height: 3.h,),
                   //the last 2 buttons
                   Padding(
                     padding: EdgeInsets.only(bottom: 0.3.h),
@@ -149,14 +195,35 @@ class CustomerPaymentsScreen extends StatelessWidget {
                         CustomButton(
                             backgroundColor: AppColors.yellow,
                             textColor: AppColors.white,
-                            text: "payment".tr(),
+                            text: "with_payment".tr(),
                             onPressed: () {
-                             Navigator.pushReplacementNamed(context, Routes.catchReceiptRoute);
+                              if(cubit.currentClient==""){
+                                makeToast("choose client");
+                              }
+                              else if(cubit.selectedPaymentValue==null){
+                                makeToast("choose payment method");
+                              }
+                              else if(cubit.amountController.text==""){
+                                makeToast("choose payment method");
+                              }
+                              else if(cubit.datePickedController.text==""){
+                                makeToast("pick date");
+                              }
+                              else{
+                                Navigator.pushReplacementNamed(context, Routes.catchReceiptRoute,arguments:
+                                CatchReceiptModel(clientName: cubit.currentClient,
+                                    amount: double.parse(cubit.amountController.text,),
+                                    paymentMethod: cubit.selectedPaymentValue!,
+                                    date: cubit.datePickedController.text,
+                                    memo: cubit.memoController.text
+                                ));
+                                //cubit.clearFields();
+                              }
                             }),
                         CustomButton(
                             backgroundColor: AppColors.primary,
                             textColor: AppColors.white,
-                            text: "file".tr(),
+                            text: "print".tr(),
                             onPressed: () {}),
                       ],
                     ),
@@ -173,7 +240,7 @@ class CustomerPaymentsScreen extends StatelessWidget {
 );
   }
 
-  void showClientsPopup(BuildContext context, List<String> names) {
+  void showClientsPopup(BuildContext context,List<ClientModel> clients) {
     showDialog(
       context: context,
       builder: (context) {
@@ -225,9 +292,9 @@ class CustomerPaymentsScreen extends StatelessWidget {
                           return InkWell(
                             onTap: () {
                               cubit.matches.isEmpty
-                                  ? cubit.selectClientName(names[index])
+                                  ? cubit.selectClientName(clients[index].name)
                                   : cubit
-                                  .selectClientName(cubit.matches[index]);
+                                  .selectClientName(cubit.matches[index].name);
                               cubit.matches.clear();
                               Navigator.pop(context);
                             },
@@ -240,13 +307,15 @@ class CustomerPaymentsScreen extends StatelessWidget {
                                 children: [
                                   Text(
                                     cubit.matches.isEmpty
-                                         ? names[index]
-                                        : cubit.matches[index],
+                                         ? clients[index].name
+                                        : cubit.matches[index].name,
                                     style:
                                     Theme.of(context).textTheme.bodyMedium,
                                   ),
                                   Text(
-                                    cubit.phoneNumbers[index],
+                                    cubit.matches.isEmpty
+                                        ? clients[index].phoneNumber
+                                        : cubit.matches[index].phoneNumber,
                                     textDirection: TextDirection.ltr,
                                     style:
                                     Theme.of(context).textTheme.bodyMedium,
@@ -264,10 +333,10 @@ class CustomerPaymentsScreen extends StatelessWidget {
                             thickness: 1,
                           );
                         },
-                        itemCount: 10
-                        // cubit.matches.isEmpty
-                        //     ? names.length
-                        //     : cubit.matches.length,
+                        itemCount:
+                        cubit.matches.isEmpty
+                            ? clients.length
+                            : cubit.matches.length,
                     ),
                   ),
                 ],

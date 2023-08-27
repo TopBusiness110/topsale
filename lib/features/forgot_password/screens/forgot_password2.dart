@@ -43,7 +43,7 @@ class ForgotPasswordStep2 extends StatelessWidget {
                     ),
                     SizedBox(height: 3.h,),
                     //  Spacer(),
-                    Image.asset(ImageAssets.splash,color: AppColors.white,width: 45.w,height: 25.h,),
+                    Image.asset(AssetsManager.splash,color: AppColors.white,width: 45.w,height: 25.h,),
                     SizedBox(height: 5.h,),
                     Center(
                       child: CustomContainer(

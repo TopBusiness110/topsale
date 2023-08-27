@@ -20,13 +20,17 @@ class CustomTextField extends StatelessWidget {
     required this.textColor,
     this.onchange,
     this.borderSide = BorderSide.none,
+    this.readOnly = false,
+    this.onTap,
     this.contentPadding =
         const EdgeInsets.symmetric(vertical: 0, horizontal: 14), this.horizantalTape=20,
   }) : super(key: key);
   final Widget? suffixWidget;
+  final bool readOnly;
   final Color imageColor;
   final Color backgroundColor;
   final String title;
+  final Function()? onTap;
   final String validatorMessage;
   final int minLine;
  final Color textColor ;
@@ -44,7 +48,8 @@ class CustomTextField extends StatelessWidget {
     return Padding(
       padding:  EdgeInsets.symmetric(vertical: 4, horizontal: horizantalTape!),
       child: TextFormField(
-
+        onTap:onTap ,
+         readOnly: readOnly,
         controller: controller,
         keyboardType: textInputType,
         obscureText: isPassword,

@@ -36,7 +36,7 @@ class OnBoarding2 extends StatelessWidget {
             child: SizedBox(
             height: 20.h,
               width: 70.w,
-              child: Image.asset(ImageAssets.onBoarding2),
+              child: Image.asset(AssetsManager.onBoarding2),
             ),
     ),
             ),

@@ -51,7 +51,7 @@ class  ReceiptScreen extends StatelessWidget {
                         child: Column(
                           children: [
                             Image.asset(
-                              ImageAssets.splash,
+                              AssetsManager.splash,
                               width: 30.w,
                               height: 16.h,
                             ),

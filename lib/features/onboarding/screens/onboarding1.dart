@@ -43,8 +43,8 @@ class OnBoarding1 extends StatelessWidget {
                   width: 70.w,
                   child: Center(
                     child: Stack(children: [
-                      Image.asset(ImageAssets.onboardingImageBg,height: 20.h,),
-                      Image.asset(ImageAssets.onBoarding1,height: 20.h,),
+                      Image.asset(AssetsManager.onboardingImageBg,height: 20.h,),
+                      Image.asset(AssetsManager.onBoarding1,height: 20.h,),
                     ],),
                   ),
                 ),

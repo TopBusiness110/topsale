@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sizer/sizer.dart';
 import 'package:topsale/features/products/cubit/products_cubit.dart';
 import '../../../core/models/product_model.dart';
 import '../../../core/utils/app_colors.dart';
@@ -11,7 +12,7 @@ class ProductGridItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProductsCubit, ProductsState>(
-  builder: (context, state) {
+    builder: (context, state) {
     ProductsCubit cubit = context.read<ProductsCubit>();
     return Container(
       decoration: BoxDecoration(
@@ -23,7 +24,7 @@ class ProductGridItem extends StatelessWidget {
           Container(
             decoration: BoxDecoration(shape: BoxShape.rectangle),
             margin: EdgeInsets.all(8),
-            child: Image.asset(product.image!,fit: BoxFit.cover,),
+            child: Image.asset(product.image!,fit: BoxFit.cover,width: 40.w,),
 
 
           ),
@@ -60,7 +61,7 @@ class ProductGridItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CircleAvatar(
-                  radius: 10,
+                  radius: 12,
                   backgroundColor: AppColors.primary,
                   child: IconButton(
                     padding: EdgeInsets.zero,
@@ -71,7 +72,7 @@ class ProductGridItem extends StatelessWidget {
                     icon: const Icon(
                       Icons.add,
                       color: AppColors.yellow,
-                      size: 15,
+                      size: 17,
                     ),
                   ),
                 ),
@@ -80,7 +81,7 @@ class ProductGridItem extends StatelessWidget {
                   child: Text("${product.userOrderedQuantity}"),
                 ),
                 CircleAvatar(
-                  radius: 10,
+                  radius: 12,
                   backgroundColor: AppColors.primary,
                   child: IconButton(
                     padding: EdgeInsets.zero,
@@ -90,7 +91,7 @@ class ProductGridItem extends StatelessWidget {
                     icon: const Icon(
                       Icons.remove,
                       color: AppColors.yellow,
-                      size: 15,
+                      size: 17,
                     ),
                   ),
                 ),

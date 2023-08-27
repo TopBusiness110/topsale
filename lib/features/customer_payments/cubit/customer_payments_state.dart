@@ -8,3 +8,4 @@ class SearchingResultsState extends CustomerPaymentsState {}
 class SelectingNameState extends CustomerPaymentsState {}
 class ChangingPaymentMethodState extends CustomerPaymentsState {}
 class ChangingContainerColorState extends CustomerPaymentsState {}
+class AllFieldsCleared extends CustomerPaymentsState {}

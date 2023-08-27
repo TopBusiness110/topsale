@@ -33,7 +33,7 @@ class LoginScreen extends StatelessWidget{
                 children: [
                   SizedBox(height: 5.h,),
                 //  Spacer(),
-               Image.asset(ImageAssets.splash,color: AppColors.white,width: 45.w,height: 25.h,),
+               Image.asset(AssetsManager.splash,color: AppColors.white,width: 45.w,height: 25.h,),
                 CustomContainer(
                   width: 90.w,
                   height: 30.h,

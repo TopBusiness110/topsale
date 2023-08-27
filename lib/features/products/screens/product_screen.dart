@@ -97,6 +97,7 @@ class ProductsScreen extends StatelessWidget {
               shape: CircleBorder(),
               child: Icon(Icons.add, color: AppColors.lightBlue, size: 27,),
               onPressed: () {
+
                 Navigator.pushNamed(context, Routes.createSalesOrderRoute,arguments: SelectedProducts(cubit.selectedProducts));
               },),
           ),

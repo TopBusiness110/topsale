@@ -78,7 +78,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         child: Column(
                           children: [
                             Image.asset(
-                              ImageAssets.splash,
+                              AssetsManager.splash,
                               width: 30.w,
                               height: 20.h,
                             ),

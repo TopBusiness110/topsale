@@ -11,6 +11,6 @@ class BottomCopyRightsWidget extends StatelessWidget {
     return    SizedBox(
         width: 100,
         //height: 50,
-        child: Image.asset(ImageAssets.whiteCopyRights,color: AppColors.white,));
+        child: Image.asset(AssetsManager.whiteCopyRights,color: AppColors.white,));
   }
 }

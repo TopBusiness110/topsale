@@ -50,6 +50,9 @@ dependencies:
   screenshot: ^2.1.0
   share:
   path_provider: ^2.1.0
+  intl:
+  fluttertoast:
+
 
 
 dev_dependencies:
@@ -79,6 +82,7 @@ flutter:
     - assets/lang/
     - assets/images/
     - assets/images/products/
+    - assets/images/more/
     - assets/icon/
     - assets/fonts/
   #   - images/a_dot_ham.jpeg

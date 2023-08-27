@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
         children: [
           const Spacer(),
           Center(
-            child: Image.asset(ImageAssets.splash),
+            child: Image.asset(AssetsManager.splash),
           ),
           const Spacer(),
           Image.asset("assets/images/copy_rights.png"),

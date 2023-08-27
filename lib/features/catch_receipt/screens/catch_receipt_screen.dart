@@ -5,9 +5,11 @@ import 'package:topsale/core/utils/app_colors.dart';
 
 import '../../../core/utils/app_assets.dart';
 import '../../../core/widgets/custom_button.dart';
+import '../models/catch_receipt_model.dart';
 
 class CatchReceiptScreen extends StatelessWidget {
-  const CatchReceiptScreen({super.key});
+  final CatchReceiptModel catchReceiptModel;
+  const CatchReceiptScreen({super.key,required this.catchReceiptModel});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,7 @@ class CatchReceiptScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     Image.asset(
-                      ImageAssets.splash,
+                      AssetsManager.splash,
                       width: 30.w,
                       height: 16.h,
                     ),

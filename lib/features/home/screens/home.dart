@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sizer/sizer.dart';
 import 'package:topsale/core/utils/app_assets.dart';
-import 'package:topsale/features/home/cubit/home_cubit.dart';
+import 'package:topsale/features/home/cubit/home_tab_cubit/home_cubit.dart';
 
 import '../../../core/utils/app_colors.dart';
 import '../../../core/widgets/copy_right_widget.dart';
@@ -24,47 +24,7 @@ class Home extends StatelessWidget {
     HomeCubit cubit = context.read<HomeCubit>();
     return Scaffold(
       backgroundColor: AppColors.primary,
-      appBar: AppBar(
-        // leading:   Padding(
-        //   padding: EdgeInsets.only(bottom: 9.h),
-        //   child: const Icon(Icons.menu,color: AppColors.white,),
-        // ),
-        title: Row(
-         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-           Row(
-             mainAxisAlignment: MainAxisAlignment.center,
-             children: [  Container(
-               decoration: const BoxDecoration(
-                 shape:BoxShape.circle,
 
-               ),
-
-               child:Image.asset(ImageAssets.profile),),
-             const SizedBox(width: 5,),
-             Text("اهلا, مصطفي خليل",style: Theme.of(context).textTheme.bodyMedium,),],),
-
-            const SizedBox(width: 5,),
-            Column(
-              children: [
-                Text("3265.25 EGP",style: Theme.of(context).textTheme.bodySmall,),
-                const SizedBox(height: 10,),
-                Text("الميزاينية الاساسية",style: Theme.of(context).textTheme.bodySmall,),
-              ],
-            ),
-
-
-          ],
-        ),
-          // this property hide the back arrow
-        automaticallyImplyLeading: false,
-        toolbarHeight: MediaQuery.of(context).size.height / 6,
-        backgroundColor: AppColors.lightBlue,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.horizontal(
-              left: Radius.circular(50), right: Radius.circular(50)),
-        ),
-      ),
       body:cubit.tabs[cubit.currentIndex] ,
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
@@ -84,18 +44,18 @@ class Home extends StatelessWidget {
          unselectedItemColor: AppColors.white,
           items: [
             BottomNavigationBarItem(
-                icon:SvgPicture.asset(ImageAssets.homeIcon,width: 25,),label: "home".tr(),
-              activeIcon: SvgPicture.asset(ImageAssets.homeIcon,color: AppColors.yellow,width: 25,)
+                icon:SvgPicture.asset(AssetsManager.homeIcon,width: 25,),label: "home".tr(),
+              activeIcon: SvgPicture.asset(AssetsManager.homeIcon,color: AppColors.yellow,width: 25,)
             ),
-            BottomNavigationBarItem(icon:SvgPicture.asset(ImageAssets.ordersIcon,width: 25,),
-                activeIcon: SvgPicture.asset(ImageAssets.ordersIcon,color: AppColors.yellow,width: 25,),
-                label: "delivery_orders".tr()),
-            BottomNavigationBarItem(icon:SvgPicture.asset(ImageAssets.itineraryIcon,width: 25,),
-                activeIcon: SvgPicture.asset(ImageAssets.itineraryIcon,color: AppColors.yellow,width: 25,),
+            BottomNavigationBarItem(icon:SvgPicture.asset(AssetsManager.ordersIcon,width: 25,),
+                activeIcon: SvgPicture.asset(AssetsManager.ordersIcon,color: AppColors.yellow,width: 25,),
+                label: "expected_clients".tr()),
+            BottomNavigationBarItem(icon:SvgPicture.asset(AssetsManager.itineraryIcon,width: 25,),
+                activeIcon: SvgPicture.asset(AssetsManager.itineraryIcon,color: AppColors.yellow,width: 25,),
                 label: "itinerary".tr()),
             BottomNavigationBarItem(
-              icon:SvgPicture.asset(ImageAssets.moreIcon,width: 25,),
-              activeIcon:SvgPicture.asset(ImageAssets.moreIcon,color: AppColors.yellow,width: 25,) ,
+              icon:SvgPicture.asset(AssetsManager.moreIcon,width: 25,),
+              activeIcon:SvgPicture.asset(AssetsManager.moreIcon,color: AppColors.yellow,width: 25,) ,
               label: "more".tr(),),
 
           ],

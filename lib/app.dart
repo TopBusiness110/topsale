@@ -7,7 +7,8 @@ import 'package:topsale/core/utils/app_strings.dart';
 import 'package:topsale/features/cart/cart_cubit.dart';
 import 'package:topsale/features/create_sales_order/cubit/create_sales_order_cubit.dart';
 import 'package:topsale/features/customer_payments/cubit/customer_payments_cubit.dart';
-import 'package:topsale/features/home/cubit/home_cubit.dart';
+import 'package:topsale/features/dismissal_notice_details/cubit/dismissal_notice_details_cubit.dart';
+import 'package:topsale/features/home/cubit/home_tab_cubit/home_cubit.dart';
 import 'package:topsale/features/new_product/cubit/new_product_cubit.dart';
 import 'package:topsale/features/payments/cubit/payments_cubit.dart';
 import 'package:topsale/features/products/cubit/products_cubit.dart';
@@ -15,7 +16,12 @@ import 'package:topsale/features/signup/cubit/signup_cubit.dart';
 
 import 'core/utils/app_colors.dart';
 import 'features/ receipt/cubit/receipt_cubit.dart';
+import 'features/dismissal_notice/cubit/dismissal_notice_cubit.dart';
+import 'features/expectet_clients_list/cubit/expected_clients_list_cubit.dart';
 import 'features/forgot_password/cubit/forgot_password_cubit.dart';
+
+import 'features/home/cubit/expected_clients_cubit/expected_clients_cubit.dart';
+import 'features/home/cubit/itinerary_cubit/itinerary_cubit.dart';
 import 'features/login/cubit/login_cubit.dart';
 import 'features/onboarding/cubit/onboarding_cubit.dart';
 import 'features/returns/cubit/returns_cubit.dart';
@@ -46,6 +52,11 @@ class TopSale extends StatelessWidget{
        BlocProvider(create: (context) => injector.serviceLocator<ReturnsCubit>()),
        BlocProvider(create: (context) => injector.serviceLocator<CustomerPaymentsCubit>()),
        BlocProvider(create: (context) => injector.serviceLocator<CartCubit>()),
+       BlocProvider(create: (context) => injector.serviceLocator<DismissalNoticeCubit>()),
+       BlocProvider(create: (context) => injector.serviceLocator<ExpectedClientsCubit>()),
+       BlocProvider(create: (context) => injector.serviceLocator<DismissalNoticeDetailsCubit>()),
+       BlocProvider(create: (context) => injector.serviceLocator<ExpectedClientsListCubit>()),
+       BlocProvider(create: (context) => injector.serviceLocator<ItineraryCubit>()),
 
       ], child:  MaterialApp(
          supportedLocales: context.supportedLocales,
