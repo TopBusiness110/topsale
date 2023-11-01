@@ -21,12 +21,12 @@ class ProductGridItem extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
-            decoration: BoxDecoration(shape: BoxShape.rectangle),
-            margin: EdgeInsets.all(8),
-            child: Image.asset(product.image!,fit: BoxFit.cover,width: 40.w,),
-
-
+          Flexible(
+            child: Container(
+              decoration: BoxDecoration(shape: BoxShape.rectangle),
+              margin: EdgeInsets.all(8),
+              child: Image.asset(product.image!,fit: BoxFit.cover,width: 40.w,),
+            ),
           ),
           Row(
             children: [

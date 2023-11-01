@@ -65,6 +65,8 @@ class ProductsScreen extends StatelessWidget {
                 ),
                 Expanded(
                     child: GridView.builder(
+                      shrinkWrap: true,
+                      physics: const BouncingScrollPhysics(),
                       itemCount: cubit.matches.isEmpty?
                           products.length:
                       cubit.matches.length,
@@ -72,6 +74,7 @@ class ProductsScreen extends StatelessWidget {
                       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           mainAxisExtent: 230,
+
                           crossAxisSpacing: 10,
                           mainAxisSpacing: 20),
                       itemBuilder: (context, index) {
