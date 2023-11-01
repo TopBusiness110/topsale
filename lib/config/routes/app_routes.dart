@@ -24,6 +24,7 @@ import 'package:topsale/features/payments/screens/payment_screen.dart';
 import 'package:topsale/features/products/screens/product_screen.dart';
 import 'package:topsale/features/reports/screens/reports_screen.dart';
 import 'package:topsale/features/returns/screens/returns_screen.dart';
+import 'package:topsale/features/sales_ordered_list/screens/sales_ordered_list_screen.dart';
 import 'package:topsale/features/signup/screens/signup.dart';
 import '../../core/models/product_model.dart';
 import '../../core/models/shipment_model.dart';
@@ -31,6 +32,7 @@ import '../../core/utils/app_strings.dart';
 import '../../features/catch_receipt/models/catch_receipt_model.dart';
 import '../../features/forgot_password/screens/forgot_password3.dart';
 import '../../features/home/screens/home.dart';
+import '../../features/returns_list/screens/returns_list_screen.dart';
 import '../../features/splash/screens/splash_screen.dart';
 
 class Routes{
@@ -60,6 +62,8 @@ class Routes{
   static const String  expectedClientsTabRoute = '/ ExpectedClientsTab';
   static const String  googleMapRoute = '/ googleMap';
   static const String  googleMapRoutingRoute = '/ googleMapRoutingScreen';
+  static const String  salesOrderedListRoute = '/ salesOrderedListScreen';
+  static const String  returnsListRoute = '/ returnsListScreen';
 
 }
 
@@ -166,7 +170,11 @@ class AppRoutes{
        return MaterialPageRoute(builder: (context) =>  GoogleMapRoutingScreen( destinationlatLng: latlng,),);
 
 
+     case Routes.salesOrderedListRoute:
+       return MaterialPageRoute(builder: (context) =>  SalesOrderedListScreen(),);
 
+     case Routes.returnsListRoute:
+       return MaterialPageRoute(builder: (context) => const ReturnsListScreen(),);
 
 
 

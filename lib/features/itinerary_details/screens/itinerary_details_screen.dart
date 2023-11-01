@@ -1,14 +1,19 @@
+import 'dart:io';
 import 'package:easy_localization/easy_localization.dart' as easy;
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:sizer/sizer.dart';
-import 'package:topsale/config/routes/app_routes.dart';
 import 'package:topsale/core/models/shipment_model.dart';
 import 'package:topsale/core/widgets/custom_button.dart';
-
+import 'package:topsale/features/home/tabs/more_tab.dart';
+import 'package:topsale/features/itinerary_details/cubit/itinerary_details_cubit.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../../../config/routes/app_routes.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/widgets/custom_arrow_back.dart';
+import '../../../core/widgets/custom_textfield.dart';
 
 class ItineraryDetailsScreen extends StatefulWidget {
   final ShipmentModel shipmentModel ;
@@ -27,6 +32,12 @@ class _ItineraryDetailsScreenState extends State<ItineraryDetailsScreen> {
   }
   @override
   Widget build(BuildContext context) {
+    return BlocConsumer<ItineraryDetailsCubit, ItineraryDetailsState>(
+         listener: (context, state) {
+            // TODO: implement listener
+         },
+  builder: (context, state) {
+    ItineraryDetailsCubit cubit = context.read<ItineraryDetailsCubit>();
     return Scaffold(
       backgroundColor: AppColors.primary,
       body: Column(
@@ -63,20 +74,24 @@ class _ItineraryDetailsScreenState extends State<ItineraryDetailsScreen> {
                       child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                           // "${shipmentModel.products?[index].name}",
-                            "${widget.shipmentModel.clientName}",
-                            style: Theme.of(context).textTheme.bodyMedium,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "${widget.shipmentModel.products?[index].name}",
+                               // "${widget.shipmentModel.clientName}",
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                              Text(
+                                //cubit.matches.isEmpty?
+                                "${ widget.shipmentModel.products?[index].userOrderedQuantity}",
+                                // "${ widget.shipmentModel.address}",
+                                textDirection: TextDirection.ltr,
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ],
                           ),
-                          Text(
-                            //cubit.matches.isEmpty?
-                           // "${ shipmentModel.products?[index].userOrderedQuantity}",
-                            "${ widget.shipmentModel.address}",
-                            textDirection: TextDirection.ltr,
-                            style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                              color: AppColors.white.withOpacity(0.5)
-                            ),
-                          ),
+
 
                         ],
                       ),
@@ -103,10 +118,12 @@ class _ItineraryDetailsScreenState extends State<ItineraryDetailsScreen> {
                 borderRadius: BorderRadius.circular(15)
               ),
               child: GoogleMap(
-                initialCameraPosition: CameraPosition(target: LatLng(widget.shipmentModel.clientLat!,widget.shipmentModel.clientLng!),zoom: 13.5),
+                initialCameraPosition: CameraPosition(
+                    target: LatLng(widget.shipmentModel.clientLat!,widget.shipmentModel.clientLng!),zoom: 14.5),
                 markers: {
                   Marker(markerId: MarkerId("client location"),
-                  position: LatLng(widget.shipmentModel.clientLat!,widget.shipmentModel.clientLng!))
+                  position: LatLng(widget.shipmentModel.clientLat!,widget.shipmentModel.clientLng!),
+                  )
                 },
               )
               //Image.asset("assets/images/map.png"),
@@ -120,29 +137,51 @@ class _ItineraryDetailsScreenState extends State<ItineraryDetailsScreen> {
                   width: 30.w,
                     height: 4.5.h,
                     backgroundColor: AppColors.lightBlue, textColor: AppColors.white,
-                    text: "start_trip".tr(), onPressed: (){
-                    Navigator.pushNamed(context, Routes.googleMapRoutingRoute,arguments:LatLng(widget.shipmentModel.clientLat!, widget.shipmentModel.clientLng!) );
+                    text: "start_trip".tr(),
+                    onPressed: (){
+                    cubit.startDateTime = DateTime.now();
+                   if(currentLocation!=null){
+                     cubit.startLatLng = LatLng(currentLocation!.latitude!, currentLocation!.longitude!);
+                   }
+                     // openGoogleMapsRoute(widget.shipmentModel.clientLat!, widget.shipmentModel.clientLng!,currentLocation!.latitude!,currentLocation!.longitude!);
+                   Navigator.pushNamed(context, Routes.googleMapRoutingRoute,arguments:LatLng(widget.shipmentModel.clientLat!, widget.shipmentModel.clientLng!) );
                 }),
                 CustomButton(
                     fontSize: 14,
                     width: 30.w,
                     height: 4.5.h,
                     backgroundColor: AppColors.yellow, textColor: AppColors.white,
-                    text: "end_trip".tr(), onPressed: (){}),
+                    text: "end_trip".tr(), onPressed: (){
+                  cubit.endDateTime = DateTime.now();
+                  if(currentLocation!=null){
+                    cubit.endLatLng = LatLng(currentLocation!.latitude!, currentLocation!.longitude!);
+                  }
+                  showInformationDialog(context);
+                }),
                 CustomButton(
                     fontSize: 14,
                     width: 30.w,
                     height: 4.5.h,
                     backgroundColor: AppColors.red, textColor: AppColors.white,
-                    text: "cancel".tr(), onPressed: (){})
+                    text: "cancel".tr(),
+                    onPressed: (){
+                      cubit.cancelDateTime= DateTime.now();
+                      if(currentLocation!=null){
+                        cubit.cancelLatLng = LatLng(currentLocation!.latitude!, currentLocation!.longitude!);
+                      }
+                     // cubit.photo = null;
+                      showCancelPopUp(context);
+                })
               ],
             ),
             SizedBox(height: 10,),
 
       ]),
     );
+  },
+);
   }
-  getCurrentLocation()async{
+  getCurrentLocation(){
 
     Location location = Location();
     location.getLocation().then((value) {
@@ -151,148 +190,163 @@ class _ItineraryDetailsScreenState extends State<ItineraryDetailsScreen> {
     });
 
   }
+  void openGoogleMapsRoute(double originLat, double originLng, double destinationLat, double destinationLng) async {
+    final url = 'https://www.google.com/maps/dir/?api=1&origin=$originLat,$originLng&destination=$destinationLat,$destinationLng';
+
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch Google Maps.';
+    }
+  }
+
+  void showCancelPopUp(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return BlocBuilder<ItineraryDetailsCubit, ItineraryDetailsState>(
+           builder: (context, state) {
+             ItineraryDetailsCubit cubit = context.read<ItineraryDetailsCubit>();
+           return Dialog(
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          backgroundColor: AppColors.blue2,
+
+
+              child: ListView(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(
+                    height: 2.h,
+                  ),
+                  Center(
+                      child: Text(
+                        "cancel_trip".tr(),
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.displayLarge,
+                      ).tr()),
+                  SizedBox(
+                    height: 2.h,
+                  ),
+                  CustomTextField(
+                      controller: cubit.reasonController,
+                      title: "write_reason".tr(),
+                      textInputType: TextInputType.text,
+                      backgroundColor: AppColors.primary,
+                      textColor: AppColors.white),
+                  SizedBox(
+                    height: 2.h,
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      // Handle photo button press
+                      // Take a photo or perform related actions
+
+                      cubit.takePhoto();
+                    },
+                    child: Text('take_photo'.tr(),style: TextStyle(color: Colors.amberAccent),),
+                  ),
+
+                  cubit.photo!=null?   Container(
+                        width: 20.w,
+                          child: Image.file(File(cubit.photo!.path))):
+                  SizedBox(),
+
+                  Container(
+                    margin:
+                    EdgeInsets.symmetric(horizontal: 27.w, vertical: 10),
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: CustomButton(
+                        backgroundColor: AppColors.yellow,
+                        height: 30,
+                        width: 30,
+                        textColor: AppColors.white,
+                        text: "ok".tr(),
+                        onPressed: () {
+
+                         Navigator.pop(context);
+
+                          //add the new contact to the contacts list
+                        }),
+                  )
+                ],
+              ),
+
+        );
+  },
+);
+      },
+    );
+  }
+
+  void showInformationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return BlocBuilder<ItineraryDetailsCubit, ItineraryDetailsState>(
+           builder: (context, state) {
+             ItineraryDetailsCubit cubit = context.read<ItineraryDetailsCubit>();
+           return AlertDialog(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20)),
+          backgroundColor: AppColors.white,
+          actionsAlignment: MainAxisAlignment.spaceBetween,
+          title: Center(
+            child: Text(
+              "end_trip_info".tr(),
+              style: Theme.of(context).textTheme.displayLarge!.copyWith(
+                color: AppColors.lightBlue,
+              ),
+            ),
+          ),
+             content: Text(
+               "  تاريخ انهاء الرحلة ${ cubit.endDateTime.toString().substring(0,16)}  ",
+            style: Theme.of(context)
+                .textTheme
+                .displayMedium!
+                .copyWith(color: AppColors.lightBlue, fontSize: 14),
+          ),
+          actions: [
+            // ElevatedButton(
+            //   onPressed: () {
+            //     Navigator.pop(context);
+            //
+            //   },
+            //   style: ElevatedButton.styleFrom(
+            //     minimumSize: Size(28.w, 5.h),
+            //     maximumSize: Size(30.w, 5.h),
+            //     backgroundColor: AppColors.red,
+            //   ),
+            //   child: Text(
+            //     "yes_delete".tr(),
+            //     style: Theme.of(context).textTheme.bodySmall,
+            //   ),
+            // ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.lightBlue,
+                minimumSize: Size(28.w, 5.h),
+                maximumSize: Size(30.w, 5.h),
+              ),
+              child: Text(
+                "ok".tr(),
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ),
+          ],
+        );
+  },
+);
+
+
+      },
+    );
+  }
 }
 
-// void showClientsPopup(BuildContext context, List<ClientModel> clients) {
-//   showDialog(
-//     context: context,
-//     builder: (context) {
-//       return Dialog(
-//         shape:
-//         RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-//         backgroundColor: AppColors.blue2,
-//         child: BlocBuilder<CreateSalesOrderCubit, CreateSalesOrderState>(
-//           builder: (context, state) {
-//             CreateSalesOrderCubit cubit =
-//             context.read<CreateSalesOrderCubit>();
-//             return ListView(
-//               physics: const NeverScrollableScrollPhysics(),
-//               shrinkWrap: true,
-//               // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//               children: [
-//                 SizedBox(
-//                   height: 2.h,
-//                 ),
-//                 Center(
-//                     child: Text(
-//                       "client",
-//                       textAlign: TextAlign.center,
-//                       style: Theme.of(context).textTheme.displayLarge,
-//                     ).tr()),
-//                 SizedBox(
-//                   height: 2.h,
-//                 ),
-//                 CustomTextField(
-//                     onchange: (value) {
-//                       cubit.searchForName(value);
-//                     },
-//                     title: "الاسم / الرقم",
-//                     textInputType: TextInputType.text,
-//                     backgroundColor: AppColors.primary,
-//                     textColor: AppColors.white),
-//                 Container(
-//                   alignment: Alignment.center,
-//                   width: 95.w,
-//                   height: 60.h,
-//                   margin: const EdgeInsets.all(15),
-//                   padding: const EdgeInsets.all(8),
-//                   decoration: BoxDecoration(
-//                       borderRadius: BorderRadius.circular(10),
-//                       color: AppColors.primary),
-//                   child: state is NoClientsMatchesState
-//                       ? SizedBox(
-//                     height: 50,
-//                     width: 50,
-//                     child: IconButton(
-//                       style: IconButton.styleFrom(
-//                           backgroundColor: AppColors.yellow,
-//                           shape: CircleBorder()),
-//                       onPressed: () {
-//                         showNewClientPopUp(context);
-//                       },
-//                       icon: const Icon(
-//                         Icons.add,
-//                         color: AppColors.primary,
-//                         size: 30,
-//                       ),
-//                     ),
-//                   )
-//                       : ListView.separated(
-//                       itemBuilder: (context, index) {
-//                         //when we clicked on client
-//                         return InkWell(
-//                           onTap: () {
-//                             cubit.matches.isEmpty
-//                                 ? cubit
-//                                 .selectClientName(clients[index].name)
-//                                 : cubit.selectClientName(
-//                                 cubit.matches[index].name);
-//                             cubit.matches.clear();
-//                             Navigator.pop(context);
-//                           },
-//                           child: Padding(
-//                             padding: EdgeInsets.all(8.0),
-//                             child: Row(
-//                               mainAxisSize: MainAxisSize.min,
-//                               mainAxisAlignment:
-//                               MainAxisAlignment.spaceBetween,
-//                               children: [
-//                                 Text(
-//                                   state is SearchingResultsState
-//                                       ? cubit.matches[index].name
-//                                       :
-//                                   // cubit.matches.isEmpty ?
-//                                   clients[index].name,
-//                                   //  : cubit.matches[index].name,
-//                                   style: Theme.of(context)
-//                                       .textTheme
-//                                       .bodyMedium,
-//                                 ),
-//                                 Text(
-//                                   //cubit.matches.isEmpty?
-//                                   state is SearchingResultsState
-//                                       ? cubit.matches[index].phoneNumber
-//                                       : clients[index].phoneNumber,
-//                                   //:cubit.matches[index].phoneNumber,
-//                                   textDirection: TextDirection.ltr,
-//                                   style: Theme.of(context)
-//                                       .textTheme
-//                                       .bodyMedium,
-//                                 ),
-//                               ],
-//                             ),
-//                           ),
-//                         );
-//                       },
-//                       separatorBuilder: (context, index) {
-//                         return Divider(
-//                           indent: 10,
-//                           endIndent: 10,
-//                           color: AppColors.white.withOpacity(0.7),
-//                           thickness: 1,
-//                         );
-//                       },
-//                       itemCount: cubit.matches.isEmpty
-//                           ? clients.length
-//                           : cubit.matches.length),
-//                 ),
-//                 // SizedBox(
-//                 //   height: 50,
-//                 //   width: 50,
-//                 //   child: IconButton(
-//                 //     style: IconButton.styleFrom(
-//                 //       backgroundColor: AppColors.yellow,
-//                 //       shape: CircleBorder()
-//                 //     ),
-//                 //     onPressed: () {
-//                 //       showNewClientPopUp(context);
-//                 //     }, icon: Icon(Icons.add,color: AppColors.primary,size: 30,),),
-//                 // ),
-//               ],
-//             );
-//           },
-//         ),
-//       );
-//     },
-//   );
-// }
+

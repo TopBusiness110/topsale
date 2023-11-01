@@ -90,7 +90,12 @@
   "cancel": "Cancel",
   "from_stock": "From Stock",
   "to_stock": "To Stock",
-  "add_expected_client": "Add Expected Client"
+  "add_expected_client": "Add Expected Client",
+  "cancel_trip": "Cancel Trip",
+  "write_reason": "Write the cancellation reason",
+  "take_photo": "Take Photo",
+  "end_trip_info": "End Trip Information",
+  "sales_ordered_list": "Sales Ordered List"
 
 
 

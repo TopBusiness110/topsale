@@ -10,6 +10,7 @@ import 'package:topsale/core/widgets/custom_button.dart';
 import 'package:topsale/core/widgets/custom_textfield.dart';
 import 'package:topsale/features/cart/cart_cubit.dart';
 import 'package:topsale/features/create_sales_order/cubit/create_sales_order_cubit.dart';
+import 'package:topsale/features/sales_ordered_list/cubit/sales_ordered_list_cubit.dart';
 import '../../../core/methods/clients.dart';
 import '../../../core/models/selected_products.dart';
 import '../../../core/widgets/custom_arrow_back.dart';
@@ -231,6 +232,7 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                                                                 cubit.calculateTotalPrice(
                                                                     widget
                                                                         .selectedProducts!);
+
                                                               },
                                                               child:
                                                                   const CircleAvatar(
@@ -401,6 +403,7 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                         ));
                       }
                       if (widget.selectedProducts!.products.isNotEmpty&&cubit.currentClient!="") {
+
                         showAlertDialog(context);
                       } else {
                         // ScaffoldMessenger.of(context)
@@ -462,6 +465,12 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                     print("++++++++++++++++++++++++++++++++++++++++++++++");
                     print(widget.selectedProducts?.products);
                     context.read<CartCubit>().addClients(cubit.currentClient,widget.selectedProducts!.products );
+                    context.read<SalesOrderedListCubit>().fillSalesOrderedList(
+                        creationDate: cubit.dateTime,
+                        customer: cubit.currentClient,
+                        number: cubit.billingNumber,
+                        status: cubit.billingStatus,
+                        total: cubit.sum);
                   },
                   style: ElevatedButton.styleFrom(
                     minimumSize: Size(28.w, 5.h),

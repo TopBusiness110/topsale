@@ -10,3 +10,4 @@ class AddingProductState extends ReturnsState {}
 class ClientCartFounded extends ReturnsState {}
 class AddedState extends ReturnsState {}
 class ProductRemoved extends ReturnsState {}
+class RemoveState extends ReturnsState {}

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:sizer/sizer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:topsale/core/utils/app_assets.dart';
@@ -26,7 +27,7 @@ class _OnBoardingState extends State<OnBoarding> {
 
   @override
   void initState() {
-
+    checkLocationPermission();
     super.initState();
     context.read<OnBoardingCubit>().pageController.addListener(() {
       context.read<OnBoardingCubit>().changePages();
@@ -37,7 +38,13 @@ class _OnBoardingState extends State<OnBoarding> {
   //   context.read<OnBoardingCubit>().pageController.dispose();
   //   super.dispose();
   // }
-
+  Future<void> checkLocationPermission() async {
+    if (await Permission.location.request().isGranted) {
+      // Location permission granted
+    } else {
+      // Location permission denied
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

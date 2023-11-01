@@ -58,6 +58,20 @@ addProductQuantity(int index){
       emit(AddedState());
     }
 }
+  decreaseProductQuantity(int index){
+    int quantity = listOfProducts[index].quantity!;
+    int userOrderedQuantity = listOfProducts[index].userOrderedQuantity;
+    if(userOrderedQuantity==0){
+      removeProduct(index);
+      return ;
+
+    }
+   else if(userOrderedQuantity<=quantity) {
+      listOfProducts[index].userOrderedQuantity--;
+     emit(RemoveState());
+    }
+
+  }
 
 removeProduct(index){
     listOfProducts.removeAt(index);

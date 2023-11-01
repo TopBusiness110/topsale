@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:topsale/config/routes/app_routes.dart';
 import 'package:topsale/core/preferences/preferences.dart';
 import 'package:topsale/core/utils/app_strings.dart';
@@ -22,9 +23,12 @@ import 'features/forgot_password/cubit/forgot_password_cubit.dart';
 
 import 'features/home/cubit/expected_clients_cubit/expected_clients_cubit.dart';
 import 'features/home/cubit/itinerary_cubit/itinerary_cubit.dart';
+import 'features/itinerary_details/cubit/itinerary_details_cubit.dart';
 import 'features/login/cubit/login_cubit.dart';
 import 'features/onboarding/cubit/onboarding_cubit.dart';
 import 'features/returns/cubit/returns_cubit.dart';
+import 'features/returns_list/cubit/returns_list_cubit.dart';
+import 'features/sales_ordered_list/cubit/sales_ordered_list_cubit.dart';
 import 'injector.dart'as injector;
 
 class TopSale extends StatelessWidget{
@@ -36,6 +40,7 @@ class TopSale extends StatelessWidget{
     Preferences.instance.saveLanguage(
       EasyLocalization.of(context)!.locale.languageCode
     );
+   // checkLocationPermission();
     return
       MultiBlocProvider(
       providers: [
@@ -57,6 +62,9 @@ class TopSale extends StatelessWidget{
        BlocProvider(create: (context) => injector.serviceLocator<DismissalNoticeDetailsCubit>()),
        BlocProvider(create: (context) => injector.serviceLocator<ExpectedClientsListCubit>()),
        BlocProvider(create: (context) => injector.serviceLocator<ItineraryCubit>()),
+       BlocProvider(create: (context) => injector.serviceLocator<ItineraryDetailsCubit>()),
+       BlocProvider(create: (context) => injector.serviceLocator<SalesOrderedListCubit>()),
+       BlocProvider(create: (context) => injector.serviceLocator<ReturnsListCubit>()),
 
       ], child:  MaterialApp(
          supportedLocales: context.supportedLocales,
@@ -101,4 +109,7 @@ class TopSale extends StatelessWidget{
       
     );
   }
+
+
 }
+
