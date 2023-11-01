@@ -88,9 +88,11 @@ class HomeTab extends StatelessWidget{
                    Navigator.pushNamed(context, Routes.productsRoute);
                  }
                  else   if(index==1){
-                   Navigator.pushNamed(context, Routes.createSalesOrderRoute,arguments: SelectedProducts([]));
+                   Navigator.pushNamed(context, Routes.salesOrderedListRoute);
+                  // Navigator.pushNamed(context, Routes.createSalesOrderRoute,arguments: SelectedProducts([]));
                  }
                  else   if(index==2){
+                 //  Navigator.pushNamed(context, Routes.returnsListRoute);
                    Navigator.pushNamed(context, Routes.returnsRoute);
                  }
                  else   if(index==3){

@@ -27,17 +27,15 @@ Future<void> main() async {
     runApp(
         Sizer(
             builder: (context, orientation, deviceType) {
-               return DevicePreview(
-                   builder: (context) =>EasyLocalization(
-                    supportedLocales: const [Locale('ar',''),Locale('en','')],
-                       path: 'assets/lang',
-                       saveLocale: true,
-                       startLocale: const Locale("ar",""),
-                       fallbackLocale: const Locale("ar",""),
-                       child: Phoenix(
-                         child: const TopSale(),
-                       ),
-                   ) ,
+               return EasyLocalization(
+                supportedLocales: const [Locale('ar',''),Locale('en','')],
+                   path: 'assets/lang',
+                   saveLocale: true,
+                   startLocale: const Locale("ar",""),
+                   fallbackLocale: const Locale("ar",""),
+                   child: Phoenix(
+                     child: const TopSale(),
+                   ),
                );
             },
         ),

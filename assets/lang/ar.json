@@ -90,5 +90,10 @@
   "cancel": "الغاء الرحلة",
   "from_stock": "من مخزن",
   "to_stock": "الى مخزن",
-  "add_expected_client": "اضافة عميل محتمل"
+  "add_expected_client": "اضافة عميل محتمل",
+  "cancel_trip": "الغاء الرحلة",
+  "write_reason": "ادخل سبب الالغاء",
+  "take_photo": "التقط صورة",
+  "end_trip_info": "معلومات انهاء الرحلة",
+  "sales_ordered_list": "قائمة اوامر المبيعات "
 }

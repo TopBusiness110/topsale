@@ -25,7 +25,10 @@ import 'features/forgot_password/cubit/forgot_password_cubit.dart';
 
 import 'features/home/cubit/expected_clients_cubit/expected_clients_cubit.dart';
 import 'features/home/cubit/itinerary_cubit/itinerary_cubit.dart';
+import 'features/itinerary_details/cubit/itinerary_details_cubit.dart';
 import 'features/returns/cubit/returns_cubit.dart';
+import 'features/returns_list/cubit/returns_list_cubit.dart';
+import 'features/sales_ordered_list/cubit/sales_ordered_list_cubit.dart';
 
 final serviceLocator = GetIt.instance;
 //*************** Blocs *****************
@@ -121,6 +124,19 @@ Future<void> setUp()async{
   );
   serviceLocator.registerFactory(
           () => ItineraryCubit(
+        //serviceLocator(),
+      )
+  );  serviceLocator.registerFactory(
+          () => ItineraryDetailsCubit(
+        //serviceLocator(),
+      )
+  );
+  serviceLocator.registerFactory(
+          () => SalesOrderedListCubit(
+        //serviceLocator(),
+      )
+  );  serviceLocator.registerFactory(
+          () => ReturnsListCubit(
         //serviceLocator(),
       )
   );

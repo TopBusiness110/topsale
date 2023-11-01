@@ -6,10 +6,12 @@
     <application
         android:label="topsale"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
 
         <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyA6QI378BHt9eqBbiJKtqWHTSAZxcSwN3Q"/>
+
+
+            android:value="AIzaSyCqeB0JnSmNrrtuICRJEG3ZJPxC1DLWSmU"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -4,10 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 import 'package:topsale/features/cart/cart_cubit.dart';
 import 'package:topsale/features/returns/cubit/returns_cubit.dart';
-
 import '../../../core/methods/clients.dart';
-import '../../../core/methods/products.dart';
-import '../../../core/methods/products.dart';
 import '../../../core/methods/products.dart';
 import '../../../core/models/client_model.dart';
 import '../../../core/utils/app_colors.dart';
@@ -93,7 +90,7 @@ class ReturnsScreen extends StatelessWidget {
                     style: Theme.of(context).textTheme.displayLarge,
                   ).tr(),
 
-                  state is ClientCartFounded || state is AddedState || state is ProductRemoved?
+                  state is ClientCartFounded || state is AddedState || state is ProductRemoved || state is RemoveState?
                     //  cubit.listOfProducts.isNotEmpty?
                       Expanded(
                         child: Container(
@@ -236,17 +233,22 @@ class ReturnsScreen extends StatelessWidget {
                                                         child:
                                                         Text("${cubit.listOfProducts[index].userOrderedQuantity}"),
                                                       ),
-                                                      const CircleAvatar(
-                                                        radius: 12,
-                                                        backgroundColor:
-                                                        AppColors
-                                                            .lightBlue,
-                                                        child: Icon(
-                                                          Icons.remove,
-                                                          size: 13,
-                                                          color:
+                                                      InkWell(
+                                                        onTap: (){
+                                                          cubit.decreaseProductQuantity(index);
+                                                        },
+                                                        child: const CircleAvatar(
+                                                          radius: 12,
+                                                          backgroundColor:
                                                           AppColors
-                                                              .white,
+                                                              .lightBlue,
+                                                          child: Icon(
+                                                            Icons.remove,
+                                                            size: 13,
+                                                            color:
+                                                            AppColors
+                                                                .white,
+                                                          ),
                                                         ),
                                                       )
                                                     ],
@@ -309,7 +311,7 @@ class ReturnsScreen extends StatelessWidget {
                   width: 37.w,
                 textColor: AppColors.white,
                 onPressed: () {
-               //  showProductsPopup(context);
+                  Navigator.pop(context);
                 },
                 text: "return".tr(),
               ),

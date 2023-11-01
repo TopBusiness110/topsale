@@ -17,6 +17,9 @@ class CreateSalesOrderCubit extends Cubit<CreateSalesOrderState> {
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController addressController = TextEditingController();
+  DateTime dateTime = DateTime.now();
+  String billingStatus = "مؤكد";
+  String billingNumber = "Xz012345";
 
 
   String currentClient = '';
