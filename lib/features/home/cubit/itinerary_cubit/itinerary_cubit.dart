@@ -5,5 +5,4 @@ part 'itinerary_state.dart';
 
 class ItineraryCubit extends Cubit<ItineraryState> {
   ItineraryCubit() : super(ItineraryInitial());
-
 }

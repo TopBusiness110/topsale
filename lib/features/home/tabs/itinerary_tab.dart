@@ -20,110 +20,111 @@ class ItineraryTab extends StatefulWidget {
 }
 
 class _ItineraryTabState extends State<ItineraryTab> {
-  LocationData? currentLocation ;
-  @override
-  void initState() {
-    getCurrentLocation();
-    super.initState();
-  }
+  // LocationData? currentLocation ;
+  // @override
+  // void initState() {
+  //   getCurrentLocation();
+  //   super.initState();
+  // }
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ItineraryCubit, ItineraryState>(
-  listener: (context, state) {
-    // TODO: implement listener
-  },
+    return BlocBuilder<ItineraryCubit, ItineraryState>(
   builder: (context, state) {
     ItineraryCubit cubit = context.read<ItineraryCubit>();
-    return Scaffold(
-      backgroundColor: AppColors.primary,
-      body: Column(
-        children: [
-          SizedBox(height: 5.h,),
-          Row(
-          //  mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(width: 10,),
-              Container(
-              decoration: const BoxDecoration(
-                shape:BoxShape.circle,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: AppColors.primary,
+        body: Column(
+          children: [
+            SizedBox(height: 5),
+            Row(
+            //  mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(width: 10,),
+                Container(
+                decoration: const BoxDecoration(
+                  shape:BoxShape.circle,
 
-              ),
-
-              child:Image.asset(AssetsManager.profile),),
-              const SizedBox(width: 5,),
-              Text("اهلا, مصطفي خليل",style: Theme.of(context).textTheme.bodyMedium,),],),
-          Expanded(
-              child: ListView.builder(
-            itemCount: shipments.length,
-            itemBuilder: (context, index) {
-            return InkWell(
-              onTap: () {
-                print("_______________________________________________________");
-                print(shipments[index].products?[0].code);
-                Navigator.pushNamed(context, Routes.itineraryDetailsRoute,arguments: shipments[index]);
-              },
-              child: Container(
-                alignment: Alignment.centerRight,
-                margin: EdgeInsets.all(12),
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: AppColors.blue2,
-                  borderRadius: BorderRadius.circular(20)
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("${shipments[index].clientName}",style: Theme.of(context).textTheme.bodyMedium,),
-                    SizedBox(height: 10,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("${shipments[index].address}",style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: AppColors.yellow
-                        ),),
-                        Text("${shipments[index].dateTime.toString().substring(0,11)}",style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+
+                child:Image.asset(AssetsManager.profile),),
+                const SizedBox(width: 5,),
+                Flexible(child: Text("اهلا, مصطفي خليل",style: Theme.of(context).textTheme.bodyMedium,)),],),
+            Flexible(
+                child: ListView.builder(
+                  shrinkWrap: true,
+              physics: const BouncingScrollPhysics(),
+              itemCount: shipments.length,
+              itemBuilder: (context, index) {
+              return InkWell(
+                onTap: () {
+                  print("_______________________________________________________");
+                  print(shipments[index].products?[0].code);
+                  Navigator.pushNamed(context, Routes.itineraryDetailsRoute,arguments: shipments[index]);
+                },
+                child: Container(
+                  alignment: Alignment.centerRight,
+                  margin: EdgeInsets.all(12),
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.blue2,
+                    borderRadius: BorderRadius.circular(20)
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("${shipments[index].clientName}",style: Theme.of(context).textTheme.bodyMedium,),
+                      SizedBox(height: 10,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("${shipments[index].address}",style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                             color: AppColors.yellow
-                        ),),
-                      ],
-                    ),
-                    const SizedBox(height: 10,),
-                     Row(
-                      children: [
+                          ),),
+                          Text("${shipments[index].dateTime.toString().substring(0,11)}",style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              color: AppColors.yellow
+                          ),),
+                        ],
+                      ),
+                      const SizedBox(height: 10,),
+                       Row(
+                        children: [
 
-                     InkWell(
-                       onTap:(){
-                         launch("tel://${shipments[index].clientPhoneNumber}");
-                       },
-                       child: const CircleAvatar(
-                         radius: 15,
-                         backgroundColor: AppColors.yellow,
-                         child: Icon(Icons.call,color: AppColors.white,size: 20,),
+                       InkWell(
+                         onTap:(){
+                           launch("tel://${shipments[index].clientPhoneNumber}");
+                         },
+                         child: const CircleAvatar(
+                           radius: 15,
+                           backgroundColor: AppColors.yellow,
+                           child: Icon(Icons.call,color: AppColors.white,size: 20,),
+                         ),
                        ),
-                     ),
-                        const SizedBox(width: 20,),
-                        InkWell(
-                          onTap: () {
-                            Navigator.pushNamed(context, Routes.googleMapRoute,arguments: LatLng(shipments[index].clientLat!, shipments[index].clientLng!));
-                          },
-                          child: const CircleAvatar(
-                            radius: 15,
-                            backgroundColor: AppColors.lightBlue,
-                            child: Icon(Icons.location_on_outlined,color: AppColors.white,size: 20,),
+                          const SizedBox(width: 20,),
+                          InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(context, Routes.googleMapRoute,arguments: LatLng(shipments[index].clientLat!, shipments[index].clientLng!));
+                            },
+                            child: const CircleAvatar(
+                              radius: 15,
+                              backgroundColor: AppColors.lightBlue,
+                              child: Icon(Icons.location_on_outlined,color: AppColors.white,size: 20,),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10,),
+                        ],
+                      ),
+                      const SizedBox(height: 10,),
 
-                  ],
+                    ],
+                  ),
+
+
                 ),
-
-
-              ),
-            );
-          },))
-        ],
+              );
+            },))
+          ],
+        ),
       ),
     );
   },
@@ -131,11 +132,9 @@ class _ItineraryTabState extends State<ItineraryTab> {
   }
 
   getCurrentLocation()async{
-
-    Location location = Location();
+    Location location =await Location();
     location.getLocation().then((value) {
-      currentLocation=value;
-
+      // currentLocation=value;
     });
 
   }

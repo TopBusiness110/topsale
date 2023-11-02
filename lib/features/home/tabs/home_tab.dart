@@ -17,17 +17,13 @@ class HomeTab extends StatelessWidget{
   Widget build(BuildContext context) {
     return BlocConsumer<HomeCubit, HomeState>(
   listener: (context, state) {
-    // TODO: implement listener
   },
      builder: (context, state) {
     HomeCubit cubit = context.read<HomeCubit>();
      return Scaffold(
       backgroundColor: AppColors.primary,
        appBar: AppBar(
-         // leading:   Padding(
-         //   padding: EdgeInsets.only(bottom: 9.h),
-         //   child: const Icon(Icons.menu,color: AppColors.white,),
-         // ),
+
          title: Row(
            mainAxisAlignment: MainAxisAlignment.spaceBetween,
            children: [
@@ -76,9 +72,9 @@ class HomeTab extends StatelessWidget{
               ),
             ],
           ),
-          Expanded(
+          Flexible(
             child: ListView.separated(
-              separatorBuilder: (context, index) => SizedBox(height: 3.h,),
+              separatorBuilder: (context, index) => SizedBox(height: 3,),
               itemCount: 5,
 
               itemBuilder: (context, index) {
@@ -105,7 +101,7 @@ class HomeTab extends StatelessWidget{
                  child: HomeListItem(title:cubit.titles[index] ,imagePath: cubit.imagesPath[index],));
             },),
           ),
-          SizedBox(height: 2.h,)
+          SizedBox(height: 2,)
         ],
       ),
     );

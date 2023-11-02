@@ -17,114 +17,116 @@ class MoreTab extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    return Scaffold(
-      backgroundColor: AppColors.primary,
-      body: Stack(
-        children: [
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: AppColors.primary,
+        body: Stack(
+          children: [
 
-          Align(alignment: Alignment.bottomCenter,
-            child:
-            Container(
-              width: double.infinity,
-              height: 25.h,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(topRight: Radius.circular(64),topLeft: Radius.circular(64)),
-                color: AppColors.lightBlue,
-              ),
-              child: Column(
+            Align(alignment: Alignment.bottomCenter,
+              child:
+              Container(
+                width: double.infinity,
+                height: 25.h,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(topRight: Radius.circular(64),topLeft: Radius.circular(64)),
+                  color: AppColors.lightBlue,
+                ),
+                child: Column(
 
-                children: [
-                  SizedBox(height: 12.h,),
-                  InkWell(
-                    onTap: ()  async {
-                      print(")))))))))))))))))))))))))))))))))))))))))))");
-                      await  launchURLBrowser();
-                      //  await launchURLInApp();
+                  children: [
+                    SizedBox(height: 12.h,),
+                    InkWell(
+                      onTap: ()  async {
+                        print(")))))))))))))))))))))))))))))))))))))))))))");
+                        await  launchURLBrowser();
+                        //  await launchURLInApp();
 
-                    },
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text("www.topbusiness.io",style: Theme.of(context).textTheme.bodySmall,),
-                        const SizedBox(width: 5,),
-                        CircleAvatar(
-                            radius: 12,
-                            backgroundColor: AppColors.white,
-
-                            child: Image.asset("assets/images/more/globe3.png",color: AppColors.lightBlue,width: 22,)),
-
-
-                      ],),
-                  ),
-                  SizedBox(height: 10,),
-                  InkWell(
-                    onTap: () async {
-                      //To remove the keyboard when button is pressed
-                      FocusManager.instance.primaryFocus?.unfocus();
-
-                      var whatsappUrl =
-                          "whatsapp://send?phone=+201011827324"
-                              "&text=${Uri.encodeComponent("top sale customer service")}";
-                      try {
-                        launch(whatsappUrl);
-                      } catch (e) {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Unable to open whatsapp")));
-
-                      }
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 16.0),
+                      },
                       child: Row(
-
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text("+201011827324",style: Theme.of(context).textTheme.bodySmall,
-                            textDirection: TextDirection.ltr,),
-                          const SizedBox(width: 4,),
-                          const CircleAvatar(
+                          Text("www.topbusiness.io",style: Theme.of(context).textTheme.bodySmall,),
+                          const SizedBox(width: 5,),
+                          CircleAvatar(
                               radius: 12,
                               backgroundColor: AppColors.white,
 
-                              child: Icon(Icons.phone,color: AppColors.lightBlue,size: 20,)),
-
+                              child: Image.asset("assets/images/more/globe3.png",color: AppColors.lightBlue,width: 22,)),
 
 
                         ],),
                     ),
-                  ),
-                  const SizedBox(height: 10,),
-                  Image.asset("assets/images/white_copyrights.png",width: 35.w,)
-                ],
+                    SizedBox(height: 10,),
+                    InkWell(
+                      onTap: () async {
+                        //To remove the keyboard when button is pressed
+                        FocusManager.instance.primaryFocus?.unfocus();
+
+                        var whatsappUrl =
+                            "whatsapp://send?phone=+201011827324"
+                                "&text=${Uri.encodeComponent("top sale customer service")}";
+                        try {
+                          launch(whatsappUrl);
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Unable to open whatsapp")));
+
+                        }
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: Row(
+
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text("+201011827324",style: Theme.of(context).textTheme.bodySmall,
+                              textDirection: TextDirection.ltr,),
+                            const SizedBox(width: 4,),
+                            const CircleAvatar(
+                                radius: 12,
+                                backgroundColor: AppColors.white,
+
+                                child: Icon(Icons.phone,color: AppColors.lightBlue,size: 20,)),
+
+
+
+                          ],),
+                      ),
+                    ),
+                    const SizedBox(height: 10,),
+                    Image.asset("assets/images/white_copyrights.png",width: 35.w,)
+                  ],
+                ),
+              )
+              ,),
+            Padding(
+              padding:  EdgeInsets.only(top: 10.h),
+              child: SizedBox(
+                height: 60.h,
+                child: ListView.builder(
+                  itemCount: 5,
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () {
+                        if(index==0){
+                              Navigator.pushNamed(context, Routes.myAccountRoute);
+                        }
+                        else if(index==2){
+                          Navigator.pushNamed(context, Routes.reportsRoute);
+                        }
+                        else if(index==3){
+                          showAlertDialog(context);
+                        }
+
+                      },
+                        child: MoreListItem(text: labels[index],imagePath: moreImages[index],));
+
+                  },),
               ),
-            )
-            ,),
-          Padding(
-            padding:  EdgeInsets.only(top: 10.h),
-            child: SizedBox(
-              height: 60.h,
-              child: ListView.builder(
-                itemCount: 5,
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () {
-                      if(index==0){
-                            Navigator.pushNamed(context, Routes.myAccountRoute);
-                      }
-                      else if(index==2){
-                        Navigator.pushNamed(context, Routes.reportsRoute);
-                      }
-                      else if(index==3){
-                        showAlertDialog(context);
-                      }
-
-                    },
-                      child: MoreListItem(text: labels[index],imagePath: moreImages[index],));
-
-                },),
             ),
-          ),
 
-        ],
+          ],
+        ),
       ),
     );
   }
