@@ -97,7 +97,7 @@ class LoginScreen extends StatelessWidget{
                               height: 4.h,
                               backgroundColor: AppColors.primary,
                               onPressed: () {
-                              //  Navigator.pushNamed(context, Routes.homeRoute);
+                                Navigator.pushNamed(context, Routes.homeRoute);
                             }, text: "try".tr(), textColor: AppColors.yellow,),
                           ],),
                       ],
