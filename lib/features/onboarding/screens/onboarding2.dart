@@ -5,7 +5,6 @@ import 'package:sizer/sizer.dart';
 import '../../../config/routes/app_routes.dart';
 import '../../../core/utils/app_assets.dart';
 import '../../../core/utils/app_colors.dart';
-import '../../../core/widgets/copy_right_widget.dart';
 import '../../../core/widgets/custom_button.dart';
 
 class OnBoarding2 extends StatelessWidget {

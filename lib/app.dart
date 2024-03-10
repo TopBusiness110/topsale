@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:topsale/config/routes/app_routes.dart';
 import 'package:topsale/core/preferences/preferences.dart';
 import 'package:topsale/core/utils/app_strings.dart';
@@ -20,7 +19,6 @@ import 'features/ receipt/cubit/receipt_cubit.dart';
 import 'features/dismissal_notice/cubit/dismissal_notice_cubit.dart';
 import 'features/expectet_clients_list/cubit/expected_clients_list_cubit.dart';
 import 'features/forgot_password/cubit/forgot_password_cubit.dart';
-
 import 'features/home/cubit/expected_clients_cubit/expected_clients_cubit.dart';
 import 'features/home/cubit/itinerary_cubit/itinerary_cubit.dart';
 import 'features/itinerary_details/cubit/itinerary_details_cubit.dart';
@@ -33,10 +31,8 @@ import 'injector.dart'as injector;
 
 class TopSale extends StatelessWidget{
   const TopSale({super.key});
-
   @override
   Widget build(BuildContext context) {
-
     Preferences.instance.saveLanguage(
       EasyLocalization.of(context)!.locale.languageCode
     );
@@ -99,17 +95,11 @@ class TopSale extends StatelessWidget{
                 fontWeight: FontWeight.w600,
                 fontSize: 12
             ),
-
           )
-
-
         ),
-
       ),
-      
     );
   }
-
 
 }
 

@@ -1,18 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:sizer/sizer.dart';
 import 'package:topsale/config/routes/app_routes.dart';
 import 'package:topsale/core/utils/app_assets.dart';
 import 'package:topsale/core/utils/app_colors.dart';
 import 'package:topsale/features/onboarding/cubit/onboarding_cubit.dart';
-import 'package:topsale/features/onboarding/cubit/onboarding_cubit.dart';
 
-import '../../../config/theme/app_theme.dart';
-import '../../../core/widgets/copy_right_widget.dart';
 import '../../../core/widgets/custom_button.dart';
-import '../../../core/widgets/custom_svg_images.dart';
 
 class OnBoarding1 extends StatelessWidget {
   const OnBoarding1({super.key});

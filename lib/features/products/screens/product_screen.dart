@@ -5,8 +5,8 @@ import 'package:topsale/config/routes/app_routes.dart';
 import 'package:topsale/core/models/selected_products.dart';
 import 'package:topsale/core/widgets/custom_textfield.dart';
 import 'package:topsale/features/products/cubit/products_cubit.dart';
+
 import '../../../core/methods/products.dart';
-import '../../../core/models/product_model.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/widgets/custom_arrow_back.dart';
 import '../components/product_grid_item.dart';

@@ -1,18 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:sizer/sizer.dart';
-import 'package:topsale/core/models/expected_client_model.dart';
 import 'package:topsale/core/utils/app_colors.dart';
 import 'package:topsale/features/expectet_clients_list/cubit/expected_clients_list_cubit.dart';
 
-
-import '../../../config/routes/app_routes.dart';
-import '../../../core/utils/app_assets.dart';
 import '../../../core/widgets/custom_arrow_back.dart';
 import '../../../core/widgets/custom_button.dart';
-import '../../../core/widgets/custom_container.dart';
 import '../../../core/widgets/custom_textfield.dart';
 import '../cubit/expected_clients_cubit/expected_clients_cubit.dart';
 //العملاء المحتملين

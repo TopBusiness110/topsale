@@ -135,10 +135,8 @@ import 'package:sizer/sizer.dart';
 import 'package:topsale/core/utils/app_colors.dart';
 import 'package:topsale/features/expectet_clients_list/cubit/expected_clients_list_cubit.dart';
 
-
 import '../../../config/routes/app_routes.dart';
 import '../../../core/widgets/custom_arrow_back.dart';
-import '../../home/cubit/expected_clients_cubit/expected_clients_cubit.dart';
 
 class ExpectedClientsListScreen extends StatelessWidget {
   const ExpectedClientsListScreen({super.key});

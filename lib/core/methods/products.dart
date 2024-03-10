@@ -1,6 +1,5 @@
 import '../models/product_model.dart';
 import '../utils/app_assets.dart';
-
 List <ProductModel> products = [
   ProductModel(image: AssetsManager.mobileImage,name: " samsung mobile",price:1000 ,quantity: 10,code: "VB-123"),
   ProductModel(image: AssetsManager.mobile2Image,name: " Iphone mobile",price:10000 ,quantity: 20,code: "BUR-152"),

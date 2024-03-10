@@ -1,11 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sizer/sizer.dart';
 import 'package:topsale/features/home/cubit/home_tab_cubit/home_cubit.dart';
 
 import '../../../config/routes/app_routes.dart';
-import '../../../core/models/selected_products.dart';
 import '../../../core/utils/app_assets.dart';
 import '../../../core/utils/app_colors.dart';
 import '../components/home_list_item.dart';

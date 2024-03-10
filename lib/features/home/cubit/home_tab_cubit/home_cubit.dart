@@ -1,7 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
-import 'package:topsale/features/home/tabs/expected_clients_tab.dart';
 import 'package:topsale/features/home/tabs/home_tab.dart';
 import 'package:topsale/features/home/tabs/itinerary_tab.dart';
 import 'package:topsale/features/home/tabs/more_tab.dart';

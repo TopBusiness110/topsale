@@ -11,7 +11,6 @@ class ProductsCubit extends Cubit<ProductsState> {
   List<ProductModel> selectedProducts = [];
 
   addProduct({ required ProductModel product}) {
-
     if(selectedProducts.isEmpty){
       print("____________________selectedProducts.isEmpty __________________________");
       product.userOrderedQuantity++;
@@ -22,16 +21,13 @@ class ProductsCubit extends Cubit<ProductsState> {
     else{
       for(int i = 0 ; i<selectedProducts.length ; i++){
       //  product already exists in list
-        if(selectedProducts[i].code==product.code&&selectedProducts[i].quantity! > product.userOrderedQuantity){
 
+        if(selectedProducts[i].code==product.code&&selectedProducts[i].quantity! > product.userOrderedQuantity){
             print("+++++++++++++++++++++product already exists in list+++++++++++++++++++++++++++++++++");
             product.userOrderedQuantity++;
             emit(AddProductsState());
           return ;
-
         }
-
-
         //product already exists in list
         // if(selectedProducts[i].code==product.code&&selectedProducts[i].quantity! > product.userOrderedQuantity){
         //

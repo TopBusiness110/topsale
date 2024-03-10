@@ -4,10 +4,10 @@ import 'dart:typed_data';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share/share.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
+
 part 'receipt_state.dart';
 
 class ReceiptCubit extends Cubit<ReceiptState> {

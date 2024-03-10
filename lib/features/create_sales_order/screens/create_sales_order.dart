@@ -1,16 +1,18 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:easy_localization/easy_localization.dart' as easy;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 import 'package:topsale/config/routes/app_routes.dart';
 import 'package:topsale/core/models/client_model.dart';
-import 'package:topsale/core/models/product_model.dart';
 import 'package:topsale/core/utils/app_colors.dart';
 import 'package:topsale/core/widgets/custom_button.dart';
 import 'package:topsale/core/widgets/custom_textfield.dart';
 import 'package:topsale/features/cart/cart_cubit.dart';
 import 'package:topsale/features/create_sales_order/cubit/create_sales_order_cubit.dart';
 import 'package:topsale/features/sales_ordered_list/cubit/sales_ordered_list_cubit.dart';
+
 import '../../../core/methods/clients.dart';
 import '../../../core/models/selected_products.dart';
 import '../../../core/widgets/custom_arrow_back.dart';

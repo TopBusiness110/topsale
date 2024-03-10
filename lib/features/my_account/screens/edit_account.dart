@@ -1,10 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
-import 'package:topsale/config/routes/app_routes.dart';
 import 'package:topsale/core/utils/app_colors.dart';
 import 'package:topsale/core/widgets/custom_button.dart';
-import 'package:topsale/features/my_account/components/custom_data_container.dart';
 
 import '../../../core/utils/app_assets.dart';
 import '../../../core/widgets/custom_arrow_back.dart';

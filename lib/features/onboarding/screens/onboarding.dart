@@ -1,20 +1,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:sizer/sizer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:topsale/core/utils/app_assets.dart';
 import 'package:topsale/core/utils/app_colors.dart';
-import 'package:topsale/core/widgets/custom_svg_images.dart';
 import 'package:topsale/features/onboarding/cubit/onboarding_cubit.dart';
-
 import 'package:topsale/features/onboarding/screens/onboarding1.dart';
 import 'package:topsale/features/onboarding/screens/onboarding2.dart';
 
 import '../../../core/widgets/bottom_copy_rights_widget.dart';
-import '../../../core/widgets/copy_right_widget.dart';
 
 class OnBoarding extends StatefulWidget {
   const OnBoarding({super.key});
