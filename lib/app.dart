@@ -28,7 +28,6 @@ import 'features/returns/cubit/returns_cubit.dart';
 import 'features/returns_list/cubit/returns_list_cubit.dart';
 import 'features/sales_ordered_list/cubit/sales_ordered_list_cubit.dart';
 import 'injector.dart'as injector;
-
 class TopSale extends StatelessWidget{
   const TopSale({super.key});
   @override
@@ -61,7 +60,6 @@ class TopSale extends StatelessWidget{
        BlocProvider(create: (context) => injector.serviceLocator<ItineraryDetailsCubit>()),
        BlocProvider(create: (context) => injector.serviceLocator<SalesOrderedListCubit>()),
        BlocProvider(create: (context) => injector.serviceLocator<ReturnsListCubit>()),
-
       ], child:  MaterialApp(
          supportedLocales: context.supportedLocales,
         locale: context.locale,

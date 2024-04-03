@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import 'package:topsale/core/preferences/preferences.dart';
 
 import '../../../config/routes/app_routes.dart';
 import '../../../core/utils/app_assets.dart';
@@ -14,40 +15,35 @@ class OnBoarding2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primary,
-
       body: Stack(
-
         children: [
           // SizedBox(height: 27.h),
-        //  const Spacer(),
+          //  const Spacer(),
           Positioned(
-
-            top: MediaQuery.of(context).size.height*.3,
+            top: MediaQuery.of(context).size.height * .3,
             left: 0,
             right: 0,
             //bottom:  MediaQuery.of(context).size.height*.1,
 
-            child:
-            SizedBox(
-              height: MediaQuery.of(context).size.height*.20,
-              width: 70.w,
-              child:  Center(
             child: SizedBox(
-            height: 20.h,
+              height: MediaQuery.of(context).size.height * .20,
               width: 70.w,
-              child: Image.asset(AssetsManager.onBoarding2),
-            ),
-    ),
+              child: Center(
+                child: SizedBox(
+                  height: 20.h,
+                  width: 70.w,
+                  child: Image.asset(AssetsManager.onBoarding2),
+                ),
+              ),
             ),
           ),
           // SizedBox(height: 2.h,),
           Positioned(
-            top: MediaQuery.of(context).size.height*.51,
+            top: MediaQuery.of(context).size.height * .51,
             left: 0,
             right: 0,
-
             child: Center(
-              child:   Text(
+              child: Text(
                 "clients_transactions",
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.displayLarge,
@@ -55,28 +51,30 @@ class OnBoarding2 extends StatelessWidget {
             ),
           ),
           // SizedBox(height: 2.h),
-          Positioned(top: MediaQuery.of(context).size.height*.54,
+          Positioned(
+            top: MediaQuery.of(context).size.height * .54,
             left: 0,
             right: 0,
-
-            child: Center(child:  Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                "add_customers_transactions",
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.displayMedium,).tr(),
-            ),),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "add_customers_transactions",
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.displayMedium,
+                ).tr(),
+              ),
+            ),
           ),
           // SizedBox(height: 4.h,),
           //  SizedBox(height: 20.h,),
           // SizedBox(height: 20.h,),
           Positioned(
-            top:  MediaQuery.of(context).size.height*.64,
+            top: MediaQuery.of(context).size.height * .64,
             bottom: 0,
             left: 0,
             right: 0,
-
-            child:       Row(
+            child: Row(
               children: [
                 Padding(
                   padding: const EdgeInsets.only(right: 28.0),
@@ -87,8 +85,17 @@ class OnBoarding2 extends StatelessWidget {
                       height: 5.h,
                       backgroundColor: AppColors.lightBlue,
                       onPressed: () {
-                        Navigator.pushReplacementNamed(context, Routes.loginRoute);
+                        Preferences.instance
+                            .setIsFirstTime(key: 'onBoarding', value: true)
+                            .then((value) {
+                          print('first timee');
+                          Navigator.pushReplacementNamed(
+                              context, Routes.loginRoute);
+                        }).catchError((error) {
+                          print('error${error.toString()}');
+                        });
                       },
+                      
                       text: "finish",
                       textColor: AppColors.white,
                     ),
@@ -98,17 +105,12 @@ class OnBoarding2 extends StatelessWidget {
             ),
           ),
 
+          //  SizedBox(
+          //    height: 4.h,
+          //  ),
+          // SizedBox(height: 15.h,),
 
-
-
-
-
-         //  SizedBox(
-         //    height: 4.h,
-         //  ),
-         // SizedBox(height: 15.h,),
-
-        //  const Spacer()
+          //  const Spacer()
 
           // SizedBox(height: 7.h,),
           // CopyRightsWidget()
