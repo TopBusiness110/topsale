@@ -27,41 +27,69 @@ import 'features/onboarding/cubit/onboarding_cubit.dart';
 import 'features/returns/cubit/returns_cubit.dart';
 import 'features/returns_list/cubit/returns_list_cubit.dart';
 import 'features/sales_ordered_list/cubit/sales_ordered_list_cubit.dart';
-import 'injector.dart'as injector;
-class TopSale extends StatelessWidget{
+import 'injector.dart' as injector;
+
+class TopSale extends StatelessWidget {
   const TopSale({super.key});
   @override
   Widget build(BuildContext context) {
-    Preferences.instance.saveLanguage(
-      EasyLocalization.of(context)!.locale.languageCode
-    );
-   // checkLocationPermission();
-    return
-      MultiBlocProvider(
+    Preferences.instance
+        .saveLanguage(EasyLocalization.of(context)!.locale.languageCode);
+    // checkLocationPermission();
+    return MultiBlocProvider(
       providers: [
-       BlocProvider(create: (context) => injector.serviceLocator<OnBoardingCubit>()),
-       BlocProvider(create: (context) => injector.serviceLocator<LoginCubit>()),
-       BlocProvider(create: (context) => injector.serviceLocator<SignupCubit>()),
-       BlocProvider(create: (context) => injector.serviceLocator<ForgotPasswordCubit>()),
-       BlocProvider(create: (context) => injector.serviceLocator<HomeCubit>()),
-       BlocProvider(create: (context) => injector.serviceLocator<ProductsCubit>()),
-       BlocProvider(create: (context) => injector.serviceLocator<NewProductCubit>()),
-       BlocProvider(create: (context) => injector.serviceLocator<CreateSalesOrderCubit>()),
-       BlocProvider(create: (context) => injector.serviceLocator<PaymentsCubit>()),
-       BlocProvider(create: (context) => injector.serviceLocator<ReceiptCubit>()),
-       BlocProvider(create: (context) => injector.serviceLocator<ReturnsCubit>()),
-       BlocProvider(create: (context) => injector.serviceLocator<CustomerPaymentsCubit>()),
-       BlocProvider(create: (context) => injector.serviceLocator<CartCubit>()),
-       BlocProvider(create: (context) => injector.serviceLocator<DismissalNoticeCubit>()),
-       BlocProvider(create: (context) => injector.serviceLocator<ExpectedClientsCubit>()),
-       BlocProvider(create: (context) => injector.serviceLocator<DismissalNoticeDetailsCubit>()),
-       BlocProvider(create: (context) => injector.serviceLocator<ExpectedClientsListCubit>()),
-       BlocProvider(create: (context) => injector.serviceLocator<ItineraryCubit>()),
-       BlocProvider(create: (context) => injector.serviceLocator<ItineraryDetailsCubit>()),
-       BlocProvider(create: (context) => injector.serviceLocator<SalesOrderedListCubit>()),
-       BlocProvider(create: (context) => injector.serviceLocator<ReturnsListCubit>()),
-      ], child:  MaterialApp(
-         supportedLocales: context.supportedLocales,
+        BlocProvider(
+            create: (context) => injector.serviceLocator<OnBoardingCubit>()),
+        BlocProvider(
+            create: (context) => injector.serviceLocator<LoginCubit>()),
+        BlocProvider(
+            create: (context) => injector.serviceLocator<SignupCubit>()),
+        BlocProvider(
+            create: (context) =>
+                injector.serviceLocator<ForgotPasswordCubit>()),
+        BlocProvider(create: (context) => injector.serviceLocator<HomeCubit>()),
+        BlocProvider(
+            create: (context) => injector.serviceLocator<ProductsCubit>()),
+        BlocProvider(
+            create: (context) => injector.serviceLocator<NewProductCubit>()),
+        BlocProvider(
+            create: (context) =>
+                injector.serviceLocator<CreateSalesOrderCubit>()),
+        BlocProvider(
+            create: (context) => injector.serviceLocator<PaymentsCubit>()),
+        BlocProvider(
+            create: (context) => injector.serviceLocator<ReceiptCubit>()),
+        BlocProvider(
+            create: (context) => injector.serviceLocator<ReturnsCubit>()),
+        BlocProvider(
+            create: (context) =>
+                injector.serviceLocator<CustomerPaymentsCubit>()),
+        BlocProvider(create: (context) => injector.serviceLocator<CartCubit>()),
+        BlocProvider(
+            create: (context) =>
+                injector.serviceLocator<DismissalNoticeCubit>()),
+        BlocProvider(
+            create: (context) =>
+                injector.serviceLocator<ExpectedClientsCubit>()),
+        BlocProvider(
+            create: (context) =>
+                injector.serviceLocator<DismissalNoticeDetailsCubit>()),
+        BlocProvider(
+            create: (context) =>
+                injector.serviceLocator<ExpectedClientsListCubit>()),
+        BlocProvider(
+            create: (context) => injector.serviceLocator<ItineraryCubit>()),
+        BlocProvider(
+            create: (context) =>
+                injector.serviceLocator<ItineraryDetailsCubit>()),
+        BlocProvider(
+            create: (context) =>
+                injector.serviceLocator<SalesOrderedListCubit>()),
+        BlocProvider(
+            create: (context) => injector.serviceLocator<ReturnsListCubit>()),
+      ],
+      child: MaterialApp(
+        supportedLocales: context.supportedLocales,
         locale: context.locale,
         themeMode: ThemeMode.light,
         darkTheme: ThemeData.light(),
@@ -69,35 +97,28 @@ class TopSale extends StatelessWidget{
         debugShowCheckedModeBanner: false,
         title: AppStrings.appName,
         onGenerateRoute: AppRoutes.onGenerateRoute,
-        theme:
-        ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-          textTheme: const TextTheme(
-            displayLarge:  TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: AppColors.white
-          ),
-            displayMedium: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: AppColors.white),
-            bodyMedium: TextStyle(
-              color: AppColors.white,
-              fontWeight: FontWeight.w600,
-              fontSize: 14
-            ),
-            bodySmall:TextStyle(
-                color: AppColors.white,
-                fontWeight: FontWeight.w600,
-                fontSize: 12
-            ),
-          )
-        ),
+        theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+            textTheme: const TextTheme(
+              displayLarge: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.white),
+              displayMedium: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.white),
+              bodyMedium: TextStyle(
+                  color: AppColors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14),
+              bodySmall: TextStyle(
+                  color: AppColors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 12),
+            )),
       ),
     );
   }
-
 }
-
