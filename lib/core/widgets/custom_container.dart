@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import '../utils/app_colors.dart';
 
 class CustomContainer extends StatelessWidget{
-  const CustomContainer({super.key,required this.width, required this.height,this.color=AppColors.blue2,
+  const CustomContainer({super.key,required this.width,  this.height,this.color=AppColors.blue2,
   this.child});
   final double width;
-  final double height;
+  final double? height;
   final Widget? child;
   final Color color;
 

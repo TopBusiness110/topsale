@@ -9,8 +9,6 @@ import '../../../core/models/product_model.dart';
 import '../../../core/utils/app_assets.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/widgets/custom_button.dart';
-import '../../create_sales_order/cubit/create_sales_order_cubit.dart';
-import '../../payments/cubit/payments_cubit.dart';
 
 class DismissalNoticeDetailsScreen extends StatelessWidget {
   final  List<ProductModel>? products ;

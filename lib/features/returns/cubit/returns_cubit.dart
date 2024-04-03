@@ -48,6 +48,7 @@ class ReturnsCubit extends Cubit<ReturnsState> {
         return cart[i].listOfProducts;
       }
     }
+    return null;
   }
 
 addProductQuantity(int index){

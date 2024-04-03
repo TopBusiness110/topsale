@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import '../utils/app_colors.dart';
 
@@ -23,7 +22,7 @@ class CustomTextField extends StatelessWidget {
     this.readOnly = false,
     this.onTap,
     this.contentPadding =
-        const EdgeInsets.symmetric(vertical: 0, horizontal: 14), this.horizantalTape=20,
+        const EdgeInsets.symmetric(vertical: 0, horizontal: 14), this.horizantalTape=20, this.isEdite = false,
   }) : super(key: key);
   final Widget? suffixWidget;
   final bool readOnly;
@@ -37,6 +36,7 @@ class CustomTextField extends StatelessWidget {
    final BorderSide borderSide ;
   final bool isPassword;
   final bool? isEnable;
+  final bool? isEdite;
   final double? horizantalTape;
   final Function(String)? onchange;
   final TextInputType textInputType;
@@ -48,6 +48,7 @@ class CustomTextField extends StatelessWidget {
     return Padding(
       padding:  EdgeInsets.symmetric(vertical: 4, horizontal: horizantalTape!),
       child: TextFormField(
+        
         onTap:onTap ,
          readOnly: readOnly,
         controller: controller,
@@ -64,13 +65,14 @@ class CustomTextField extends StatelessWidget {
           ),
           hintText: title,
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16.0),
+            borderRadius: BorderRadius.circular(isEdite!?0:16.0),
            borderSide:borderSide ,
           ),
           suffixIcon: suffixWidget,
           fillColor: backgroundColor,
           filled: true,
         ),
+        
         onChanged: onchange,
         maxLines: isPassword ? 1 : 20,
         minLines: minLine,

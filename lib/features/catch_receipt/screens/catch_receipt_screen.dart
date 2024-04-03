@@ -9,7 +9,7 @@ import '../models/catch_receipt_model.dart';
 
 class CatchReceiptScreen extends StatelessWidget {
   final CatchReceiptModel catchReceiptModel;
-  const CatchReceiptScreen({super.key,required this.catchReceiptModel});
+  const CatchReceiptScreen({super.key, required this.catchReceiptModel});
 
   @override
   Widget build(BuildContext context) {
@@ -19,16 +19,19 @@ class CatchReceiptScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: 15.h,),
+            SizedBox(
+              height: 15.h,
+            ),
             Center(
               child: Container(
                 margin: EdgeInsets.only(top: 20),
                 height: 75.h,
                 width: 95.w,
                 decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(topRight:Radius.circular(16) ,topLeft: Radius.circular(16)),
-                    color: AppColors.white
-                ),
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(16),
+                        topLeft: Radius.circular(16)),
+                    color: AppColors.white),
                 child: Column(
                   children: [
                     Image.asset(
@@ -43,7 +46,9 @@ class CatchReceiptScreen extends StatelessWidget {
                           .displayLarge!
                           .copyWith(color: AppColors.primary),
                     ),
-                    SizedBox(height: 3.h,),
+                    SizedBox(
+                      height: 3.h,
+                    ),
                     Text(
                       "تاريخ الدفع: 2023-05-22  06:35:58",
                       style: Theme.of(context)
@@ -51,7 +56,9 @@ class CatchReceiptScreen extends StatelessWidget {
                           .displayLarge!
                           .copyWith(color: AppColors.primary),
                     ),
-                    SizedBox(height: 1.h,),
+                    SizedBox(
+                      height: 1.h,
+                    ),
                     Text(
                       "رقم السند: 322",
                       style: Theme.of(context)
@@ -59,7 +66,9 @@ class CatchReceiptScreen extends StatelessWidget {
                           .displayLarge!
                           .copyWith(color: AppColors.primary),
                     ),
-                    SizedBox(height: 1.h,),
+                    SizedBox(
+                      height: 1.h,
+                    ),
                     Text(
                       "بواسطة: TopBusiness",
                       style: Theme.of(context)
@@ -67,7 +76,9 @@ class CatchReceiptScreen extends StatelessWidget {
                           .bodyMedium!
                           .copyWith(color: AppColors.primary),
                     ),
-                    SizedBox(height: 1.h,),
+                    SizedBox(
+                      height: 1.h,
+                    ),
                     Text(
                       "اسم العميل: khaled elsheikh",
                       style: Theme.of(context)
@@ -76,10 +87,9 @@ class CatchReceiptScreen extends StatelessWidget {
                           .copyWith(color: AppColors.primary),
                     ),
                     Padding(
-                      padding:  EdgeInsets.symmetric(horizontal: 6.w),
+                      padding: EdgeInsets.symmetric(horizontal: 6.w),
                       child: Divider(),
                     ),
-
                     Text(
                       "اجمالي المدفوع: 500.00 USD",
                       style: Theme.of(context)
@@ -88,12 +98,9 @@ class CatchReceiptScreen extends StatelessWidget {
                           .copyWith(color: AppColors.primary),
                     ),
                     Padding(
-                      padding:  EdgeInsets.symmetric(horizontal: 6.w),
+                      padding: EdgeInsets.symmetric(horizontal: 6.w),
                       child: Divider(),
                     ),
-
-
-
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Text(
@@ -104,13 +111,17 @@ class CatchReceiptScreen extends StatelessWidget {
                             .copyWith(color: AppColors.primary),
                       ),
                     ),
-                  SizedBox(height: 13.h,),
                     SizedBox(
-                      height: 7.h,
+                      height: 13.h,
+                    ),
+                    SizedBox(
+                      height: 5.h,
                       child: Image.asset(
-                        "assets/icon/copy_rights_blue.png",
-                        color: Colors.black,
+                        AssetsManager.whiteCopyRights,
                       ),
+                    ),
+                    SizedBox(
+                      height: 2.h,
                     ),
                     CustomButton(
                         backgroundColor: AppColors.yellow,
@@ -119,7 +130,6 @@ class CatchReceiptScreen extends StatelessWidget {
                         onPressed: () {
                           //  Navigator.pushReplacementNamed(context, Routes.receiptRoute);
                         }),
-
                   ],
                 ),
               ),

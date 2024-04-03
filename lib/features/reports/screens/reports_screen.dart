@@ -1,6 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:sizer/sizer.dart';
 import 'package:topsale/core/utils/app_colors.dart';
 import 'package:topsale/core/widgets/custom_arrow_back.dart';
 

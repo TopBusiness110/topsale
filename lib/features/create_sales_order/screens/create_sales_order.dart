@@ -1,16 +1,18 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:easy_localization/easy_localization.dart' as easy;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 import 'package:topsale/config/routes/app_routes.dart';
 import 'package:topsale/core/models/client_model.dart';
-import 'package:topsale/core/models/product_model.dart';
 import 'package:topsale/core/utils/app_colors.dart';
 import 'package:topsale/core/widgets/custom_button.dart';
 import 'package:topsale/core/widgets/custom_textfield.dart';
 import 'package:topsale/features/cart/cart_cubit.dart';
 import 'package:topsale/features/create_sales_order/cubit/create_sales_order_cubit.dart';
 import 'package:topsale/features/sales_ordered_list/cubit/sales_ordered_list_cubit.dart';
+
 import '../../../core/methods/clients.dart';
 import '../../../core/models/selected_products.dart';
 import '../../../core/widgets/custom_arrow_back.dart';
@@ -232,7 +234,6 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                                                                 cubit.calculateTotalPrice(
                                                                     widget
                                                                         .selectedProducts!);
-
                                                               },
                                                               child:
                                                                   const CircleAvatar(
@@ -253,7 +254,7 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                                                             Padding(
                                                               padding:
                                                                   const EdgeInsets
-                                                                          .all(
+                                                                      .all(
                                                                       12.0),
                                                               child: Text(
                                                                 "${widget.selectedProducts?.products[index].userOrderedQuantity}",
@@ -386,7 +387,7 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                     backgroundColor: AppColors.lightBlue,
                     textColor: AppColors.white,
                     onPressed: () {
-                      if(widget.selectedProducts!.products.isEmpty){
+                      if (widget.selectedProducts!.products.isEmpty) {
                         ScaffoldMessenger.of(context)
                             .showSnackBar(const SnackBar(
                           content: Text(" من فضلك اضف منتجات"),
@@ -394,7 +395,7 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                           duration: Duration(milliseconds: 1000),
                         ));
                       }
-                      if(cubit.currentClient==""){
+                      if (cubit.currentClient == "") {
                         ScaffoldMessenger.of(context)
                             .showSnackBar(const SnackBar(
                           content: Text(" من فضلك اضف عميل"),
@@ -402,8 +403,8 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                           duration: Duration(milliseconds: 1000),
                         ));
                       }
-                      if (widget.selectedProducts!.products.isNotEmpty&&cubit.currentClient!="") {
-
+                      if (widget.selectedProducts!.products.isNotEmpty &&
+                          cubit.currentClient != "") {
                         showAlertDialog(context);
                       } else {
                         // ScaffoldMessenger.of(context)
@@ -456,46 +457,57 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                     .copyWith(color: AppColors.lightBlue, fontSize: 14),
               ),
               actions: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    Navigator.pushNamed(context, Routes.paymentRoute,
-                        arguments: cubit.sum);
-                    //save client name and its products
-                    print("++++++++++++++++++++++++++++++++++++++++++++++");
-                    print(widget.selectedProducts?.products);
-                    context.read<CartCubit>().addClients(cubit.currentClient,widget.selectedProducts!.products );
-                    context.read<SalesOrderedListCubit>().fillSalesOrderedList(
-                        creationDate: cubit.dateTime,
-                        customer: cubit.currentClient,
-                        number: cubit.billingNumber,
-                        status: cubit.billingStatus,
-                        total: cubit.sum);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: Size(28.w, 5.h),
-                    maximumSize: Size(30.w, 5.h),
-                    backgroundColor: AppColors.lightBlue,
-                  ),
-                  child: Text(
-                    "yes".tr(),
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    minimumSize: Size(28.w, 5.h),
-                    maximumSize: Size(30.w, 5.h),
-                  ),
-                  child: Text(
-                    "no".tr(),
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ),
+                Row(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        Navigator.pushNamed(context, Routes.paymentRoute,
+                            arguments: cubit.sum);
+                        //save client name and its products
+                        print("++++++++++++++++++++++++++++++++++++++++++++++");
+                        print(widget.selectedProducts?.products);
+                        context.read<CartCubit>().addClients(
+                            cubit.currentClient,
+                            widget.selectedProducts!.products);
+                        context
+                            .read<SalesOrderedListCubit>()
+                            .fillSalesOrderedList(
+                                creationDate: cubit.dateTime,
+                                customer: cubit.currentClient,
+                                number: cubit.billingNumber,
+                                status: cubit.billingStatus,
+                                total: cubit.sum);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(28.w, 5.h),
+                        maximumSize: Size(30.w, 5.h),
+                        backgroundColor: AppColors.lightBlue,
+                      ),
+                      child: Text(
+                        "yes".tr(),
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 3.w,
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        minimumSize: Size(28.w, 5.h),
+                        maximumSize: Size(30.w, 5.h),
+                      ),
+                      child: Text(
+                        "no".tr(),
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ),
+                  ],
+                )
               ],
             );
           },
@@ -724,7 +736,6 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                               cubit.phoneController.clear();
                               cubit.nameController.clear();
                             }
-
 
                             //add the new contact to the contacts list
                           }),

@@ -9,9 +9,7 @@ import 'package:topsale/features/dismissal_notice/cubit/dismissal_notice_cubit.d
 
 import '../../../core/methods/products.dart';
 import '../../../core/widgets/custom_arrow_back.dart';
-import '../../../core/widgets/custom_textfield.dart';
 import '../../dismissal_notice_details/components/dismissal_notice_product_item.dart';
-import '../../products/components/product_grid_item.dart';
 //اذن صرف
 class DismissalNoticeScreen extends StatelessWidget {
   const DismissalNoticeScreen({super.key});

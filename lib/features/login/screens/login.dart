@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-
 import 'package:sizer/sizer.dart';
 import 'package:topsale/config/routes/app_routes.dart';
 import 'package:topsale/core/utils/app_assets.dart';
@@ -12,7 +11,6 @@ import 'package:topsale/core/widgets/custom_container.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/widgets/bottom_copy_rights_widget.dart';
-import '../../../core/widgets/copy_right_widget.dart';
 import '../../../core/widgets/custom_textfield.dart';
 
 class LoginScreen extends StatelessWidget{

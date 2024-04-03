@@ -9,11 +9,9 @@ import '../../../config/routes/app_routes.dart';
 import '../../../core/utils/app_assets.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/widgets/bottom_copy_rights_widget.dart';
-import '../../../core/widgets/copy_right_widget.dart';
 import '../../../core/widgets/custom_arrow_back.dart';
 import '../../../core/widgets/custom_button.dart';
 import '../../../core/widgets/custom_container.dart';
-import '../../../core/widgets/custom_textfield.dart';
 
 class ForgotPasswordStep2 extends StatelessWidget {
   const ForgotPasswordStep2({super.key});

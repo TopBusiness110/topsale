@@ -1,4 +1,4 @@
-import 'package:topsale/core/utils/app_assets.dart';
+
 
 class ProductModel{
   String? name;

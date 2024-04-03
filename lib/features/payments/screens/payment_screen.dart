@@ -13,16 +13,14 @@ import '../../../config/routes/app_routes.dart';
 import '../../../core/widgets/custom_arrow_back.dart';
 
 class PaymentScreen extends StatefulWidget {
-   PaymentScreen({super.key,required this.sum});
-  final double sum ;
+  PaymentScreen({super.key, required this.sum});
+  final double sum;
 
   @override
   State<PaymentScreen> createState() => _PaymentScreenState();
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
-
-
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<PaymentsCubit, PaymentsState>(
@@ -33,284 +31,312 @@ class _PaymentScreenState extends State<PaymentScreen> {
         PaymentsCubit cubit = context.read<PaymentsCubit>();
         return OrientationBuilder(
           builder: (context, orientation) {
-            if(orientation ==Orientation.landscape){
+            if (orientation == Orientation.landscape) {
               SystemChrome.setPreferredOrientations([
-                DeviceOrientation.portraitDown,DeviceOrientation.portraitUp
+                DeviceOrientation.portraitDown,
+                DeviceOrientation.portraitUp
               ]);
             }
-          return  WillPopScope(
-            onWillPop: () async {
-              cubit.changeButtonColor(false);
-              return true;
-            },
-            child: Scaffold(
-              resizeToAvoidBottomInset: true,
-              backgroundColor: AppColors.primary,
-              body: Stack(
-                children: [
-                  //app bar
-                  Positioned(
-                      left: 2.w,
-                      top: 3.h,
-                      child: Row(
-                        children: [
-                          Text(
-                            "create_sales_order",
-                            style: Theme.of(context).textTheme.displayLarge,
-                          ).tr(),
-                          const CustomArrowBack(),
-                        ],
-                      )),
-                  //the big white container
-                  Align(
-                    alignment: Alignment.bottomCenter,
-
-                    child:
-                    SingleChildScrollView(
-                      child: Container(
-                        width: double.infinity,
-                        height: 73.h,
-                        decoration: const BoxDecoration(
-                            color: AppColors.white,
-                            borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(60),
-                                topLeft: Radius.circular(60))),
-                        child: Column(
+            return WillPopScope(
+              onWillPop: () async {
+                cubit.changeButtonColor(false);
+                return true;
+              },
+              child: Scaffold(
+                resizeToAvoidBottomInset: true,
+                backgroundColor: AppColors.primary,
+                body: Stack(
+                  children: [
+                    //app bar
+                    Positioned(
+                        left: 2.w,
+                        top: 3.h,
+                        child: Row(
                           children: [
-                            Image.asset(
-                              AssetsManager.splash,
-                              width: 30.w,
-                              height: 20.h,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  Icons.check,
-                                  color: AppColors.yellow,
-                                  size: 25,
-                                ),
-                                SizedBox(
-                                  width: 3.w,
-                                ),
-                                Text(
-                                  "sales_order_success".tr(),
+                            Text(
+                              "create_sales_order",
+                              style: Theme.of(context).textTheme.displayLarge,
+                            ).tr(),
+                            const CustomArrowBack(),
+                          ],
+                        )),
+                    //the big white container
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: SingleChildScrollView(
+                        child: Container(
+                          width: double.infinity,
+                          height: 73.h,
+                          decoration: const BoxDecoration(
+                              color: AppColors.white,
+                              borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(60),
+                                  topLeft: Radius.circular(60))),
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                AssetsManager.splash,
+                                width: 30.w,
+                                height: 20.h,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(
+                                    Icons.check,
+                                    color: AppColors.yellow,
+                                    size: 25,
+                                  ),
+                                  SizedBox(
+                                    width: 3.w,
+                                  ),
+                                  Text(
+                                    "sales_order_success".tr(),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displayMedium!
+                                        .copyWith(color: AppColors.primary),
+                                  )
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              Text("الاجمالي: ${widget.sum} USD",
                                   style: Theme.of(context)
                                       .textTheme
                                       .displayMedium!
-                                      .copyWith(color: AppColors.primary),
-                                )
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 8,
-                            ),
-                            Text("الاجمالي: ${widget.sum} USD",
+                                      .copyWith(color: AppColors.primary)),
+                              SizedBox(
+                                height: 3.h,
+                              ),
+                              Text(
+                                "the_payment".tr(),
                                 style: Theme.of(context)
                                     .textTheme
                                     .displayMedium!
-                                    .copyWith(color: AppColors.primary)),
-                            SizedBox(
-                              height: 3.h,
-                            ),
-                            Text(
-                              "the_payment".tr(),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displayMedium!
-                                  .copyWith(color: AppColors.primary),
-                            ),
-                            const SizedBox(height: 8,),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Radio(
-                                  value: 1,
-                                  groupValue: cubit.selectedRadioValue,
-                                  onChanged: (value) {
-                                    cubit.setSelectedRadioValue(value!);
-                                  },
-                                ),
-                                Text(
-                                    'without_payment'.tr(),
-                                    style:Theme.of(context).textTheme.displayMedium!.copyWith( color: AppColors.primary)),
-                                SizedBox(width: 14.w,),
-                                Radio(
-                                  value: 2,
-                                  groupValue: cubit.selectedRadioValue,
-                                  onChanged: (value) {
-                                    cubit.setSelectedRadioValue(value!);
-                                  },
-                                ),
-                                Text('with_payment'.tr(),
-                                    style:Theme.of(context).textTheme.displayMedium!.copyWith( color: AppColors.primary)),
-
-                              ],
-                            ),
-                            //drop down button
-                            Visibility(
-                              visible:cubit.selectedRadioValue==2?true:false ,
-                              child: Container(
-                                margin: EdgeInsets.symmetric(horizontal: 5.w),
-                                decoration: BoxDecoration(
-                                    color: cubit.isSelected
-                                        ? AppColors.primary
-                                        : AppColors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(color: AppColors.primary)),
-                                child: DropdownButtonHideUnderline(
-                                  child: DropdownButton2(
-                                    dropdownStyleData: const DropdownStyleData(
-                                        decoration: BoxDecoration(
-                                      color: AppColors.primary,
-                                    )),
-                                    value: cubit.selectedValue,
+                                    .copyWith(color: AppColors.primary),
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Radio(
+                                    value: 1,
+                                    groupValue: cubit.selectedRadioValue,
                                     onChanged: (value) {
-                                      cubit.selectPaymentMethod(value);
+                                      cubit.setSelectedRadioValue(value!);
                                     },
-                                    isExpanded: true,
-                                    hint: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text("payment_method".tr(),
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .displayMedium!
-                                                .copyWith(color: AppColors.primary)),
-                                      ],
-                                    ),
-                                    items: cubit.items
-                                        .map((item) => DropdownMenuItem<String>(
-                                            value: item,
-                                            child: Text(
-                                              item,
+                                  ),
+                                  Text('without_payment'.tr(),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displayMedium!
+                                          .copyWith(color: AppColors.primary)),
+                                  SizedBox(
+                                    width: 14.w,
+                                  ),
+                                  Radio(
+                                    value: 2,
+                                    groupValue: cubit.selectedRadioValue,
+                                    onChanged: (value) {
+                                      cubit.setSelectedRadioValue(value!);
+                                    },
+                                  ),
+                                  Text('with_payment'.tr(),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displayMedium!
+                                          .copyWith(color: AppColors.primary)),
+                                ],
+                              ),
+                              //drop down button
+                              Visibility(
+                                visible: cubit.selectedRadioValue == 2
+                                    ? true
+                                    : false,
+                                child: Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 5.w),
+                                  decoration: BoxDecoration(
+                                      color: cubit.isSelected
+                                          ? AppColors.primary
+                                          : AppColors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                      border:
+                                          Border.all(color: AppColors.primary)),
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton2(
+                                      dropdownStyleData:
+                                          const DropdownStyleData(
+                                              decoration: BoxDecoration(
+                                        color: AppColors.primary,
+                                      )),
+                                      value: cubit.selectedValue,
+                                      onChanged: (value) {
+                                        cubit.selectPaymentMethod(value);
+                                      },
+                                      isExpanded: true,
+                                      hint: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text("payment_method".tr(),
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .displayMedium!
                                                   .copyWith(
-                                                    color: AppColors.white,
-                                                    overflow: TextOverflow.ellipsis,
-                                                  ),
-                                            )))
-                                        .toList(),
+                                                      color:
+                                                          AppColors.primary)),
+                                        ],
+                                      ),
+                                      items: cubit.items
+                                          .map((item) =>
+                                              DropdownMenuItem<String>(
+                                                  value: item,
+                                                  child: Text(
+                                                    item,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .displayMedium!
+                                                        .copyWith(
+                                                          color:
+                                                              AppColors.white,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        ),
+                                                  )))
+                                          .toList(),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              height: 3.h,
-                            ),
-                            // Text(
-                            //   "the_payment".tr(),
-                            //   style: Theme.of(context)
-                            //       .textTheme
-                            //       .displayMedium!
-                            //       .copyWith(color: AppColors.primary),
-                            // ),
-                            // const SizedBox(height: 8,),
-                            // Row(
-                            //   mainAxisAlignment: MainAxisAlignment.center,
-                            //   children: [
-                            //     Radio(
-                            //       value: 1,
-                            //       groupValue: cubit.selectedRadioValue,
-                            //       onChanged: (value) {
-                            //         cubit.setSelectedRadioValue(value!);
-                            //       },
-                            //     ),
-                            //      Text(
-                            //       'without_payment'.tr(),
-                            //       style:Theme.of(context).textTheme.displayMedium!.copyWith( color: AppColors.primary)),
-                            //    SizedBox(width: 14.w,),
-                            //     Radio(
-                            //       value: 2,
-                            //       groupValue: cubit.selectedRadioValue,
-                            //       onChanged: (value) {
-                            //         cubit.setSelectedRadioValue(value!);
-                            //       },
-                            //     ),
-                            //      Text('with_payment'.tr(),
-                            //          style:Theme.of(context).textTheme.displayMedium!.copyWith( color: AppColors.primary)),
-                            //
-                            //   ],
-                            // ),
-                            const SizedBox(height: 8,),
-                            Visibility(
-                                visible: cubit.selectedRadioValue==2?true:false,
-                                child:Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: SizedBox(
-                                    height:5.h,
-                                    width: 80.w,
-                                    child: TextFormField(
-                                      controller: cubit.amountController,
-                                      keyboardType: TextInputType.number,
-                                      style: Theme.of(context).textTheme.displayMedium,
-                                     decoration: InputDecoration(
-                                       hintText:"المبلغ   ${widget.sum}  " ,
-
-                                         hintStyle: const TextStyle(color: AppColors.white,fontWeight: FontWeight.w600),
-                                         contentPadding: const EdgeInsets.symmetric(vertical: 5.0,horizontal: 5),
-                                       border: OutlineInputBorder(
-                                         borderRadius: BorderRadius.circular(20)
-                                       ),
-                                       filled: true,
-                                       fillColor: AppColors.primary
-                                     ),
+                              SizedBox(
+                                height: 3.h,
+                              ),
+                              // Text(
+                              //   "the_payment".tr(),
+                              //   style: Theme.of(context)
+                              //       .textTheme
+                              //       .displayMedium!
+                              //       .copyWith(color: AppColors.primary),
+                              // ),
+                              // const SizedBox(height: 8,),
+                              // Row(
+                              //   mainAxisAlignment: MainAxisAlignment.center,
+                              //   children: [
+                              //     Radio(
+                              //       value: 1,
+                              //       groupValue: cubit.selectedRadioValue,
+                              //       onChanged: (value) {
+                              //         cubit.setSelectedRadioValue(value!);
+                              //       },
+                              //     ),
+                              //      Text(
+                              //       'without_payment'.tr(),
+                              //       style:Theme.of(context).textTheme.displayMedium!.copyWith( color: AppColors.primary)),
+                              //    SizedBox(width: 14.w,),
+                              //     Radio(
+                              //       value: 2,
+                              //       groupValue: cubit.selectedRadioValue,
+                              //       onChanged: (value) {
+                              //         cubit.setSelectedRadioValue(value!);
+                              //       },
+                              //     ),
+                              //      Text('with_payment'.tr(),
+                              //          style:Theme.of(context).textTheme.displayMedium!.copyWith( color: AppColors.primary)),
+                              //
+                              //   ],
+                              // ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              Visibility(
+                                  visible: cubit.selectedRadioValue == 2
+                                      ? true
+                                      : false,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: SizedBox(
+                                      height: 5.h,
+                                      width: 80.w,
+                                      child: TextFormField(
+                                        controller: cubit.amountController,
+                                        keyboardType: TextInputType.number,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displayMedium,
+                                        decoration: InputDecoration(
+                                            hintText:
+                                                "المبلغ   ${widget.sum}  ",
+                                            hintStyle: const TextStyle(
+                                                color: AppColors.white,
+                                                fontWeight: FontWeight.w600),
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                                    vertical: 5.0,
+                                                    horizontal: 5),
+                                            border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20)),
+                                            filled: true,
+                                            fillColor: AppColors.primary),
+                                      ),
                                     ),
-                                  ),
-                                ) ),
-                            SizedBox(
-                              height: 10.h,
-                              child: Image.asset(
-                                "assets/icon/copy_rights_blue.png",
+                                  )),
+                              SizedBox(
+                                height: 5.h,
+                                child: Image.asset(
+                                  AssetsManager.whiteCopyRights,
+                                ),
                               ),
-                            ),
-                            //the last 2 buttons
-                            SizedBox(
-                              height: 40,
-                              child: Padding(
-                                padding: EdgeInsets.only(bottom: 0.3.h),
-                                child:   CustomButton(
-                                    backgroundColor: AppColors.yellow,
-                                    textColor: AppColors.white,
-                                    text: "confirm".tr(),
-                                    onPressed: () {
-
-                                      Navigator.pushReplacementNamed(context, Routes.receiptRoute);
-                                    }),
-                                // Row(
-                                //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                //   children: [
-                                //     CustomButton(
-                                //         backgroundColor: AppColors.yellow,
-                                //         textColor: AppColors.white,
-                                //         text: "confirm".tr(),
-                                //         onPressed: () {
-                                //           Navigator.pushReplacementNamed(context, Routes.receiptRoute);
-                                //         }),
-                                //     CustomButton(
-                                //         backgroundColor: AppColors.primary,
-                                //         textColor: AppColors.white,
-                                //         text: "print".tr(),
-                                //         onPressed: () {}),
-                                //   ],
-                                // ),
+                              SizedBox(
+                                height: 2.h,
                               ),
-                            )
-                           // SizedBox(height: 30,)
-                          ],
+                              //the last 2 buttons
+                              SizedBox(
+                                height: 40,
+                                child: Padding(
+                                  padding: EdgeInsets.only(bottom: 0.3.h),
+                                  child: CustomButton(
+                                      backgroundColor: AppColors.yellow,
+                                      textColor: AppColors.white,
+                                      text: "confirm".tr(),
+                                      onPressed: () {
+                                        Navigator.pushReplacementNamed(
+                                            context, Routes.receiptRoute);
+                                      }),
+                                  // Row(
+                                  //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  //   children: [
+                                  //     CustomButton(
+                                  //         backgroundColor: AppColors.yellow,
+                                  //         textColor: AppColors.white,
+                                  //         text: "confirm".tr(),
+                                  //         onPressed: () {
+                                  //           Navigator.pushReplacementNamed(context, Routes.receiptRoute);
+                                  //         }),
+                                  //     CustomButton(
+                                  //         backgroundColor: AppColors.primary,
+                                  //         textColor: AppColors.white,
+                                  //         text: "print".tr(),
+                                  //         onPressed: () {}),
+                                  //   ],
+                                  // ),
+                                ),
+                              )
+                              // SizedBox(height: 30,)
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  //copy rights
-               
-                ],
+                    //copy rights
+                  ],
+                ),
               ),
-            ),
-          );
+            );
           },
         );
       },

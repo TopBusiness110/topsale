@@ -43,7 +43,7 @@ class SignUpScreen extends StatelessWidget {
                 Center(
                   child: CustomContainer(
                       width: 90.w,
-                      height: 49.h,
+                     // height: 49.h,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -104,7 +104,6 @@ class SignUpScreen extends StatelessWidget {
               ],
             ),
           ),
-
 
         ],
       ),

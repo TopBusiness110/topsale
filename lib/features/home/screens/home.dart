@@ -1,14 +1,13 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:easy_localization/easy_localization.dart' as easy;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:sizer/sizer.dart';
 import 'package:topsale/core/utils/app_assets.dart';
 import 'package:topsale/features/home/cubit/home_tab_cubit/home_cubit.dart';
 
 import '../../../core/utils/app_colors.dart';
-import '../../../core/widgets/copy_right_widget.dart';
-import '../../../core/widgets/custom_svg_images.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});

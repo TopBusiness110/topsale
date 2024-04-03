@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sizer/sizer.dart';
 import 'package:topsale/config/routes/app_routes.dart';
+import 'package:topsale/core/preferences/preferences.dart';
 import 'package:topsale/core/utils/app_assets.dart';
 import 'package:topsale/core/utils/app_colors.dart';
 
@@ -14,10 +14,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,9 +27,17 @@ class _SplashScreenState extends State<SplashScreen> {
             child: Image.asset(AssetsManager.splash),
           ),
           const Spacer(),
-          Image.asset("assets/images/copy_rights.png"),
-        //  SvgPicture.asset(ImageAssets.copyRightsIcon),
-          SizedBox(height: 3.h,)
+          SizedBox(
+            height: 5.h,
+            child: Image.asset(
+              AssetsManager.whiteCopyRights,
+            ),
+          ),
+
+          //  SvgPicture.asset(ImageAssets.copyRightsIcon),
+          SizedBox(
+            height: 3.h,
+          )
         ],
       ),
     );
@@ -52,7 +56,29 @@ class _SplashScreenState extends State<SplashScreen> {
     await Future.delayed(const Duration(seconds: 1));
     print('go!');
     FlutterNativeSplash.remove();
-    Navigator.pushReplacementNamed(context, Routes.onBoardingRoute);
+
+     Preferences.instance.getIsFirstTime(key: 'onBoarding').then((value) {
+       if (value != null && value == true) {
+         Preferences.instance.getUserToken().then((value) {
+           if (value != null) {
+               Navigator.pushNamedAndRemoveUntil(
+                   context, Routes.homeRoute, (route) => false);
+              // context.read<HomeCubit>().getUser();
+           } else {
+             Navigator.pushNamedAndRemoveUntil(
+                 context, Routes.loginRoute, (route) => false);
+           }
+         });
+         print('not first time');
+       } else {
+         Navigator.pushReplacementNamed(context, Routes.onBoardingRoute);
+         print('first time');
+       }
+     }).catchError((error) {
+       print(error.toString());
+     });
+
+    //   Navigator.pushReplacementNamed(context, Routes.onBoardingRoute);
   }
 
   @override

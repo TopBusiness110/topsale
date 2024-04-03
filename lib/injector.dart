@@ -140,8 +140,6 @@ Future<void> setUp()async{
         //serviceLocator(),
       )
   );
-
-
   //*********************************************
   // ! External
   // shared preferences
@@ -150,7 +148,6 @@ Future<void> setUp()async{
   serviceLocator.registerLazySingleton(() =>ServiceApi(serviceLocator()) );
   serviceLocator.registerLazySingleton<BaseApiConsumer>(
           () => DioConsumer(client: serviceLocator()));
-
   serviceLocator.registerLazySingleton(() =>
       Dio(
         BaseOptions(
