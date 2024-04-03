@@ -4,40 +4,36 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sizer/sizer.dart';
-import 'package:topsale/injector.dart'as injector;
+import 'package:topsale/injector.dart' as injector;
 
 import 'app.dart';
 import 'app_bloc_observer.dart';
 
-final locator = GetIt.instance;//unused variable
+final locator = GetIt.instance; //unused variable
 Future<void> main() async {
-      WidgetsFlutterBinding.ensureInitialized();
-      await EasyLocalization.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
   // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   //
   // await Firebase.initializeApp(
   //   options: DefaultFirebaseOptions.currentPlatform,
   // );
-    await injector.setUp();
-    Bloc.observer = AppBlocObserver();
-    runApp(
-        Sizer(
-            builder: (context, orientation, deviceType) {
-               return EasyLocalization(
-                supportedLocales: const [Locale('ar',''),Locale('en','')],
-                   path: 'assets/lang',
-                   saveLocale: true,
-                   startLocale: const Locale("ar",""),
-                   fallbackLocale: const Locale("ar",""),
-                   child: Phoenix(
-                     child: const TopSale(),
-                   ),
-               );
-            },
-        ),
-    );
-
+  await injector.setUp();
+  Bloc.observer = AppBlocObserver();
+  runApp(
+    Sizer(
+      builder: (context, orientation, deviceType) {
+        return EasyLocalization(
+          supportedLocales: const [Locale('ar', ''), Locale('en', '')],
+          path: 'assets/lang',
+          saveLocale: true,
+          startLocale: const Locale("ar", ""),
+          fallbackLocale: const Locale("ar", ""),
+          child: Phoenix(
+            child: const TopSale(),
+          ),
+        );
+      },
+    ),
+  );
 }
-
-
-

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:topsale/core/models/selected_products.dart';
@@ -35,7 +34,7 @@ import '../../features/home/screens/home.dart';
 import '../../features/returns_list/screens/returns_list_screen.dart';
 import '../../features/splash/screens/splash_screen.dart';
 
-class Routes{
+class Routes {
   static const String initialRoute = '/';
   static const String onBoardingRoute = '/onBoarding';
   static const String loginRoute = '/login';
@@ -48,141 +47,195 @@ class Routes{
   static const String newProductRoute = '/newProduct';
   static const String createSalesOrderRoute = '/createSalesOrder';
   static const String paymentRoute = '/payment';
-  static const String  receiptRoute = '/ receipt';
-  static const String  returnsRoute = '/ returns';
-  static const String  customerPaymentsRoute = '/ customerPayments';
-  static const String  catchReceiptRoute = '/ catchReceipt';
-  static const String  dismissalNoticeRoute = '/ dismissalNotice';
-  static const String  myAccountRoute = '/ myAccount';
-  static const String  editAccountRoute = '/ editAccount';
-  static const String  reportsRoute = '/ reports';
-  static const String  expectedClientsListRoute = '/ xpectedClientsList';
-  static const String  itineraryDetailsRoute = '/ itineraryDetails';
-  static const String  dismissalNoticeDetailsRoute = '/ dismissalNoticeDetails';
-  static const String  expectedClientsTabRoute = '/ ExpectedClientsTab';
-  static const String  googleMapRoute = '/ googleMap';
-  static const String  googleMapRoutingRoute = '/ googleMapRoutingScreen';
-  static const String  salesOrderedListRoute = '/ salesOrderedListScreen';
-  static const String  returnsListRoute = '/ returnsListScreen';
-
+  static const String receiptRoute = '/ receipt';
+  static const String returnsRoute = '/ returns';
+  static const String customerPaymentsRoute = '/ customerPayments';
+  static const String catchReceiptRoute = '/ catchReceipt';
+  static const String dismissalNoticeRoute = '/ dismissalNotice';
+  static const String myAccountRoute = '/ myAccount';
+  static const String editAccountRoute = '/ editAccount';
+  static const String reportsRoute = '/ reports';
+  static const String expectedClientsListRoute = '/ xpectedClientsList';
+  static const String itineraryDetailsRoute = '/ itineraryDetails';
+  static const String dismissalNoticeDetailsRoute = '/ dismissalNoticeDetails';
+  static const String expectedClientsTabRoute = '/ ExpectedClientsTab';
+  static const String googleMapRoute = '/ googleMap';
+  static const String googleMapRoutingRoute = '/ googleMapRoutingScreen';
+  static const String salesOrderedListRoute = '/ salesOrderedListScreen';
+  static const String returnsListRoute = '/ returnsListScreen';
 }
 
+class AppRoutes {
+  static Route onGenerateRoute(RouteSettings settings) {
+    switch (settings.name) {
+      case Routes.initialRoute:
+        return MaterialPageRoute(
+          builder: (context) => const SplashScreen(),
+        );
 
+      case Routes.onBoardingRoute:
+        return MaterialPageRoute(
+          builder: (context) => const OnBoarding(),
+        );
 
+      case Routes.loginRoute:
+        return MaterialPageRoute(
+          builder: (context) => const LoginScreen(),
+        );
 
+      case Routes.signUpRoute:
+        return MaterialPageRoute(
+          builder: (context) => const SignUpScreen(),
+        );
 
+      case Routes.forgotPassword1Route:
+        return MaterialPageRoute(
+          builder: (context) => const ForgotPasswordStep1(),
+        );
 
+      case Routes.forgotPassword2Route:
+        return MaterialPageRoute(
+          builder: (context) => const ForgotPasswordStep2(),
+        );
 
+      case Routes.forgotPassword3Route:
+        return MaterialPageRoute(
+          builder: (context) => const ForgotPasswordStep3(),
+        );
 
+      case Routes.homeRoute:
+        return MaterialPageRoute(
+          builder: (context) => const Home(),
+        );
 
-class AppRoutes{
- static Route onGenerateRoute(RouteSettings settings){
-   switch(settings.name)
-    {
-     case Routes.initialRoute:
-       return MaterialPageRoute(builder: (context) => const SplashScreen(),);
+      case Routes.productsRoute:
+        return MaterialPageRoute(
+          builder: (context) => const ProductsScreen(),
+        );
 
-     case Routes.onBoardingRoute:
-       return MaterialPageRoute(builder: (context) => const OnBoarding(),);
+      case Routes.newProductRoute:
+        return MaterialPageRoute(
+          builder: (context) => const NewProduct(),
+        );
 
+      case Routes.createSalesOrderRoute:
+        final selectedProducts = settings.arguments as SelectedProducts;
 
-     case Routes.loginRoute:
-       return MaterialPageRoute(builder: (context) => const LoginScreen(),);
+        return MaterialPageRoute(
+          builder: (context) =>
+              CreateSalesOrder(selectedProducts: selectedProducts),
+        );
 
-     case Routes.signUpRoute:
-       return MaterialPageRoute(builder: (context) => const SignUpScreen(),);
+      case Routes.paymentRoute:
+        final sum = settings.arguments as double;
+        return MaterialPageRoute(
+          builder: (context) => PaymentScreen(sum: sum),
+        );
 
-     case Routes.forgotPassword1Route:
-       return MaterialPageRoute(builder: (context) => const ForgotPasswordStep1(),);
+      case Routes.receiptRoute:
+        return MaterialPageRoute(
+          builder: (context) => const ReceiptScreen(),
+        );
 
-     case Routes.forgotPassword2Route:
-       return MaterialPageRoute(builder: (context) => const ForgotPasswordStep2(),);
+      case Routes.returnsRoute:
+        return MaterialPageRoute(
+          builder: (context) => const ReturnsScreen(),
+        );
 
-     case Routes.forgotPassword3Route:
-       return MaterialPageRoute(builder: (context) => const ForgotPasswordStep3(),);
+      case Routes.customerPaymentsRoute:
+        return MaterialPageRoute(
+          builder: (context) => const CustomerPaymentsScreen(),
+        );
 
-     case Routes.homeRoute:
-       return MaterialPageRoute(builder: (context) => const Home(),);
+      case Routes.catchReceiptRoute:
+        final catchReceiptModel = settings.arguments as CatchReceiptModel;
+        return MaterialPageRoute(
+          builder: (context) =>
+              CatchReceiptScreen(catchReceiptModel: catchReceiptModel),
+        );
 
-     case Routes.productsRoute:
-       return MaterialPageRoute(builder: (context) => const ProductsScreen(),);
+      case Routes.dismissalNoticeRoute:
+        return MaterialPageRoute(
+          builder: (context) => const DismissalNoticeScreen(),
+        );
 
-     case Routes.newProductRoute:
-       return MaterialPageRoute(builder: (context) => const NewProduct(),);
+      case Routes.myAccountRoute:
+        return MaterialPageRoute(
+          builder: (context) => const MyAccount(),
+        );
 
-     case Routes.createSalesOrderRoute:
+      case Routes.editAccountRoute:
+        return MaterialPageRoute(
+          builder: (context) => const EditAccountScreen(),
+        );
 
-       final selectedProducts = settings.arguments as SelectedProducts;
+      case Routes.reportsRoute:
+        return MaterialPageRoute(
+          builder: (context) => const ReportsScreen(),
+        );
 
-       return MaterialPageRoute(builder: (context) =>  CreateSalesOrder(selectedProducts: selectedProducts),);
+      case Routes.expectedClientsListRoute:
+        return MaterialPageRoute(
+          builder: (context) => const ExpectedClientsListScreen(),
+        );
 
-     case Routes.paymentRoute:
-       final sum = settings.arguments as double;
-       return MaterialPageRoute(builder: (context) =>  PaymentScreen(sum: sum),);
+      case Routes.itineraryDetailsRoute:
+        final shipmentModel = settings.arguments as ShipmentModel;
+        return MaterialPageRoute(
+          builder: (context) =>
+              ItineraryDetailsScreen(shipmentModel: shipmentModel),
+        );
 
-     case Routes.receiptRoute:
-       return MaterialPageRoute(builder: (context) => const ReceiptScreen(),);
+      case Routes.dismissalNoticeDetailsRoute:
+        final productsList = settings.arguments as List<ProductModel>;
+        return MaterialPageRoute(
+          builder: (context) =>
+              DismissalNoticeDetailsScreen(products: productsList),
+        );
 
-     case Routes.returnsRoute:
-       return MaterialPageRoute(builder: (context) => const ReturnsScreen(),);
+      case Routes.expectedClientsTabRoute:
+        return MaterialPageRoute(
+          builder: (context) => ExpectedClientsTab(),
+        );
 
-     case Routes.customerPaymentsRoute:
-       return MaterialPageRoute(builder: (context) => const CustomerPaymentsScreen(),);
+      case Routes.googleMapRoute:
+        final latlng = settings.arguments as LatLng;
 
-     case Routes.catchReceiptRoute:
-       final catchReceiptModel = settings.arguments as CatchReceiptModel;
-       return MaterialPageRoute(builder: (context) =>  CatchReceiptScreen(catchReceiptModel: catchReceiptModel),);
+        return MaterialPageRoute(
+          builder: (context) => GoogleMapScreen(latLng: latlng),
+        );
 
-     case Routes.dismissalNoticeRoute:
-       return MaterialPageRoute(builder: (context) => const DismissalNoticeScreen(),);
+      case Routes.googleMapRoutingRoute:
+        final latlng = settings.arguments as LatLng;
 
-     case Routes.myAccountRoute:
-       return MaterialPageRoute(builder: (context) => const MyAccount(),);
+        return MaterialPageRoute(
+          builder: (context) => GoogleMapRoutingScreen(
+            destinationlatLng: latlng,
+          ),
+        );
 
-     case Routes.editAccountRoute:
-       return MaterialPageRoute(builder: (context) => const EditAccountScreen(),);
+      case Routes.salesOrderedListRoute:
+        return MaterialPageRoute(
+          builder: (context) => SalesOrderedListScreen(),
+        );
 
-     case Routes.reportsRoute:
-       return MaterialPageRoute(builder: (context) => const ReportsScreen(),);
+      case Routes.returnsListRoute:
+        return MaterialPageRoute(
+          builder: (context) => const ReturnsListScreen(),
+        );
 
-     case Routes.expectedClientsListRoute:
-       return MaterialPageRoute(builder: (context) => const ExpectedClientsListScreen(),);
-
-     case Routes.itineraryDetailsRoute:
-       final shipmentModel = settings.arguments as ShipmentModel;
-       return MaterialPageRoute(builder: (context) =>  ItineraryDetailsScreen(shipmentModel: shipmentModel),);
-
-     case Routes.dismissalNoticeDetailsRoute:
-       final productsList = settings.arguments as  List<ProductModel>;
-       return MaterialPageRoute(builder: (context) =>  DismissalNoticeDetailsScreen(products: productsList),);
-
-     case Routes.expectedClientsTabRoute:
-       return MaterialPageRoute(builder: (context) =>  ExpectedClientsTab(),);
-
-     case Routes.googleMapRoute:
-     final latlng = settings.arguments as LatLng;
-
-     return MaterialPageRoute(builder: (context) =>  GoogleMapScreen(latLng: latlng),);
-
-     case Routes.googleMapRoutingRoute:
-       final latlng = settings.arguments as LatLng;
-
-       return MaterialPageRoute(builder: (context) =>  GoogleMapRoutingScreen( destinationlatLng: latlng,),);
-
-
-     case Routes.salesOrderedListRoute:
-       return MaterialPageRoute(builder: (context) =>  SalesOrderedListScreen(),);
-
-     case Routes.returnsListRoute:
-       return MaterialPageRoute(builder: (context) => const ReturnsListScreen(),);
-
-
-
-     default:
-       return undefinedRoute() ;
-   }
+      default:
+        return undefinedRoute();
+    }
   }
-  static Route<dynamic> undefinedRoute(){
-   return MaterialPageRoute(builder: (context) => const Scaffold(body: Center(child: Text(AppStrings.noRouteFound),),),);
+
+  static Route<dynamic> undefinedRoute() {
+    return MaterialPageRoute(
+      builder: (context) => const Scaffold(
+        body: Center(
+          child: Text(AppStrings.noRouteFound),
+        ),
+      ),
+    );
   }
 }
