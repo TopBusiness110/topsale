@@ -1,32 +1,38 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:topsale/core/models/product_model.dart';
+import 'package:topsale/core/remote/service_api.dart';
+
+import '../../../core/models/all_prodyucts_model.dart';
+import '../../../core/models/category_model.dart';
 
 part 'products_state.dart';
 
 class ProductsCubit extends Cubit<ProductsState> {
-  ProductsCubit() : super(ProductsInitial());
-
-  List<ProductModel> matches = [];
+  ProductsCubit(this.api) : super(ProductsInitial());
+  ServiceApi api;
+  List<ProductModelData> matches = [];
   List<ProductModel> selectedProducts = [];
 
-  addProduct({ required ProductModel product}) {
-    if(selectedProducts.isEmpty){
-      print("____________________selectedProducts.isEmpty __________________________");
+  addProduct({required ProductModel product}) {
+    if (selectedProducts.isEmpty) {
+      print(
+          "____________________selectedProducts.isEmpty __________________________");
       product.userOrderedQuantity++;
       selectedProducts.add(product);
       emit(AddProductsState());
       return;
-    }
-    else{
-      for(int i = 0 ; i<selectedProducts.length ; i++){
-      //  product already exists in list
+    } else {
+      for (int i = 0; i < selectedProducts.length; i++) {
+        //  product already exists in list
 
-        if(selectedProducts[i].code==product.code&&selectedProducts[i].quantity! > product.userOrderedQuantity){
-            print("+++++++++++++++++++++product already exists in list+++++++++++++++++++++++++++++++++");
-            product.userOrderedQuantity++;
-            emit(AddProductsState());
-          return ;
+        if (selectedProducts[i].code == product.code &&
+            selectedProducts[i].quantity! > product.userOrderedQuantity) {
+          print(
+              "+++++++++++++++++++++product already exists in list+++++++++++++++++++++++++++++++++");
+          product.userOrderedQuantity++;
+          emit(AddProductsState());
+          return;
         }
         //product already exists in list
         // if(selectedProducts[i].code==product.code&&selectedProducts[i].quantity! > product.userOrderedQuantity){
@@ -49,36 +55,61 @@ class ProductsCubit extends Cubit<ProductsState> {
         // }
       }
 
-      print("____________________selectedProducts doesn't exist __________________________");
+      print(
+          "____________________selectedProducts doesn't exist __________________________");
       product.userOrderedQuantity++;
       selectedProducts.add(product);
       emit(AddProductsState());
-
     }
   }
 
-
-  removeProduct({ required ProductModel product}) {
-    if ( product.userOrderedQuantity>0) {
+  removeProduct({required ProductModel product}) {
+    if (product.userOrderedQuantity > 0) {
       product.userOrderedQuantity = product.userOrderedQuantity - 1;
       emit(RemoveProductsState());
-    }
-    else if(product.userOrderedQuantity ==0 ){
+    } else if (product.userOrderedQuantity == 0) {
       selectedProducts.remove(product);
       emit(RemoveProductsState());
-
     }
   }
 
-  searchInProducts(String key , List<ProductModel> products){
+  searchInProducts(String key, List<ProductModelData> products) {
     matches.clear();
-    for(int i = 0 ; i<products.length ; i++){
-
-      if(products[i].name!.toLowerCase().contains(key)){
+    for (int i = 0; i < products.length; i++) {
+      if (products[i].name!.toLowerCase().contains(key)) {
         matches.add(products[i]);
         emit(SearchingState());
       }
     }
+  }
 
+  AllCategoriesModel? categoriesModel;
+  getAllCategories() async {
+    emit(LoadingAllCategoriesState());
+    // authModel = await Preferences.instance.getUserModel2();
+    final response = await api.getAllCategories();
+    response.fold((l) => emit(AllCategoriesFailureState()), (r) {
+      emit(AllCategoriesSuccessState());
+      categoriesModel = r;
+      print("***************************************************");
+      print(r);
+      print("**************************${r.result}");
+      // r.result!.map((e) => print(e.image1920));
+    });
+  }
+
+  AllProductsModel? productsModel;
+  getAllProducts() async {
+    emit(LoadingAllProductsState());
+    // authModel = await Preferences.instance.getUserModel2();
+    final response = await api.getAllProducts();
+    response.fold((l) => emit(AllProductsFailureState()), (r) {
+      emit(AllProductsSuccessState());
+      productsModel = r;
+      print("***************************************************");
+      print(r.toString());
+      print("**************************${r.result.toString()}");
+      // r.result!.map((e) => print(e.image1920));
+    });
   }
 }

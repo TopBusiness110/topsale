@@ -8,24 +8,68 @@
 // import '../error/exceptions.dart';
 // import '../error/failures.dart';
 
-// import 'package:odoo_rpc/odoo_rpc.dart';
+import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
+import 'package:odoo_rpc/odoo_rpc.dart';
+
+import '../api/base_api_consumer.dart';
+import '../api/end_points.dart';
+import '../error/exceptions.dart';
+import '../error/failures.dart';
+import '../models/all_prodyucts_model.dart';
+import '../models/category_model.dart';
+import '../preferences/preferences.dart';
 // import 'package:http/http.dart' as http;
 
-// class ServiceApi {
-//   final BaseApiConsumer dio;
+class ServiceApi {
+  final BaseApiConsumer dio;
 
-//   ServiceApi(this.dio);
+  ServiceApi(this.dio);
 
-//   final odoo = OdooClient('https://kreezmart.com');
+  final odoo = OdooClient('https://demo17.topbuziness.com');
 
-//   Future<String> getSessionId(
-//       {required String phone, required String password}) async {
-//     final odoResponse =
-//         await odoo.authenticate('kreezmart.com', phone, password);
-//     final sessionId = odoResponse.id;
-//     print("getSessionId = $sessionId");
-//     return sessionId;
-//   }
+  Future<String> getSessionId(
+      {required String phone, required String password}) async {
+    final odoResponse =
+        await odoo.authenticate('topbuziness.com', phone, password);
+    final sessionId = odoResponse.id;
+    print("getSessionId = $sessionId");
+    return sessionId;
+  }
+
+  Future<Either<Failure, AllProductsModel>> getAllProducts() async {
+    try {
+      String? sessionId = '834180ab0871f4709d8d49891f6e80b583c3a463';
+      // String? sessionId = await Preferences.instance.getSessionId();
+      final response = await dio.get(
+        EndPoints.allProducts,
+        options: Options(
+          headers: {"Cookie": "frontend_lang=en_US;session_id=$sessionId"},
+        ),
+      );
+
+      return Right(AllProductsModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+  Future<Either<Failure, AllCategoriesModel>> getAllCategories() async {
+    try {
+      String? sessionId = '834180ab0871f4709d8d49891f6e80b583c3a463';
+      // String? sessionId = await Preferences.instance.getSessionId();
+      final response = await dio.get(
+        EndPoints.allCategoriesUrl,
+        options: Options(
+          headers: {"Cookie": "frontend_lang=en_US;session_id=$sessionId"},
+        ),
+      );
+
+      return Right(AllCategoriesModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
 
 //   Future<Either<Failure, AuthModel>> postLoginAsAdmin2(
 //       String phoneOrMail, String password) async {
@@ -185,22 +229,6 @@
 //     }
 //   }
 
-//   Future<Either<Failure, AllCategoriesModel>> getAllCategories() async {
-//     try {
-//       String? sessionId = await Preferences.instance.getSessionId();
-//       final response = await dio.get(
-//         EndPoints.allCategoriesUrl,
-//         options: Options(
-//           headers: {"Cookie": "session_id=$sessionId"},
-//         ),
-//       );
-
-//       return Right(AllCategoriesModel.fromJson(response));
-//     } on ServerException {
-//       return Left(ServerFailure());
-//     }
-//   }
-
 //   Future<Either<Failure, AllProductsModel>> getAllProducts() async {
 //     try {
 //       String? sessionId = await Preferences.instance.getSessionId();
@@ -349,11 +377,4 @@
 //       return Left(ServerFailure());
 //     }
 //   }
-// }
-import '../api/base_api_consumer.dart';
-
-class ServiceApi {
-  final BaseApiConsumer dio;
-
-  ServiceApi(this.dio);
 }
