@@ -32,10 +32,8 @@ class LoginCubit extends Cubit<LoginState> {
         authModel = r;
         String sessionId =
             await api.getSessionId(phone: phoneOrMail, password: password);
-
         print('lllllllll $sessionId');
         await Preferences.instance.setSessionId(sessionId);
-
         emit(SuccessLoginState());
         Navigator.pop(context);
         Preferences.instance.setUser2(r);

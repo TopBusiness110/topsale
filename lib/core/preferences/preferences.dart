@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:topsale/core/models/login_info_model.dart';
 import 'package:topsale/core/models/login_model.dart';
 
 import '../utils/app_strings.dart';
@@ -56,6 +57,24 @@ class Preferences {
     // print(await getUserModel2());
   }
 
+ //Future<void> setLoginInfo(LoginInfoModel loginInfoModel) async {
+ //   SharedPreferences preferences = await SharedPreferences.getInstance();
+ //   preferences.setString(
+ //       'user2', jsonEncode(AuthModel.fromJson(authModel.toJson())));
+ //   // print(await getUserModel2());
+ // }
+
+ Future<AuthModel> getUser() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? jsonData = preferences.getString('user2');
+    AuthModel userModel;
+    if (jsonData != null) {
+      userModel = AuthModel.fromJson(jsonDecode(jsonData));
+    } else {
+      userModel = AuthModel();
+    }
+    return userModel;
+  }
   Future<int?> getPartnerId() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     int? partnerId = preferences.getInt('partnerId');
