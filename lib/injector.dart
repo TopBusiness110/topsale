@@ -205,9 +205,8 @@ Future<void> setUp() async {
       //serviceLocator(),
       ));
   //*********************************************
-  // ! External
-  // shared preferences
-
+   //! External
+  // Shared Preferences
   final sharedPreferences = await SharedPreferences.getInstance();
   serviceLocator.registerLazySingleton(() => sharedPreferences);
 

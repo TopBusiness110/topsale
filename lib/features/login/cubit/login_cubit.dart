@@ -26,13 +26,15 @@ class LoginCubit extends Cubit<LoginState> {
       Navigator.pop(context);
       errorGetBar("login failed");
       emit(FailureLoginState());
-    }, (r) {
+    }, (r) async {
       print('gggggggggggggggg');
       if (r.result != null) {
         authModel = r;
-        //    String sessionId =
-        //     await getSessionId(phone: phoneOrMail, password: password);
-        // await Preferences.instance.setSessionId(sessionId);
+        String sessionId =
+            await api.getSessionId(phone: phoneOrMail, password: password);
+
+        print('lllllllll $sessionId');
+        await Preferences.instance.setSessionId(sessionId);
 
         emit(SuccessLoginState());
         Navigator.pop(context);
@@ -45,7 +47,4 @@ class LoginCubit extends Cubit<LoginState> {
       }
     });
   }
-
-
-  
 }
