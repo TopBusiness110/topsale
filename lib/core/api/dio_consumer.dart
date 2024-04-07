@@ -27,9 +27,9 @@ class DioConsumer implements BaseApiConsumer {
       ..baseUrl = EndPoints.baseUrl
       ..responseType = ResponseType.plain
       ..followRedirects = false
-      ..receiveTimeout = 1000 * 60
-      ..connectTimeout = 1000 * 60
-      ..sendTimeout = 1000 * 60
+      ..receiveTimeout = 1000 * 160
+      ..connectTimeout = 1000 * 160
+      ..sendTimeout = 1000 * 160
       ..validateStatus = (status) {
         return status! < StatusCode.internalServerError;
       };
@@ -58,9 +58,9 @@ class DioConsumer implements BaseApiConsumer {
   @override
   Future post(String path,
       {Map<String, dynamic>? body,
-        bool formDataIsEnabled = false,
-        Map<String, dynamic>? queryParameters,
-        Options? options}) async {
+      bool formDataIsEnabled = false,
+      Map<String, dynamic>? queryParameters,
+      Options? options}) async {
     try {
       final response = await client.post(
         path,
@@ -77,8 +77,8 @@ class DioConsumer implements BaseApiConsumer {
   @override
   Future put(String path,
       {Map<String, dynamic>? body,
-        Map<String, dynamic>? queryParameters,
-        Options? options}) async {
+      Map<String, dynamic>? queryParameters,
+      Options? options}) async {
     try {
       final response = await client.put(
         path,
@@ -127,9 +127,9 @@ class DioConsumer implements BaseApiConsumer {
   @override
   Future newPost(String path,
       {bool formDataIsEnabled = false,
-        Map<String, dynamic>? body,
-        Map<String, dynamic>? queryParameters,
-        Options? options}) async {
+      Map<String, dynamic>? body,
+      Map<String, dynamic>? queryParameters,
+      Options? options}) async {
     try {
       final response = await client.post(
         path,
@@ -146,9 +146,9 @@ class DioConsumer implements BaseApiConsumer {
   @override
   Future delete(String path,
       {bool formDataIsEnabled = false,
-        Map<String, dynamic>? body,
-        Map<String, dynamic>? queryParameters,
-        Options? options}) async {
+      Map<String, dynamic>? body,
+      Map<String, dynamic>? queryParameters,
+      Options? options}) async {
     try {
       final response = await client.delete(
         path,

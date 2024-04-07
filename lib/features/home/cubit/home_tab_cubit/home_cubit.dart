@@ -12,12 +12,29 @@ part 'home_state.dart';
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(HomeInitial());
 
-  int currentIndex = 0 ;
-  List<String> titles = ["products","sales","returns","customer_payments","dismissal_notice"];
-  List<String> imagesPath = [AssetsManager.packageDelivery,AssetsManager.deliveryTruck,AssetsManager.cashFlow,AssetsManager.budget,AssetsManager.order];
-  List<Widget> tabs=[HomeTab(),ExpectedClientsListScreen(),ItineraryTab(),MoreTab()];
-  changeTabs(int value){
-currentIndex = value ;
-emit(ChangingTabs());
+  int currentIndex = 0;
+  List<String> titles = [
+    "products",
+    "sales",
+    "returns",
+    "customer_payments",
+    "dismissal_notice"
+  ];
+  List<String> imagesPath = [
+    AssetsManager.packageDelivery,
+    AssetsManager.deliveryTruck,
+    AssetsManager.cashFlow,
+    AssetsManager.budget,
+    AssetsManager.order
+  ];
+  List<Widget> tabs = [
+    HomeTab(),
+    ExpectedClientsListScreen(),
+    ItineraryTab(),
+    MoreTab()
+  ];
+  changeTabs(int value) {
+    currentIndex = value;
+    emit(ChangingTabs());
   }
 }

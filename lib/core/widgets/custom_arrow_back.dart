@@ -9,7 +9,7 @@ class CustomArrowBack extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String? lang = EasyLocalization.of(context)!.locale.countryCode;
-    return    Padding(
+    return Padding(
       padding: const EdgeInsets.only(left: 8.0),
       child: IconButton(
           onPressed: () {
