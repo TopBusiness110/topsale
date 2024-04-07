@@ -8,3 +8,6 @@ class EndPoints {
       '$baseUrl/api/product.product/?query={id,name,qty_available,list_price,currency_id,uom_name,uom_id,categ_id,image_1920}&filter=[["sale_ok", "=", "True"]]';
   static const String allCategoryProducts = '$baseUrl/api/product.product/';
 }
+
+
+//d
