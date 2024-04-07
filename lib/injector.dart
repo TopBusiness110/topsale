@@ -1,5 +1,3 @@
-
-
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,7 +17,6 @@ import 'package:topsale/features/payments/cubit/payments_cubit.dart';
 import 'package:topsale/features/products/cubit/products_cubit.dart';
 import 'package:topsale/features/signup/cubit/signup_cubit.dart';
 
-import 'core/api/app_interceptors.dart';
 import 'core/api/base_api_consumer.dart';
 import 'features/dismissal_notice_details/cubit/dismissal_notice_details_cubit.dart';
 import 'features/expectet_clients_list/cubit/expected_clients_list_cubit.dart';
@@ -43,112 +40,12 @@ Future<void> setUp() async {
   // );
   serviceLocator.registerFactory(() => OnBoardingCubit(
       //serviceLocator(),
-    )
-   );
-  serviceLocator.registerFactory(
-          () => LoginCubit(
-       serviceLocator(),
-      )
-  );
-  serviceLocator.registerFactory(
-          () => SignupCubit(
-       serviceLocator(),
-      )
-  );  serviceLocator.registerFactory(
-          () => ForgotPasswordCubit(
-        //serviceLocator(),
-      )
-  );
-  serviceLocator.registerFactory(
-          () => HomeCubit(
-        //serviceLocator(),
-      )
-  );
-  serviceLocator.registerFactory(
-          () => ProductsCubit(
-     serviceLocator(),
-      )
-  );
-  serviceLocator.registerFactory(
-          () => NewProductCubit(
-        //serviceLocator(),
-      )
-  );
-  serviceLocator.registerFactory(
-          () => CreateSalesOrderCubit(
-        //serviceLocator(),
-      )
-  );
-  serviceLocator.registerFactory(
-          () => PaymentsCubit(
-        //serviceLocator(),
-      )
-  );
-  serviceLocator.registerFactory(
-          () => ReceiptCubit(
-        //serviceLocator(),
-      )
-  );
-  serviceLocator.registerFactory(
-          () => ReturnsCubit(
-        //serviceLocator(),
-      )
-  );
-  serviceLocator.registerFactory(
-          () => CustomerPaymentsCubit(
-        //serviceLocator(),
-      )
-  );
-  serviceLocator.registerFactory(
-          () => CartCubit(
-        //serviceLocator(),
-      )
-  );
-  serviceLocator.registerFactory(
-          () => DismissalNoticeCubit(
-        //serviceLocator(),
-      )
-  );
-  serviceLocator.registerFactory(
-          () => ExpectedClientsCubit(
-        //serviceLocator(),
-      )
-  );  serviceLocator.registerFactory(
-          () => DismissalNoticeDetailsCubit(
-        //serviceLocator(),
-      )
-  );
-  serviceLocator.registerFactory(
-          () => ExpectedClientsListCubit(
-        //serviceLocator(),
-      )
-  );
-  serviceLocator.registerFactory(
-          () => ItineraryCubit(
-        //serviceLocator(),
-      )
-  );  serviceLocator.registerFactory(
-          () => ItineraryDetailsCubit(
-        //serviceLocator(),
-      )
-  );
-  serviceLocator.registerFactory(
-          () => SalesOrderedListCubit(
-        //serviceLocator(),
-      )
-  );  serviceLocator.registerFactory(
-          () => ReturnsListCubit(
-        //serviceLocator(),
-      )
-  );
-  //! External
-  // Shared Preferences
-
+      ));
   serviceLocator.registerFactory(() => LoginCubit(
-     serviceLocator(),
+        serviceLocator(),
       ));
   serviceLocator.registerFactory(() => SignupCubit(
-     serviceLocator(),
+        serviceLocator(),
       ));
   serviceLocator.registerFactory(() => ForgotPasswordCubit(
       //serviceLocator(),
