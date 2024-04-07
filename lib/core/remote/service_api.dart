@@ -1,148 +1,199 @@
-// import 'dart:io';
+import 'dart:io';
+import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
+import 'package:topsale/core/preferences/preferences.dart';
+import '../api/base_api_consumer.dart';
+import '../api/end_points.dart';
+import '../error/exceptions.dart';
+import '../error/failures.dart';
+import 'package:odoo_rpc/odoo_rpc.dart';
+import 'package:http/http.dart' as http;
 
-// import 'package:dartz/dartz.dart';
-// import 'package:dio/dio.dart';
+import '../models/login_model.dart';
 
-// import '../api/base_api_consumer.dart';
-// import '../api/end_points.dart';
-// import '../error/exceptions.dart';
-// import '../error/failures.dart';
+class ServiceApi {
+  final BaseApiConsumer dio;
+  ServiceApi(this.dio);
+  final odoo = OdooClient(EndPoints.baseUrl);
 
-// import 'package:odoo_rpc/odoo_rpc.dart';
-// import 'package:http/http.dart' as http;
+  Future<String> getSessionId(
+      {required String phone, required String password}) async {
+    final odoResponse = await odoo.authenticate(EndPoints.db, phone, password);
+    final sessionId = odoResponse.id;
+    print("getSessionId = $sessionId");
+    return sessionId;
+  }
 
-// class ServiceApi {
-//   final BaseApiConsumer dio;
+  Future<Either<Failure, AuthModel>> postLoginAsAdmin2(
+      String phoneOrMail, String password) async {
+    try {
+      final response = await dio.post(
+        EndPoints.auth,
+        body: {
+          "params": {
+            'login': phoneOrMail,
+            "password": password,
+            "db": EndPoints.db
+          },
+        },
+      );
+      String sessionId =
+          await getSessionId(phone: phoneOrMail, password: password);
+      //String sessionId = await getSessionId(phone: "api", password: "api");
+      await Preferences.instance.setSessionId(sessionId);
+      await Preferences.instance.setUser2(AuthModel.fromJson(response));
+      await Preferences.instance.isAdmin(true);
+      return Right(AuthModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+///////////////////////////////////////////
 
-//   ServiceApi(this.dio);
+  Future<Either<Failure, AuthModel>> auth(
+      String phoneOrMail, String password) async {
+    try {
+      final response = await dio.post(
+        EndPoints.auth,
+        body: {
+          "params": {
+            'login': phoneOrMail,
+            "password": password,
+            "db": EndPoints.db
+          },
+        },
+      );
+      // String sessionId =
+      //     await getSessionId(phone: phoneOrMail, password: password);
+      // await Preferences.instance.setSessionId(sessionId);
 
-//   final odoo = OdooClient('https://kreezmart.com');
+      //  await Preferences.instance.isAdmin(true);
+      //  print(response.toString());
+      return Right(AuthModel.fromJson(response));
+    } on ServerException {
+      print('ddddddddddd');
+      return Left(ServerFailure());
+    }
+  }
 
-//   Future<String> getSessionId(
-//       {required String phone, required String password}) async {
-//     final odoResponse =
-//         await odoo.authenticate('kreezmart.com', phone, password);
-//     final sessionId = odoResponse.id;
-//     print("getSessionId = $sessionId");
-//     return sessionId;
-//   }
 
-//   Future<Either<Failure, AuthModel>> postLoginAsAdmin2(
-//       String phoneOrMail, String password) async {
-//     try {
-//       final response = await dio.post(
-//         EndPoints.loginUrl,
-//         body: {
-//           "params": {
-//             'login': phoneOrMail,
-//             "password": password,
-//             "db": "kreezmart.com"
-//           },
-//         },
-//       );
-//       String sessionId = await getSessionId(phone: "api", password: "api");
+ Future<Either<Failure, AuthModel>> authWithSession(
+      String phoneOrMail, String password, String db) async {
+    try {
+      final response = await dio.post(
+        EndPoints.authWithSession,
+        body: {
+          "jsonrpc": "2.0",
+          "params": {
+             "is_system": false,
+            'login': phoneOrMail,
+            "password": password,
+            "db": db
+          },
+        },
+      );
+      // String sessionId =
+      //     await getSessionId(phone: phoneOrMail, password: password);
+      // await Preferences.instance.setSessionId(sessionId);
 
-//       await Preferences.instance.setSessionId(sessionId);
-//       await Preferences.instance.setUser2(AuthModel.fromJson(response));
-//       await Preferences.instance.isAdmin(true);
+      //  await Preferences.instance.isAdmin(true);
+      //  print(response.toString());
+      return Right(AuthModel.fromJson(response));
+    } on ServerException {
+      print('ddddddddddd');
+      return Left(ServerFailure());
+    }
+  }
 
-//       return Right(AuthModel.fromJson(response));
-//     } on ServerException {
-//       return Left(ServerFailure());
-//     }
-//   }
+/////////////////////////////////////////////////////
+  Future<Either<Failure, AuthModel>> postLoginAsTrueUser2(
+      String phoneOrMail, String password) async {
+    try {
+      //todo may be only session id
+      String? sessionId = await Preferences.instance.getSessionIdTrueUser();
+      final response = await dio.post(
+        EndPoints.auth,
+        options: Options(
+          headers: {"Cookie": "session_id=$sessionId"},
+        ),
+        body: {
+          
+          "params": {
+            'login': phoneOrMail,
+            "password": password,
+            "db": EndPoints.db
+          },
+        },
+      );
+      String? sessionId2 =
+          await getSessionId(phone: phoneOrMail, password: password);
+      await Preferences.instance.setSessionIdTruUser(sessionId2);
+      await Preferences.instance.setUser2(AuthModel.fromJson(response));
+      await Preferences.instance.isAdmin(false); //todo-->
+      return Right(AuthModel.fromJson(response));
+    } on ServerException {
+      print('ddddddddddd');
+      return Left(ServerFailure());
+    }
+  }
 
-//   Future<Either<Failure, AuthModel>> postLoginAsTrueUser2(
-//       String phoneOrMail, String password) async {
-//     try {
-//       //todo may be only session id
-//       String? sessionId = await Preferences.instance.getSessionIdTrueUser();
-//       final response = await dio.post(
-//         EndPoints.loginUrl,
-//         options: Options(
-//           headers: {"Cookie": "session_id=$sessionId"},
-//         ),
-//         body: {
-//           "params": {
-//             'login': phoneOrMail,
-//             "password": password,
-//             "db": "kreezmart.com"
-//           },
-//         },
-//       );
-
-//       String? sessionId2 =
-//           await getSessionId(phone: phoneOrMail, password: password);
-
-//       await Preferences.instance.setSessionIdTruUser(sessionId2);
-//       await Preferences.instance.setUser2(AuthModel.fromJson(response));
-//       await Preferences.instance.isAdmin(false); //todo-->
-
-//       return Right(AuthModel.fromJson(response));
-//     } on ServerException {
-//       return Left(ServerFailure());
-//     }
-//   }
-
-//   int? partnerId;
-//   Future<Either<Failure, AuthModel>> postRegister2(
-//       String fullName, String password, String phone, String? email) async {
-//     try {
-//       print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&#");
-//       String? sessionId = await Preferences.instance.getSessionId();
-//       print("####################################");
-//       print("sessionId =$sessionId ");
-//       final response = await dio.post(
-//         EndPoints.registerUrl,
-//         options: Options(
-//           headers: {"Cookie": "session_id=$sessionId"},
-//         ),
-//         body: {
-//           "params": {
-//             "data": {
-//               "name": fullName,
-//               'login': phone,
-//               "password": password,
-//               //"sel_groups_1_9_10":10
-//             }
-//           },
-//         },
-//       ).onError((error, stackTrace) {
-//         print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-//         print("error is $error");
-//       });
-
-//       String? sessionId2 = await getSessionId(phone: phone, password: password);
-//       print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^6");
-//       print("sessionId2 = $sessionId2");
-//       await Preferences.instance.setSessionIdTruUser(sessionId2);
-//       await Preferences.instance.isAdmin(false);
-//       Either either = await postLoginAsTrueUser2(phone, password);
-//       AuthModel? authModel;
-//       either.fold((l) => null, (r) {
-//         authModel = r;
-//       });
-
-//       await Preferences.instance.setUser2(authModel!);
-//       int result = AuthModel.fromJson(response).result;
-//       print("************************************************");
-//       print(result);
-//       UserData? userData;
-//       var data = await getUserData(result);
-//       data.fold((l) => null, (r) {
-//         userData = r;
-//         Preferences.instance.setPartnerId(userData!.result![0].partnerId!);
-//         //todo add partner id to shared preferences
-//       });
-//       partnerId = await Preferences.instance.getPartnerId();
-//       //  await Preferences.instance.setPartnerId(userData.result[0].id)
-//       print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//       print(userData);
-//       return Right(AuthModel.fromJson(response));
-//     } on ServerException {
-//       return Left(ServerFailure());
-//     }
-//   }
+  int? partnerId;
+  // Future<Either<Failure, AuthModel>> postRegister2(
+  //     String fullName, String password, String phone, String? email) async {
+  //   try {
+  //     print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&#");
+  //     String? sessionId = await Preferences.instance.getSessionId();
+  //     print("####################################");
+  //     print("sessionId =$sessionId ");
+  //     final response = await dio.post(
+  //       EndPoints.authWithSession,
+  //       options: Options(
+  //         headers: {"Cookie": "session_id=$sessionId"},
+  //       ),
+  //       body: {
+  //         "params": {
+  //           "data": {
+  //             "name": fullName,
+  //             'login': phone,
+  //             "password": password,
+  //             //"sel_groups_1_9_10":10
+  //           }
+  //         },
+  //       },
+  //     ).onError((error, stackTrace) {
+  //       print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+  //       print("error is $error");
+  //     });
+  //     String? sessionId2 = await getSessionId(phone: phone, password: password);
+  //     print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^6");
+  //     print("sessionId2 = $sessionId2");
+  //     await Preferences.instance.setSessionIdTruUser(sessionId2);
+  //     await Preferences.instance.isAdmin(false);
+  //     Either either = await postLoginAsTrueUser2(phone, password);
+  //     AuthModel? authModel;
+  //     either.fold((l) => null, (r) {
+  //       authModel = r;
+  //     });
+  //     await Preferences.instance.setUser2(authModel!);
+  //     UserData? result = AuthModel.fromJson(response).result;
+  //     print("************************************************");
+  //     print(result);
+  //     UserData? userData;
+  //    var data = await getUserData(result);
+  //     data.fold((l) => null, (r) {
+  //       userData = r;
+  //       Preferences.instance.setPartnerId(userData!.result![0].partnerId!);
+  //       //todo add partner id to shared preferences
+  //     });
+  //     partnerId = await Preferences.instance.getPartnerId();
+  //     //  await Preferences.instance.setPartnerId(userData.result[0].id)
+  //     print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+  //     print(userData);
+  //     return Right(AuthModel.fromJson(response));
+  //   } on ServerException {
+  //     return Left(ServerFailure());
+  //   }
+  // }
 
 //   Future<Either<Failure, UserData>> getUserData(int result) async {
 //     try {
@@ -349,11 +400,4 @@
 //       return Left(ServerFailure());
 //     }
 //   }
-// }
-import '../api/base_api_consumer.dart';
-
-class ServiceApi {
-  final BaseApiConsumer dio;
-
-  ServiceApi(this.dio);
 }

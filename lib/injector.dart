@@ -3,6 +3,7 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:topsale/core/api/app_interceptors.dart';
 import 'package:topsale/core/api/dio_consumer.dart';
 import 'package:topsale/core/remote/service_api.dart';
 import 'package:topsale/features/%20receipt/cubit/receipt_cubit.dart';
@@ -46,12 +47,12 @@ Future<void> setUp()async{
    );
   serviceLocator.registerFactory(
           () => LoginCubit(
-        //serviceLocator(),
+       serviceLocator(),
       )
   );
   serviceLocator.registerFactory(
           () => SignupCubit(
-        //serviceLocator(),
+       serviceLocator(),
       )
   );  serviceLocator.registerFactory(
           () => ForgotPasswordCubit(
@@ -140,27 +141,31 @@ Future<void> setUp()async{
         //serviceLocator(),
       )
   );
-  //*********************************************
-  // ! External
-  // shared preferences
+  //! External
+  // Shared Preferences
   final sharedPreferences = await SharedPreferences.getInstance();
   serviceLocator.registerLazySingleton(() => sharedPreferences);
-  serviceLocator.registerLazySingleton(() =>ServiceApi(serviceLocator()) );
-  serviceLocator.registerLazySingleton<BaseApiConsumer>(
-          () => DioConsumer(client: serviceLocator()));
-  serviceLocator.registerLazySingleton(() =>
-      Dio(
-        BaseOptions(
-          contentType: "application/x-www-form-urlencoded",
-          headers: {
-            "Accept": "application/json",
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        ),
-      ),);
 
+  serviceLocator.registerLazySingleton(() => ServiceApi(serviceLocator()));
+
+  serviceLocator.registerLazySingleton<BaseApiConsumer>(
+      () => DioConsumer(client: serviceLocator()));
+  serviceLocator.registerLazySingleton(() => AppInterceptors());
+
+  // Dio
   serviceLocator.registerLazySingleton(
-        () => LogInterceptor(
+    () => Dio(
+      BaseOptions(
+        contentType: "application/x-www-form-urlencoded",
+        headers: {
+          "Accept": "application/json",
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      ),
+    ),
+  );
+  serviceLocator.registerLazySingleton(
+    () => LogInterceptor(
       request: true,
       requestBody: true,
       requestHeader: true,

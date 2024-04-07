@@ -1,34 +1,104 @@
 // To parse this JSON data, do
 //
-//     final loginModel = loginModelFromJson(jsonString);
+//     final authModel = authModelFromJson(jsonString);
 
 import 'dart:convert';
 
-LoginModel loginModelFromJson(String str) => LoginModel.fromJson(json.decode(str));
+AuthModel authModelFromJson(String str) => AuthModel.fromJson(json.decode(str));
 
-String loginModelToJson(LoginModel data) => json.encode(data.toJson());
+String authModelToJson(AuthModel data) => json.encode(data.toJson());
 
-class LoginModel {
+class AuthModel {
     String? jsonrpc;
     dynamic id;
+    Error? error;
     Result? result;
 
-    LoginModel({
+    AuthModel({
         this.jsonrpc,
         this.id,
+        this.error,
         this.result,
     });
 
-    factory LoginModel.fromJson(Map<String, dynamic> json) => LoginModel(
+    factory AuthModel.fromJson(Map<String, dynamic> json) => AuthModel(
         jsonrpc: json["jsonrpc"],
         id: json["id"],
+        error: json["error"] == null ? null : Error.fromJson(json["error"]),
         result: json["result"] == null ? null : Result.fromJson(json["result"]),
     );
 
     Map<String, dynamic> toJson() => {
         "jsonrpc": jsonrpc,
         "id": id,
+        "error": error?.toJson(),
         "result": result?.toJson(),
+    };
+}
+
+class Error {
+    int? code;
+    String? message;
+    Data? data;
+
+    Error({
+        this.code,
+        this.message,
+        this.data,
+    });
+
+    factory Error.fromJson(Map<String, dynamic> json) => Error(
+        code: json["code"],
+        message: json["message"],
+        data: json["data"] == null ? null : Data.fromJson(json["data"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "code": code,
+        "message": message,
+        "data": data?.toJson(),
+    };
+}
+
+class Data {
+    String? name;
+    String? debug;
+    String? message;
+    List<String>? arguments;
+    Context? context;
+
+    Data({
+        this.name,
+        this.debug,
+        this.message,
+        this.arguments,
+        this.context,
+    });
+
+    factory Data.fromJson(Map<String, dynamic> json) => Data(
+        name: json["name"],
+        debug: json["debug"],
+        message: json["message"],
+        arguments: json["arguments"] == null ? [] : List<String>.from(json["arguments"]!.map((x) => x)),
+        context: json["context"] == null ? null : Context.fromJson(json["context"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "name": name,
+        "debug": debug,
+        "message": message,
+        "arguments": arguments == null ? [] : List<dynamic>.from(arguments!.map((x) => x)),
+        "context": context?.toJson(),
+    };
+}
+
+class Context {
+    Context();
+
+    factory Context.fromJson(Map<String, dynamic> json) => Context(
+    );
+
+    Map<String, dynamic> toJson() => {
     };
 }
 
@@ -57,21 +127,8 @@ class Result {
     CacheHashes? cacheHashes;
     Map<String, Currency>? currencies;
     BundleParams? bundleParams;
-    UserCompanies? userCompanies;
-    bool? showEffect;
-    bool? displaySwitchCompanyMenu;
     List<int>? userId;
-    int? maxTimeBetweenKeysInMs;
-    List<dynamic>? webTours;
-    bool? tourDisable;
-    String? notificationType;
-    bool? mapBoxToken;
     String? uaType;
-    bool? odoobotInitialized;
-    bool? iapCompanyEnrich;
-    bool? ocnTokenKey;
-    bool? fcmProjectId;
-    int? inboxAction;
     bool? isQuickEditModeEnabled;
 
     Result({
@@ -99,21 +156,8 @@ class Result {
         this.cacheHashes,
         this.currencies,
         this.bundleParams,
-        this.userCompanies,
-        this.showEffect,
-        this.displaySwitchCompanyMenu,
         this.userId,
-        this.maxTimeBetweenKeysInMs,
-        this.webTours,
-        this.tourDisable,
-        this.notificationType,
-        this.mapBoxToken,
         this.uaType,
-        this.odoobotInitialized,
-        this.iapCompanyEnrich,
-        this.ocnTokenKey,
-        this.fcmProjectId,
-        this.inboxAction,
         this.isQuickEditModeEnabled,
     });
 
@@ -142,21 +186,8 @@ class Result {
         cacheHashes: json["cache_hashes"] == null ? null : CacheHashes.fromJson(json["cache_hashes"]),
         currencies: Map.from(json["currencies"]!).map((k, v) => MapEntry<String, Currency>(k, Currency.fromJson(v))),
         bundleParams: json["bundle_params"] == null ? null : BundleParams.fromJson(json["bundle_params"]),
-        userCompanies: json["user_companies"] == null ? null : UserCompanies.fromJson(json["user_companies"]),
-        showEffect: json["show_effect"],
-        displaySwitchCompanyMenu: json["display_switch_company_menu"],
         userId: json["user_id"] == null ? [] : List<int>.from(json["user_id"]!.map((x) => x)),
-        maxTimeBetweenKeysInMs: json["max_time_between_keys_in_ms"],
-        webTours: json["web_tours"] == null ? [] : List<dynamic>.from(json["web_tours"]!.map((x) => x)),
-        tourDisable: json["tour_disable"],
-        notificationType: json["notification_type"],
-        mapBoxToken: json["map_box_token"],
         uaType: json["ua_type"],
-        odoobotInitialized: json["odoobot_initialized"],
-        iapCompanyEnrich: json["iap_company_enrich"],
-        ocnTokenKey: json["ocn_token_key"],
-        fcmProjectId: json["fcm_project_id"],
-        inboxAction: json["inbox_action"],
         isQuickEditModeEnabled: json["is_quick_edit_mode_enabled"],
     );
 
@@ -185,21 +216,8 @@ class Result {
         "cache_hashes": cacheHashes?.toJson(),
         "currencies": Map.from(currencies!).map((k, v) => MapEntry<String, dynamic>(k, v.toJson())),
         "bundle_params": bundleParams?.toJson(),
-        "user_companies": userCompanies?.toJson(),
-        "show_effect": showEffect,
-        "display_switch_company_menu": displaySwitchCompanyMenu,
         "user_id": userId == null ? [] : List<dynamic>.from(userId!.map((x) => x)),
-        "max_time_between_keys_in_ms": maxTimeBetweenKeysInMs,
-        "web_tours": webTours == null ? [] : List<dynamic>.from(webTours!.map((x) => x)),
-        "tour_disable": tourDisable,
-        "notification_type": notificationType,
-        "map_box_token": mapBoxToken,
         "ua_type": uaType,
-        "odoobot_initialized": odoobotInitialized,
-        "iap_company_enrich": iapCompanyEnrich,
-        "ocn_token_key": ocnTokenKey,
-        "fcm_project_id": fcmProjectId,
-        "inbox_action": inboxAction,
         "is_quick_edit_mode_enabled": isQuickEditModeEnabled,
     };
 }
@@ -222,21 +240,17 @@ class BundleParams {
 
 class CacheHashes {
     String? translations;
-    String? loadMenus;
 
     CacheHashes({
         this.translations,
-        this.loadMenus,
     });
 
     factory CacheHashes.fromJson(Map<String, dynamic> json) => CacheHashes(
         translations: json["translations"],
-        loadMenus: json["load_menus"],
     );
 
     Map<String, dynamic> toJson() => {
         "translations": translations,
-        "load_menus": loadMenus,
     };
 }
 
@@ -261,72 +275,6 @@ class Currency {
         "symbol": symbol,
         "position": position,
         "digits": digits == null ? [] : List<dynamic>.from(digits!.map((x) => x)),
-    };
-}
-
-class UserCompanies {
-    int? currentCompany;
-    Map<String, AllowedCompany>? allowedCompanies;
-    DisallowedAncestorCompanies? disallowedAncestorCompanies;
-
-    UserCompanies({
-        this.currentCompany,
-        this.allowedCompanies,
-        this.disallowedAncestorCompanies,
-    });
-
-    factory UserCompanies.fromJson(Map<String, dynamic> json) => UserCompanies(
-        currentCompany: json["current_company"],
-        allowedCompanies: Map.from(json["allowed_companies"]!).map((k, v) => MapEntry<String, AllowedCompany>(k, AllowedCompany.fromJson(v))),
-        disallowedAncestorCompanies: json["disallowed_ancestor_companies"] == null ? null : DisallowedAncestorCompanies.fromJson(json["disallowed_ancestor_companies"]),
-    );
-
-    Map<String, dynamic> toJson() => {
-        "current_company": currentCompany,
-        "allowed_companies": Map.from(allowedCompanies!).map((k, v) => MapEntry<String, dynamic>(k, v.toJson())),
-        "disallowed_ancestor_companies": disallowedAncestorCompanies?.toJson(),
-    };
-}
-
-class AllowedCompany {
-    int? id;
-    String? name;
-    int? sequence;
-    List<dynamic>? childIds;
-    bool? parentId;
-
-    AllowedCompany({
-        this.id,
-        this.name,
-        this.sequence,
-        this.childIds,
-        this.parentId,
-    });
-
-    factory AllowedCompany.fromJson(Map<String, dynamic> json) => AllowedCompany(
-        id: json["id"],
-        name: json["name"],
-        sequence: json["sequence"],
-        childIds: json["child_ids"] == null ? [] : List<dynamic>.from(json["child_ids"]!.map((x) => x)),
-        parentId: json["parent_id"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "sequence": sequence,
-        "child_ids": childIds == null ? [] : List<dynamic>.from(childIds!.map((x) => x)),
-        "parent_id": parentId,
-    };
-}
-
-class DisallowedAncestorCompanies {
-    DisallowedAncestorCompanies();
-
-    factory DisallowedAncestorCompanies.fromJson(Map<String, dynamic> json) => DisallowedAncestorCompanies(
-    );
-
-    Map<String, dynamic> toJson() => {
     };
 }
 
