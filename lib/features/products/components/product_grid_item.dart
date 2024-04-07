@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 import 'package:topsale/features/products/cubit/products_cubit.dart';
@@ -29,27 +30,28 @@ class ProductGridItem extends StatelessWidget {
                     child: DecodedImage(
                         base64String: product.image1920, context: context)),
               ),
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(product.name!,
-                        textAlign: TextAlign.start,
-                        style: Theme.of(context).textTheme.bodySmall),
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 2),
+                child: Text(product.name ?? '',
+                    maxLines: 1,
+                    textAlign: TextAlign.start,
+                    style: Theme.of(context).textTheme.bodySmall),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Text(
-                    product.uomId.toString(),
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall!
-                        .copyWith(fontSize: 10),
+                  Flexible(
+                    child: Text(
+                      product.uomId.toString(),
+                      maxLines: 1,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall!
+                          .copyWith(fontSize: 10),
+                    ),
                   ),
                   Text("${product.listPrice.toString()} USD",
+                      maxLines: 1,
                       style: Theme.of(context)
                           .textTheme
                           .bodySmall!

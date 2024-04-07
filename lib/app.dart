@@ -24,6 +24,7 @@ import 'features/home/cubit/itinerary_cubit/itinerary_cubit.dart';
 import 'features/itinerary_details/cubit/itinerary_details_cubit.dart';
 import 'features/login/cubit/login_cubit.dart';
 import 'features/onboarding/cubit/onboarding_cubit.dart';
+import 'features/product_of_category/cubit/cubit.dart';
 import 'features/returns/cubit/returns_cubit.dart';
 import 'features/returns_list/cubit/returns_list_cubit.dart';
 import 'features/sales_ordered_list/cubit/sales_ordered_list_cubit.dart';
@@ -87,6 +88,9 @@ class TopSale extends StatelessWidget {
                 injector.serviceLocator<SalesOrderedListCubit>()),
         BlocProvider(
             create: (context) => injector.serviceLocator<ReturnsListCubit>()),
+        BlocProvider(
+            create: (context) =>
+                injector.serviceLocator<ProductsOfCategoryCubit>()),
       ],
       child: MaterialApp(
         supportedLocales: context.supportedLocales,
@@ -98,6 +102,10 @@ class TopSale extends StatelessWidget {
         title: AppStrings.appName,
         onGenerateRoute: AppRoutes.onGenerateRoute,
         theme: ThemeData(
+            scaffoldBackgroundColor: AppColors.primary,
+            appBarTheme: AppBarTheme(
+              backgroundColor: AppColors.primary,
+            ),
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
             textTheme: const TextTheme(

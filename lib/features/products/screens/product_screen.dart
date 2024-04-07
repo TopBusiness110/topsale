@@ -4,12 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:topsale/config/routes/app_routes.dart';
 import 'package:topsale/core/models/selected_products.dart';
 import 'package:topsale/core/widgets/custom_textfield.dart';
+import 'package:topsale/features/product_of_category/screen/products_of_category.dart';
 import 'package:topsale/features/products/cubit/products_cubit.dart';
 
-import '../../../core/methods/products.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/get_size.dart';
-import '../../../core/widgets/custom_arrow_back.dart';
 import '../components/product_grid_item.dart';
 
 class ProductsScreen extends StatefulWidget {
@@ -110,6 +109,19 @@ class _ProductsScreenState extends State<ProductsScreen> {
                             itemBuilder: (BuildContext context, int index) {
                               return InkWell(
                                 onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ProductsOfCategory(
+                                                  categoryId: cubit
+                                                      .categoriesModel!
+                                                      .result![index]
+                                                      .id!,
+                                                  catName: cubit
+                                                      .categoriesModel!
+                                                      .result![index]
+                                                      .name!)));
                                   //!  nav to api of products of category
                                 },
                                 child: Container(
