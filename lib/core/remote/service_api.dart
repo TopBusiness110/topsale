@@ -80,7 +80,6 @@ class ServiceApi {
 ///////////////////////////////////////////
   Future<Either<Failure, AllCategoriesModel>> getAllCategories() async {
     try {
-      // String? sessionId = 'f5d43568ee2efa5e9a4bb792fb8138a295600e78';
       String? sessionId = await Preferences.instance.getSessionId();
       final response = await dio.get(
         EndPoints.allCategoriesUrl,
@@ -95,6 +94,27 @@ class ServiceApi {
     }
   }
 
+  Future<Either<Failure, AllProductsModel>> getAllProductsByCategory(
+      {required int categoryId}) async {
+    try {
+      String? sessionId = await Preferences.instance.getSessionId();
+      final response = await dio.get(
+        EndPoints.allCategoryProducts,
+        queryParameters: {
+          'filter': '[["categ_id", "=", [$categoryId]]]',
+          'query':
+              '{id,name,qty_available,list_price,currency_id,uom_name,uom_id,categ_id,image_1920}'
+        },
+        options: Options(
+          headers: {"Cookie": "frontend_lang=en_US;session_id=$sessionId"},
+        ),
+      );
+
+      return Right(AllProductsModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
 //vhmcvmbvm
 //   Future<Either<Failure, AuthModel>> postLoginAsAdmin2(
 //       String phoneOrMail, String password) async {
