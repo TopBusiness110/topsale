@@ -1,12 +1,3 @@
-// import 'dart:io';
-
-// import 'package:dartz/dartz.dart';
-// import 'package:dio/dio.dart';
-
-// import '../api/base_api_consumer.dart';
-// import '../api/end_points.dart';
-// import '../error/exceptions.dart';
-// import '../error/failures.dart';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -32,21 +23,7 @@ import 'package:odoo_rpc/odoo_rpc.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/login_model.dart';
-class ServiceApi {
-  final BaseApiConsumer dio;
 
-  ServiceApi(this.dio);
-
-  final odoo = OdooClient('https://demo17.topbuziness.com');
-
-  Future<String> getSessionId(
-      {required String phone, required String password}) async {
-    final odoResponse =
-        await odoo.authenticate('topbuziness.com', phone, password);
-    final sessionId = odoResponse.id;
-    print("getSessionId = $sessionId");
-    return sessionId;
-  }
 
 class ServiceApi {
   final BaseApiConsumer dio;
@@ -63,6 +40,13 @@ class ServiceApi {
         ),
       );
 
+
+      return Right(AllProductsModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
   Future<String> getSessionId(
       {required String phone, required String password}) async {
     final odoResponse = await odoo.authenticate(EndPoints.db, phone, password);
@@ -70,12 +54,6 @@ class ServiceApi {
     print("getSessionId = $sessionId");
     return sessionId;
   }
-      return Right(AllProductsModel.fromJson(response));
-    } on ServerException {
-      return Left(ServerFailure());
-    }
-  }
-
   Future<Either<Failure, AuthModel>> postLoginAsAdmin2(
       String phoneOrMail, String password) async {
     try {

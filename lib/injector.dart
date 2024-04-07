@@ -66,7 +66,7 @@ Future<void> setUp() async {
   );
   serviceLocator.registerFactory(
           () => ProductsCubit(
-        //serviceLocator(),
+     serviceLocator(),
       )
   );
   serviceLocator.registerFactory(
@@ -143,12 +143,12 @@ Future<void> setUp() async {
   );
   //! External
   // Shared Preferences
-      ));
+
   serviceLocator.registerFactory(() => LoginCubit(
-      //serviceLocator(),
+     serviceLocator(),
       ));
   serviceLocator.registerFactory(() => SignupCubit(
-      //serviceLocator(),
+     serviceLocator(),
       ));
   serviceLocator.registerFactory(() => ForgotPasswordCubit(
       //serviceLocator(),
