@@ -1,4 +1,3 @@
-
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:odoo_rpc/odoo_rpc.dart';
@@ -24,22 +23,20 @@ import 'package:http/http.dart' as http;
 
 import '../models/login_model.dart';
 
-
 class ServiceApi {
   final BaseApiConsumer dio;
   ServiceApi(this.dio);
   final odoo = OdooClient(EndPoints.baseUrl);
   Future<Either<Failure, AllProductsModel>> getAllProducts() async {
     try {
-      String? sessionId = '834180ab0871f4709d8d49891f6e80b583c3a463';
-      // String? sessionId = await Preferences.instance.getSessionId();
+      // String? sessionId = 'f5d43568ee2efa5e9a4bb792fb8138a295600e78';
+      String? sessionId = await Preferences.instance.getSessionId();
       final response = await dio.get(
         EndPoints.allProducts,
         options: Options(
           headers: {"Cookie": "frontend_lang=en_US;session_id=$sessionId"},
         ),
       );
-
 
       return Right(AllProductsModel.fromJson(response));
     } on ServerException {
@@ -54,6 +51,7 @@ class ServiceApi {
     print("getSessionId = $sessionId");
     return sessionId;
   }
+
   Future<Either<Failure, AuthModel>> postLoginAsAdmin2(
       String phoneOrMail, String password) async {
     try {
@@ -78,11 +76,12 @@ class ServiceApi {
       return Left(ServerFailure());
     }
   }
+
 ///////////////////////////////////////////
   Future<Either<Failure, AllCategoriesModel>> getAllCategories() async {
     try {
-      String? sessionId = '834180ab0871f4709d8d49891f6e80b583c3a463';
-      // String? sessionId = await Preferences.instance.getSessionId();
+      // String? sessionId = 'f5d43568ee2efa5e9a4bb792fb8138a295600e78';
+      String? sessionId = await Preferences.instance.getSessionId();
       final response = await dio.get(
         EndPoints.allCategoriesUrl,
         options: Options(
@@ -96,8 +95,7 @@ class ServiceApi {
     }
   }
 
-
-//vhmcvmbvm 
+//vhmcvmbvm
 //   Future<Either<Failure, AuthModel>> postLoginAsAdmin2(
 //       String phoneOrMail, String password) async {
 //     try {
@@ -139,8 +137,7 @@ class ServiceApi {
     }
   }
 
-
- Future<Either<Failure, AuthModel>> authWithSession(
+  Future<Either<Failure, AuthModel>> authWithSession(
       String phoneOrMail, String password, String db) async {
     try {
       final response = await dio.post(
@@ -148,7 +145,7 @@ class ServiceApi {
         body: {
           "jsonrpc": "2.0",
           "params": {
-             "is_system": false,
+            "is_system": false,
             'login': phoneOrMail,
             "password": password,
             "db": db
@@ -180,7 +177,6 @@ class ServiceApi {
           headers: {"Cookie": "session_id=$sessionId"},
         ),
         body: {
-
           "params": {
             'login': phoneOrMail,
             "password": password,
