@@ -37,6 +37,43 @@ class Preferences {
     String? sessionId = preferences.getString('sessionIdTrueUser');
     return sessionId;
   }
+Future<void> setDataBaseName(String db) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString('database', db);
+    print("sessionIdTrueUser = $db");
+  }
+  
+  Future<String?> getDataBaseName() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? database = preferences.getString('database');
+    return database;
+  }
+
+  Future<void> setUserName(String userName) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString('userName', userName);
+    print("sessionIdTrueUser = $userName");
+  }
+  Future<void> removeUserName() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.remove('userName');
+  }
+
+  Future<String?> getUserName() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? userName = preferences.getString('userName');
+    return userName;
+  }
+  Future<void> setUserPass(String userPass) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString('userPass', userPass);
+    print("Password = $userPass");
+  }
+  Future<String?> getUserPass() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? userPass = preferences.getString('userPass');
+    return userPass;
+  }
 
   Future<void> isAdmin(bool is_admin) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();

@@ -17,10 +17,14 @@ class LoginCubit extends Cubit<LoginState> {
   AuthModel? authModel;
 
   login(BuildContext context,
-      {required String phoneOrMail, required String password}) async {
+      {required String phoneOrMail,
+      required String db,
+      required String password,
+
+      bool iSVisitor = false}) async {
     emit(LoadingLoginState());
     AppWidget.createProgressDialog(context, 'انتظر');
-    final response = await api.auth(phoneOrMail, password);
+    final response = await api.auth(phoneOrMail, password,db);
     response.fold((l) {
       print('gggggggg');
       Navigator.pop(context);
@@ -33,8 +37,15 @@ class LoginCubit extends Cubit<LoginState> {
         String sessionId =
             await api.getSessionId(phone: phoneOrMail, password: password);
         print('lllllllll $sessionId');
-        await Preferences.instance.setSessionId(sessionId);
         emit(SuccessLoginState());
+        await Preferences.instance.setSessionId(sessionId);
+
+        if (!iSVisitor) {
+
+          await Preferences.instance.setUserName(phoneOrMail);
+        await Preferences.instance.setUserPass(password);
+        }
+        
         Navigator.pop(context);
         Preferences.instance.setUser2(r);
         Navigator.pushNamedAndRemoveUntil(

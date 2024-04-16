@@ -14,28 +14,44 @@ class SignupCubit extends Cubit<SignupState> {
   SignupCubit(this.api) : super(SignupInitial());
   ServiceApi api;
 
-AuthModel? authModel;
-  login(BuildContext context,
-      {required String phoneOrMail, required String password, required String db}) async {
+  AuthModel? authModel;
+  signup(
+    BuildContext context, {
+    required String phoneOrMail,
+    required String password,
+    required String db,
+    required String name,
+    required String odooLink,
+  }) async {
     emit(LoadingSignupState());
     AppWidget.createProgressDialog(context, 'انتظر');
-    final response = await api.authWithSession(phoneOrMail, password,db);
+    final response = await api.authWithDB(
+        phoneOrMail: phoneOrMail,
+        password: password,
+        db: db,
+        name: name,
+        odooLink: odooLink);
     response.fold((l) {
       print('gggggggg');
       Navigator.pop(context);
       errorGetBar("login failed");
       emit(FailureSignupState());
-    }, (r) {
+    }, (r) async {
       print('gggggggggggggggg');
       if (r.result != null) {
         authModel = r;
-        //    String sessionId =
-        //     await getSessionId(phone: phoneOrMail, password: password);
-        // await Preferences.instance.setSessionId(sessionId);
-
+    String sessionId =
+            await api.getSessionId(phone: phoneOrMail, password: password);
+        print('lllllllll $sessionId');
         emit(SuccessSignupState());
+        await Preferences.instance.setSessionId(sessionId);
+             await Preferences.instance.setUserName(phoneOrMail);
+        await Preferences.instance.setUserPass(password);
+        await Preferences.instance.setDataBaseName(db);
+      
         Navigator.pop(context);
         Preferences.instance.setUser2(r);
+
         Navigator.pushNamedAndRemoveUntil(
             context, Routes.homeRoute, (route) => false);
       } else {
@@ -44,6 +60,4 @@ AuthModel? authModel;
       }
     });
   }
-
-
 }

@@ -64,10 +64,10 @@ Future<void> setUp() async {
       //serviceLocator(),
       ));
   serviceLocator.registerFactory(() => CreateSalesOrderCubit(
-      //serviceLocator(),
+        serviceLocator(),
       ));
   serviceLocator.registerFactory(() => PaymentsCubit(
-      //serviceLocator(),
+        serviceLocator(),
       ));
   serviceLocator.registerFactory(() => ReceiptCubit(
       //serviceLocator(),
@@ -76,22 +76,22 @@ Future<void> setUp() async {
       //serviceLocator(),
       ));
   serviceLocator.registerFactory(() => CustomerPaymentsCubit(
-      //serviceLocator(),
+      serviceLocator(),
       ));
   serviceLocator.registerFactory(() => CartCubit(
       //serviceLocator(),
       ));
   serviceLocator.registerFactory(() => DismissalNoticeCubit(
-      //serviceLocator(),
+    serviceLocator(),
       ));
   serviceLocator.registerFactory(() => ExpectedClientsCubit(
-      //serviceLocator(),
+        serviceLocator(),
       ));
   serviceLocator.registerFactory(() => DismissalNoticeDetailsCubit(
       //serviceLocator(),
       ));
   serviceLocator.registerFactory(() => ExpectedClientsListCubit(
-      //serviceLocator(),
+        serviceLocator(),
       ));
   serviceLocator.registerFactory(() => ItineraryCubit(
       //serviceLocator(),
@@ -100,7 +100,7 @@ Future<void> setUp() async {
       //serviceLocator(),
       ));
   serviceLocator.registerFactory(() => SalesOrderedListCubit(
-      //serviceLocator(),
+        serviceLocator(),
       ));
   serviceLocator.registerFactory(() => ReturnsListCubit(
       //serviceLocator(),

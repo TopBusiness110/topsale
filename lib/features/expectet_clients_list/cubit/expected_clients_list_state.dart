@@ -5,3 +5,6 @@ abstract class ExpectedClientsListState {}
 
 class ExpectedClientsListInitial extends ExpectedClientsListState {}
 class NewExpectedClientAdded extends ExpectedClientsListState {}
+class FailureGetLeadsState extends ExpectedClientsListState {}
+class LoadingGetLeadsState extends ExpectedClientsListState {}
+class SuccessGetLeadsState extends ExpectedClientsListState {}

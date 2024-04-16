@@ -52,6 +52,11 @@ class HomeCubit extends Cubit<HomeState> {
       userName = (sharedUserData!.result!.name != null
           ? sharedUserData!.result!.name
           : "loll")!;
+
+
+
+
+          
 //
       // if (sharedUserData!.data!.phone!.contains('+964'))
       //   phoneController.text = sharedUserData!.data!.phone!.replaceAll("+964", "");

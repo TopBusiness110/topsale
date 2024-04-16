@@ -7,14 +7,26 @@ import 'package:sizer/sizer.dart';
 import 'package:topsale/core/utils/app_assets.dart';
 import 'package:topsale/core/utils/app_colors.dart';
 import 'package:topsale/core/widgets/custom_button.dart';
+import 'package:topsale/core/widgets/toast.dart';
+import 'package:topsale/features/create_sales_order/cubit/create_sales_order_cubit.dart';
 import 'package:topsale/features/payments/cubit/payments_cubit.dart';
 
 import '../../../config/routes/app_routes.dart';
 import '../../../core/widgets/custom_arrow_back.dart';
 
 class PaymentScreen extends StatefulWidget {
-  PaymentScreen({super.key, required this.sum});
+  PaymentScreen(
+      {super.key,
+      required this.sum,
+      this.onPressed,
+      required this.productId,
+      required this.quantity,
+      required this.partnerId});
   final double sum;
+  final productId;
+  final quantity;
+  final partnerId;
+  final void Function()? onPressed;
 
   @override
   State<PaymentScreen> createState() => _PaymentScreenState();
@@ -29,6 +41,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       },
       builder: (context, state) {
         PaymentsCubit cubit = context.read<PaymentsCubit>();
+
         return OrientationBuilder(
           builder: (context, orientation) {
             if (orientation == Orientation.landscape) {
@@ -191,12 +204,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                                           AppColors.primary)),
                                         ],
                                       ),
-                                      items: cubit.items
+                                      items: cubit.allJournalsModel!.result!
                                           .map((item) =>
                                               DropdownMenuItem<String>(
-                                                  value: item,
+                                                  value: item.id.toString(),
                                                   child: Text(
-                                                    item,
+                                                    item.displayName!,
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .displayMedium!
@@ -299,13 +312,41 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 height: 40,
                                 child: Padding(
                                   padding: EdgeInsets.only(bottom: 0.3.h),
-                                  child: CustomButton(
-                                      backgroundColor: AppColors.yellow,
-                                      textColor: AppColors.white,
-                                      text: "confirm".tr(),
-                                      onPressed: () {
-                                        Navigator.pushReplacementNamed(
-                                            context, Routes.receiptRoute);
+                                  child: BlocConsumer<CreateSalesOrderCubit,
+                                          CreateSalesOrderState>(
+                                      listener: (context, state) {},
+                                      builder: (context, state) {
+                                        return CustomButton(
+                                            backgroundColor: AppColors.yellow,
+                                            textColor: AppColors.white,
+                                            text: "confirm".tr(),
+                                            onPressed: () {
+                                              if (cubit.selectedRadioValue ==
+                                                  1) {
+                                                cubit.createInvoice(context,
+                                                    partnerId: widget.partnerId,
+                                                    productId: widget.productId,
+                                                    quantity: widget.quantity,
+                                                    amount: widget.sum);
+                                              } else {
+                                                if (cubit.selectedValue ==
+                                                    null) {
+                                                  makeToast(
+                                                      "من فضلك اخر وسيلة الدفع");
+
+                                                  print(
+                                                      "please select payment method");
+                                                } else {
+                                                  cubit.createInvoice(context,
+                                                      partnerId:
+                                                          widget.partnerId,
+                                                      productId:
+                                                          widget.productId,
+                                                      quantity: widget.quantity,
+                                                      amount: widget.sum);
+                                                }
+                                              }
+                                            });
                                       }),
                                   // Row(
                                   //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
