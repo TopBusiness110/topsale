@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 import 'package:topsale/core/utils/app_colors.dart';
+import 'package:topsale/features/create_sales_order/cubit/create_sales_order_cubit.dart';
 import 'package:topsale/features/expectet_clients_list/cubit/expected_clients_list_cubit.dart';
+import 'package:topsale/features/home/cubit/home_tab_cubit/home_cubit.dart';
 
 import '../../../core/widgets/custom_arrow_back.dart';
 import '../../../core/widgets/custom_button.dart';
@@ -13,13 +15,20 @@ import '../cubit/expected_clients_cubit/expected_clients_cubit.dart';
 //العملاء المحتملين
 class ExpectedClientsTab extends StatelessWidget {
   ExpectedClientsTab({super.key});
-  final formKey = GlobalKey<FormState>(debugLabel: "expected clients tab");
+    GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ExpectedClientsCubit, ExpectedClientsState>(
       listener: (context, state) {
-        // TODO: implement listener
+        if (state is SuccessCreateLeadState) {
+          context.read<ExpectedClientsListCubit>().getAllLeads();
+          context.read<CreateSalesOrderCubit>().getAllUsers();
+          print('success');
+
+          Navigator.pop(context);
+          context.read<ExpectedClientsCubit>().clearFields();
+        }
       },
       builder: (context, state) {
         ExpectedClientsCubit cubit = context.read<ExpectedClientsCubit>();
@@ -141,19 +150,9 @@ class ExpectedClientsTab extends StatelessWidget {
                             text: "registration".tr(),
                             onPressed: () {
                               if (formKey.currentState!.validate()) {
-                                cubit.addExpectedClient();
-                                context
-                                    .read<ExpectedClientsListCubit>()
-                                    .fillExpectedClientsList(
-                                        name: cubit.nameController.text,
-                                        opportunity:
-                                            cubit.opportunityController.text,
-                                        phone: cubit.phoneController.text,
-                                        address: cubit.addressController.text,
-                                        email: cubit.emailController.text);
-                                Navigator.pop(context);
+                                cubit.createPartner();
+
                                 // Navigator.pushNamed(context, Routes.expectedClientsListRoute);
-                                cubit.clearFields();
                               }
                               // Navigator.pushNamed(context, Routes.productsRoute);
                             },

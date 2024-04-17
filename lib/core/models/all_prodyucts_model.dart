@@ -48,6 +48,7 @@ class ProductModelData {
   String? uomName;
   int? uomId;
   int? categId;
+  int userOrderedQuantity;
   dynamic qty_available;
   dynamic image1920;
 
@@ -61,6 +62,7 @@ class ProductModelData {
     this.categId,
     this.qty_available,
     this.image1920,
+    this.userOrderedQuantity = 0,
   });
 
   factory ProductModelData.fromJson(Map<String, dynamic> json) =>

@@ -21,9 +21,9 @@ class ProductGridItem extends StatelessWidget {
               color: AppColors.lightBlue,
               borderRadius: BorderRadius.circular(18)),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Flexible(
+                fit: FlexFit.tight,
                 child: Container(
                     decoration: BoxDecoration(shape: BoxShape.rectangle),
                     margin: EdgeInsets.all(8),
@@ -69,8 +69,11 @@ class ProductGridItem extends StatelessWidget {
                       child: IconButton(
                         padding: EdgeInsets.zero,
                         onPressed: () {
+                          print(
+                              "product.userOrderedQuantity ${product.qty_available}");
+
                           //todo-->
-                          // cubit.addProduct(product: product);
+                          cubit.addProduct(product: product);
                         },
                         icon: const Icon(
                           Icons.add,
@@ -81,7 +84,7 @@ class ProductGridItem extends StatelessWidget {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text("${product.qty_available.toString()}"),
+                      child: Text("${product.userOrderedQuantity.toString()}"),
                     ),
                     CircleAvatar(
                       radius: 12,
@@ -89,7 +92,7 @@ class ProductGridItem extends StatelessWidget {
                       child: IconButton(
                         padding: EdgeInsets.zero,
                         onPressed: () {
-                          // cubit.removeProduct(product: product);
+                          cubit.removeProduct(product: product);
                         },
                         icon: const Icon(
                           Icons.remove,

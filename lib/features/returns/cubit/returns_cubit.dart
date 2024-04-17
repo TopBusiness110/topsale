@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:topsale/core/models/all_prodyucts_model.dart';
 import 'package:topsale/core/models/client_model.dart';
 
 import '../../../core/methods/clients.dart';
@@ -12,7 +13,7 @@ class ReturnsCubit extends Cubit<ReturnsState> {
   ReturnsCubit() : super(ReturnsInitial());
 
 
-  List<ProductModel> listOfProducts= [];
+  List<ProductModelData> listOfProducts= [];
 
   String currentClient = '';
   List<ClientModel> matches = [];
@@ -40,7 +41,7 @@ class ReturnsCubit extends Cubit<ReturnsState> {
     emit(SelectingNameState());
   }
 
- List<ProductModel>? searchForProductsForClient(String clientName ,List<CartModel> cart){
+ List<ProductModelData>? searchForProductsForClient(String clientName ,List<CartModel> cart){
     for(int i = 0 ; i<cart.length ; i++){
       if(cart[i].clientName.toLowerCase()==clientName.toLowerCase()){
         emit(ClientCartFounded());
@@ -52,7 +53,7 @@ class ReturnsCubit extends Cubit<ReturnsState> {
   }
 
 addProductQuantity(int index){
-    int quantity = listOfProducts[index].quantity!;
+    int quantity = listOfProducts[index].qty_available!;
     int userOrderedQuantity = listOfProducts[index].userOrderedQuantity;
     if(userOrderedQuantity<=quantity) {
       listOfProducts[index].userOrderedQuantity++;
@@ -60,7 +61,7 @@ addProductQuantity(int index){
     }
 }
   decreaseProductQuantity(int index){
-    int quantity = listOfProducts[index].quantity!;
+    int quantity = listOfProducts[index].qty_available!;
     int userOrderedQuantity = listOfProducts[index].userOrderedQuantity;
     if(userOrderedQuantity==0){
       removeProduct(index);

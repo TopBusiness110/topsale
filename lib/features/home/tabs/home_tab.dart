@@ -8,8 +8,21 @@ import '../../../core/utils/app_assets.dart';
 import '../../../core/utils/app_colors.dart';
 import '../components/home_list_item.dart';
 
-class HomeTab extends StatelessWidget {
+class HomeTab extends StatefulWidget {
   const HomeTab({super.key});
+
+  @override
+  State<HomeTab> createState() => _HomeTabState();
+}
+
+class _HomeTabState extends State<HomeTab> {
+  @override
+  void initState() {
+    context.read<HomeCubit>().getUserData();
+
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +49,7 @@ class HomeTab extends StatelessWidget {
                       width: 5,
                     ),
                     Text(
-                      "اهلا, مصطفي خليل",
+                      "اهلا, ${cubit.userName}",
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ],

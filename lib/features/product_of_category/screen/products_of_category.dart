@@ -50,22 +50,26 @@ class _ProductsOfCategoryState extends State<ProductsOfCategory> {
                   fontWeight: FontWeight.w600, color: AppColors.white),
             ),
           ),
-          body: GridView.builder(
-            shrinkWrap: true,
-            physics: const BouncingScrollPhysics(),
-            itemCount: cubit.allProductsModel?.result!.length,
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisExtent: 230,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 20),
-            itemBuilder: (context, index) {
-              return ProductGridItem(
-                  product: cubit.allProductsModel!.result![index]);
-              //products[index],);
-            },
-          ),
+          body: cubit.allProductsModel != null
+              ? GridView.builder(
+                  shrinkWrap: true,
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: cubit.allProductsModel?.result!.length,
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisExtent: 230,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 20),
+                  itemBuilder: (context, index) {
+                    return ProductGridItem(
+                        product: cubit.allProductsModel!.result![index]);
+                    //products[index],);
+                  },
+                )
+              : Container(
+                  child: null,
+                ),
         );
       },
     );

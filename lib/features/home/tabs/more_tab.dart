@@ -1,9 +1,12 @@
 import 'package:easy_localization/easy_localization.dart' as easy;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 import 'package:topsale/config/routes/app_routes.dart';
+import 'package:topsale/core/preferences/preferences.dart';
 import 'package:topsale/core/utils/app_assets.dart';
+import 'package:topsale/features/home/cubit/home_tab_cubit/home_cubit.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/utils/app_colors.dart';
@@ -137,6 +140,11 @@ class MoreTab extends StatelessWidget {
                             Navigator.pushNamed(context, Routes.reportsRoute);
                           } else if (index == 3) {
                             showAlertDialog(context);
+                          } else if (index == 4) {
+                            context.read<HomeCubit>().changeTabs(0);
+                            Preferences.instance.removeUserName();
+                            Navigator.pushNamedAndRemoveUntil(
+                                context, Routes.loginRoute, (route) => false);
                           }
                         },
                         child: MoreListItem(

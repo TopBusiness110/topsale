@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:topsale/core/models/all_prodyucts_model.dart';
 import 'package:topsale/core/models/selected_products.dart';
 import 'package:topsale/features/%20receipt/screens/receipt_screen.dart';
 import 'package:topsale/features/catch_receipt/screens/catch_receipt_screen.dart';
@@ -128,8 +129,19 @@ class AppRoutes {
 
       case Routes.paymentRoute:
         final sum = settings.arguments as double;
+        final partnerId = settings.arguments as dynamic;
+        final quantity = settings.arguments as dynamic;
+        final productId = settings.arguments as dynamic;
+
+        final onPressed = settings.arguments as void Function()?;
         return MaterialPageRoute(
-          builder: (context) => PaymentScreen(sum: sum),
+          builder: (context) => PaymentScreen(
+            sum: sum,
+            onPressed: onPressed,
+            partnerId: partnerId,
+            productId: productId,
+            quantity: quantity,
+          ),
         );
 
       case Routes.receiptRoute:
@@ -150,7 +162,7 @@ class AppRoutes {
       case Routes.catchReceiptRoute:
         final catchReceiptModel = settings.arguments as CatchReceiptModel;
         return MaterialPageRoute(
-          builder: (context) =>
+          builder: (context) => 
               CatchReceiptScreen(catchReceiptModel: catchReceiptModel),
         );
 
@@ -187,7 +199,7 @@ class AppRoutes {
         );
 
       case Routes.dismissalNoticeDetailsRoute:
-        final productsList = settings.arguments as List<ProductModel>;
+        final productsList = settings.arguments as List<ProductModelData>;
         return MaterialPageRoute(
           builder: (context) =>
               DismissalNoticeDetailsScreen(products: productsList),

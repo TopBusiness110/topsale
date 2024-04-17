@@ -2,15 +2,21 @@
 
 import 'package:easy_localization/easy_localization.dart' as easy;
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 import 'package:topsale/config/routes/app_routes.dart';
+import 'package:topsale/core/models/allusers_model.dart';
 import 'package:topsale/core/models/client_model.dart';
 import 'package:topsale/core/utils/app_colors.dart';
+import 'package:topsale/core/utils/decode_image.dart';
 import 'package:topsale/core/widgets/custom_button.dart';
 import 'package:topsale/core/widgets/custom_textfield.dart';
 import 'package:topsale/features/cart/cart_cubit.dart';
 import 'package:topsale/features/create_sales_order/cubit/create_sales_order_cubit.dart';
+import 'package:topsale/features/payments/cubit/payments_cubit.dart';
+import 'package:topsale/features/payments/screens/payment_screen.dart';
+import 'package:topsale/features/products/cubit/products_cubit.dart';
 import 'package:topsale/features/sales_ordered_list/cubit/sales_ordered_list_cubit.dart';
 
 import '../../../core/methods/clients.dart';
@@ -27,7 +33,7 @@ class CreateSalesOrder extends StatefulWidget {
 }
 
 class _CreateSalesOrderState extends State<CreateSalesOrder> {
-  final formKey = GlobalKey<FormState>(debugLabel: "new_client");
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -36,6 +42,8 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
     context
         .read<CreateSalesOrderCubit>()
         .calculateTotalPrice(widget.selectedProducts!);
+    context.read<CreateSalesOrderCubit>().getAllUsers();
+    context.read<PaymentsCubit>().getAllJournals();
   }
 
   @override
@@ -46,6 +54,7 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
       },
       builder: (context, state) {
         CreateSalesOrderCubit cubit = context.read<CreateSalesOrderCubit>();
+        ProductsCubit productCubit = context.read<ProductsCubit>();
         return Scaffold(
           backgroundColor: AppColors.primary,
           body: Stack(
@@ -80,7 +89,7 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                       ),
                       InkWell(
                         onTap: () {
-                          showClientsPopup(context, clients);
+                          showClientsPopup(context, cubit.matches);
                         },
                         child: Container(
                           width: 80.w,
@@ -161,7 +170,7 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                                                             width: 6.w,
                                                           ),
                                                           Text(
-                                                            "${widget.selectedProducts?.products[index].code}",
+                                                            "${widget.selectedProducts?.products[index].id}",
                                                             style: Theme.of(
                                                                     context)
                                                                 .textTheme
@@ -181,7 +190,7 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                                                       ),
                                                       //price
                                                       Text(
-                                                        "\$ ${widget.selectedProducts?.products[index].price}",
+                                                        "\$ ${widget.selectedProducts?.products[index].listPrice}",
                                                         textDirection:
                                                             TextDirection.ltr,
                                                         // textAlign: TextAlign.start,
@@ -298,22 +307,21 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                                                     ],
                                                   ),
                                                   Container(
-                                                    width: 20.w,
-                                                    height: 10.h,
-                                                    decoration: BoxDecoration(
-                                                        color:
-                                                            AppColors.primary,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(16)),
-                                                    child: Image.asset(
-                                                      widget
-                                                          .selectedProducts!
-                                                          .products[index]
-                                                          .image!,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
+                                                      width: 20.w,
+                                                      height: 10.h,
+                                                      decoration: BoxDecoration(
+                                                          color:
+                                                              AppColors.primary,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      16)),
+                                                      child: DecodedImage(
+                                                          base64String: widget
+                                                              .selectedProducts!
+                                                              .products[index]
+                                                              .image1920!,
+                                                          context: context)),
                                                 ],
                                               ),
                                             );
@@ -383,40 +391,49 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                     },
                     text: "add_product+",
                   ),
-                  CustomButton(
-                    backgroundColor: AppColors.lightBlue,
-                    textColor: AppColors.white,
-                    onPressed: () {
-                      if (widget.selectedProducts!.products.isEmpty) {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
-                          content: Text(" من فضلك اضف منتجات"),
-                          backgroundColor: AppColors.red,
-                          duration: Duration(milliseconds: 1000),
-                        ));
-                      }
-                      if (cubit.currentClient == "") {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
-                          content: Text(" من فضلك اضف عميل"),
-                          backgroundColor: AppColors.red,
-                          duration: Duration(milliseconds: 1000),
-                        ));
-                      }
-                      if (widget.selectedProducts!.products.isNotEmpty &&
-                          cubit.currentClient != "") {
-                        showAlertDialog(context);
-                      } else {
-                        // ScaffoldMessenger.of(context)
-                        //     .showSnackBar(const SnackBar(
-                        //   content: Text(" من فضلك اضف منتجات"),
-                        //   backgroundColor: AppColors.red,
-                        //   duration: Duration(milliseconds: 1000),
-                        // ));
-                      }
-                    },
-                    text: "confirm",
-                  )
+                  BlocConsumer<CreateSalesOrderCubit, CreateSalesOrderState>(
+                      listener: (context, state) {
+                    if (state is SuccessCreateSaleOrderState) {
+                      print("successdddd");
+                      showAlertDialog(context);
+                    }
+                  }, builder: (context, state) {
+                    return CustomButton(
+                      backgroundColor: AppColors.lightBlue,
+                      textColor: AppColors.white,
+                      onPressed: () {
+                        if (widget.selectedProducts!.products.isEmpty) {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            content: Text(" من فضلك اضف منتجات"),
+                            backgroundColor: AppColors.red,
+                            duration: Duration(milliseconds: 1000),
+                          ));
+                        } else if (cubit.currentClient == "") {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            content: Text(" من فضلك اضف عميل"),
+                            backgroundColor: AppColors.red,
+                            duration: Duration(milliseconds: 1000),
+                          ));
+                        } else if (widget
+                                .selectedProducts!.products.isNotEmpty &&
+                            cubit.currentClient != "") {
+                          cubit.createSaleOrder(
+                            context,
+                          );
+                        } else {
+                          // ScaffoldMessenger.of(context)
+                          //     .showSnackBar(const SnackBar(
+                          //   content: Text(" من فضلك اضف منتجات"),
+                          //   backgroundColor: AppColors.red,
+                          //   duration: Duration(milliseconds: 1000),
+                          // ));
+                        }
+                      },
+                      text: "confirm",
+                    );
+                  })
                 ],
               ),
             ],
@@ -432,10 +449,14 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
       builder: (context) {
         return BlocConsumer<CreateSalesOrderCubit, CreateSalesOrderState>(
           listener: (context, state) {
-            // TODO: implement listener
+            if (state is SuccessCreateSaleOrderState) {
+              // print("successdddd");
+              // showAlertDialog(context);
+            }
           },
           builder: (context, state) {
             CreateSalesOrderCubit cubit = context.read<CreateSalesOrderCubit>();
+            ProductsCubit productCubit = context.read<ProductsCubit>();
             return AlertDialog(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20)),
@@ -459,36 +480,74 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
               actions: [
                 Row(
                   children: [
-                    ElevatedButton(
-                      onPressed: () {
+                    BlocConsumer<CreateSalesOrderCubit, CreateSalesOrderState>(
+                        listener: (context, state) {
+                      if (state is SuccessCreateSaleOrderLineState) {
+                        print('sssss');
                         Navigator.pop(context);
-                        Navigator.pushNamed(context, Routes.paymentRoute,
-                            arguments: cubit.sum);
-                        //save client name and its products
-                        print("++++++++++++++++++++++++++++++++++++++++++++++");
-                        print(widget.selectedProducts?.products);
-                        context.read<CartCubit>().addClients(
-                            cubit.currentClient,
-                            widget.selectedProducts!.products);
-                        context
-                            .read<SalesOrderedListCubit>()
-                            .fillSalesOrderedList(
-                                creationDate: cubit.dateTime,
-                                customer: cubit.currentClient,
-                                number: cubit.billingNumber,
-                                status: cubit.billingStatus,
-                                total: cubit.sum);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: Size(28.w, 5.h),
-                        maximumSize: Size(30.w, 5.h),
-                        backgroundColor: AppColors.lightBlue,
-                      ),
-                      child: Text(
-                        "yes".tr(),
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ),
+                        context.read<ProductsCubit>().getAllProducts();
+                        //context.read<ProductsCubit>().selectedProducts.clear();
+
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PaymentScreen(
+                                sum: cubit.sum,
+                                partnerId: cubit.currentClientId,
+                                productId: productCubit.selectedProducts[0].id!,
+                                quantity: productCubit
+                                    .selectedProducts[0].userOrderedQuantity,
+                                onPressed: () {},
+                              ),
+                            ));
+                      }
+
+                      // if (state is SuccessCreateSaleOrderLineState) {
+                      //   Navigator.pushReplacementNamed(
+                      //       context, Routes.receiptRoute);
+                      // }
+                    }, builder: (context, state) {
+                      return ElevatedButton(
+                        onPressed: () {
+                          cubit.createSaleOrderLine(context,
+                              productId: productCubit.selectedProducts[0].id!,
+                              productQuantity: productCubit
+                                  .selectedProducts[0].userOrderedQuantity);
+
+                          // Navigator.pushNamed(
+                          //     context,
+                          //     Routes.paymentRoute,
+                          //     arguments: cubit.sum,
+                          //     () {
+
+                          //     });
+                          //save client name and its products
+                          print(
+                              "++++++++++++++++++++++++++++++++++++++++++++++");
+                          print(widget.selectedProducts?.products);
+                          context.read<CartCubit>().addClients(
+                              cubit.currentClient,
+                              widget.selectedProducts!.products);
+                          context
+                              .read<SalesOrderedListCubit>()
+                              .fillSalesOrderedList(
+                                  creationDate: cubit.dateTime,
+                                  customer: cubit.currentClient,
+                                  number: cubit.billingNumber,
+                                  status: cubit.billingStatus,
+                                  total: cubit.sum);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: Size(28.w, 5.h),
+                          maximumSize: Size(30.w, 5.h),
+                          backgroundColor: AppColors.lightBlue,
+                        ),
+                        child: Text(
+                          "yes".tr(),
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      );
+                    }),
                     SizedBox(
                       width: 3.w,
                     ),
@@ -516,7 +575,7 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
     );
   }
 
-  void showClientsPopup(BuildContext context, List<ClientModel> clients) {
+  void showClientsPopup(BuildContext context, List<UsersList> clients) {
     showDialog(
       context: context,
       builder: (context) {
@@ -586,11 +645,13 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                               return InkWell(
                                 onTap: () {
                                   cubit.matches.isEmpty
-                                      ? cubit
-                                          .selectClientName(clients[index].name)
+                                      ? cubit.selectClientName(
+                                          clients[index].name!,
+                                          clients[index].id!)
                                       : cubit.selectClientName(
-                                          cubit.matches[index].name);
-                                  cubit.matches.clear();
+                                          cubit.matches[index].name!,
+                                          cubit.matches[index].id!);
+                                  // cubit.matches.clear();
                                   Navigator.pop(context);
                                 },
                                 child: Padding(
@@ -600,27 +661,35 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
-                                        state is SearchingResultsState
-                                            ? cubit.matches[index].name
-                                            :
-                                            // cubit.matches.isEmpty ?
-                                            clients[index].name,
-                                        //  : cubit.matches[index].name,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium,
+                                      Flexible(
+                                        child: Text(
+                                          //   state is SearchingResultsState
+                                          //    ?
+                                          cubit.matches[index].name!
+                                          //   :
+                                          // cubit.matches.isEmpty ?
+                                          //    cubit.clients[index].name!,
+                                          //  : cubit.matches[index].name
+                                          ,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium,
+                                        ),
                                       ),
-                                      Text(
-                                        //cubit.matches.isEmpty?
-                                        state is SearchingResultsState
-                                            ? cubit.matches[index].phoneNumber
-                                            : clients[index].phoneNumber,
-                                        //:cubit.matches[index].phoneNumber,
-                                        textDirection: TextDirection.ltr,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium,
+                                      Flexible(
+                                        child: Text(
+                                          //cubit.matches.isEmpty?
+                                          //  state is SearchingResultsState
+                                          //      ?
+                                          cubit.matches[index].phone!.toString()
+                                          //   : cubit.clients[index].phone!
+                                          ,
+                                          //:cubit.matches[index].phoneNumber,
+                                          textDirection: TextDirection.ltr,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -638,6 +707,28 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                             itemCount: cubit.matches.isEmpty
                                 ? clients.length
                                 : cubit.matches.length),
+                  ),
+
+                  CircleAvatar(
+                    radius: 25,
+                    backgroundColor: AppColors.yellow,
+                    child: FloatingActionButton(
+                      mini: true,
+                      backgroundColor: AppColors.white,
+                      shape: CircleBorder(),
+                      child: Icon(
+                        Icons.add,
+                        color: AppColors.lightBlue,
+                        size: 27,
+                      ),
+                      onPressed: () {
+                        Navigator.pushNamed(
+                            context, Routes.expectedClientsTabRoute);
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    height: 2.h,
                   ),
                   // SizedBox(
                   //   height: 50,

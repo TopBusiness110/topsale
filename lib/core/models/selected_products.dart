@@ -1,7 +1,7 @@
-import 'package:topsale/core/models/product_model.dart';
+import 'package:topsale/core/models/all_prodyucts_model.dart';
 
 class SelectedProducts {
-  List<ProductModel> products;
+  List<ProductModelData> products;
 
   SelectedProducts(this.products);
 }
