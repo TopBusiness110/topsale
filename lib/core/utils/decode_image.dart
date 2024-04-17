@@ -15,12 +15,13 @@ class DecodedImage extends StatelessWidget {
     if (base64String.runtimeType == String) {
       Uint8List bytes = base64.decode(base64String);
 
-      image = Image.memory(Uint8List.fromList(bytes));
-    } else {
-      image = Image.asset(
-        'assets/images/splash.png',
-        color: AppColors.primary,
+      image = Image.memory(
+        Uint8List.fromList(bytes),
+        fit: BoxFit.cover,
       );
+    } else {
+      image = Image.asset('assets/images/splash.png',
+          color: AppColors.primary, fit: BoxFit.cover);
     }
     return image;
   }

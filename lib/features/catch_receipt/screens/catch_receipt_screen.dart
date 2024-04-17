@@ -1,8 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 import 'package:topsale/config/routes/app_routes.dart';
 import 'package:topsale/core/utils/app_colors.dart';
+import 'package:topsale/features/home/cubit/home_tab_cubit/home_cubit.dart';
 
 import '../../../core/utils/app_assets.dart';
 import '../../../core/widgets/custom_button.dart';
@@ -67,7 +69,7 @@ class CatchReceiptScreen extends StatelessWidget {
                         height: 1.h,
                       ),
                       Text(
-                        "رقم السند: 322",
+                        "رقم السند: ${catchReceiptModel.number}",
                         style: Theme.of(context)
                             .textTheme
                             .displayLarge!
@@ -77,7 +79,7 @@ class CatchReceiptScreen extends StatelessWidget {
                         height: 1.h,
                       ),
                       Text(
-                        "بواسطة: TopBusiness",
+                        "بواسطة: ${context.read<HomeCubit>().userName}",
                         style: Theme.of(context)
                             .textTheme
                             .bodyMedium!

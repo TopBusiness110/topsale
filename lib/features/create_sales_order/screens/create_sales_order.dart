@@ -33,7 +33,7 @@ class CreateSalesOrder extends StatefulWidget {
 }
 
 class _CreateSalesOrderState extends State<CreateSalesOrder> {
-    GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -485,6 +485,8 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                       if (state is SuccessCreateSaleOrderLineState) {
                         print('sssss');
                         Navigator.pop(context);
+                        context.read<ProductsCubit>().getAllProducts();
+                        //context.read<ProductsCubit>().selectedProducts.clear();
 
                         Navigator.push(
                             context,

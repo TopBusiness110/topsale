@@ -73,7 +73,9 @@ class _SalesOrderedListScreenState extends State<SalesOrderedListScreen> {
                   const CustomArrowBack()
                 ],
               ),
-              cubit.ordersModel == null || cubit.allUsersModel == null
+              cubit.ordersModel == null ||
+                      cubit.allUsersModel == null ||
+                      cubit.matches.isEmpty
                   ? Center(
                       child: CircularProgressIndicator(color: AppColors.yellow),
                     )

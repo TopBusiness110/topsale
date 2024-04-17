@@ -7,6 +7,7 @@ import 'package:topsale/config/routes/app_routes.dart';
 import 'package:topsale/core/utils/app_colors.dart';
 import 'package:topsale/features/%20receipt/cubit/receipt_cubit.dart';
 import 'package:topsale/features/create_sales_order/cubit/create_sales_order_cubit.dart';
+import 'package:topsale/features/home/cubit/home_tab_cubit/home_cubit.dart';
 import 'package:topsale/features/payments/cubit/payments_cubit.dart';
 import 'package:topsale/features/products/cubit/products_cubit.dart';
 
@@ -100,7 +101,7 @@ class ReceiptScreen extends StatelessWidget {
                                     height: 1.h,
                                   ),
                                   Text(
-                                    "بواسطة: TopBusiness",
+                                    "بواسطة: ${context.read<HomeCubit>().userName}",
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyMedium!

@@ -27,7 +27,7 @@ class CustomerPaymentsScreen extends StatefulWidget {
 }
 
 class _CustomerPaymentsScreenState extends State<CustomerPaymentsScreen> {
-    GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -44,6 +44,7 @@ class _CustomerPaymentsScreenState extends State<CustomerPaymentsScreen> {
         if (state is SuccessUpdatePaymentState) {
           Navigator.pushReplacementNamed(context, Routes.catchReceiptRoute,
               arguments: CatchReceiptModel(
+                  number: context.read<CreateSalesOrderCubit>().billingNumber,
                   clientName:
                       context.read<CreateSalesOrderCubit>().currentClient,
                   amount: double.parse(

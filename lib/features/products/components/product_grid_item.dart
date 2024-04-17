@@ -21,9 +21,9 @@ class ProductGridItem extends StatelessWidget {
               color: AppColors.lightBlue,
               borderRadius: BorderRadius.circular(18)),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Flexible(
+                fit: FlexFit.tight,
                 child: Container(
                     decoration: BoxDecoration(shape: BoxShape.rectangle),
                     margin: EdgeInsets.all(8),

@@ -15,71 +15,72 @@ class ProductsCubit extends Cubit<ProductsState> {
   List<ProductModelData> selectedProducts = [];
 
   addProduct({required ProductModelData product}) {
-    if (product.qty_available > product.userOrderedQuantity) {
-      print(
-          "____________________selectedProducts.isEmpty __________________________");
-      // product.userOrderedQuantity++;
-      product.userOrderedQuantity++;
-      if (selectedProducts.isEmpty) {
-        selectedProducts.add(product);
-      } else {
-        bool isExist = false;
+    // if (product.qty_available > product.userOrderedQuantity) {
 
-        for (int i = 0; i < selectedProducts.length; i++) {
-          if (selectedProducts[i].id == product.id) {
-            isExist = true;
+    print(
+        "____________________selectedProducts.isEmpty __________________________");
+    // product.userOrderedQuantity++;
+    product.userOrderedQuantity++;
+    if (selectedProducts.isEmpty) {
+      selectedProducts.add(product);
+    } else {
+      bool isExist = false;
 
-            emit(AddProductsState());
-          } else {
-            // isExist = false;
-          }
-        }
-        if (!isExist) {
-          selectedProducts.add(product);
+      for (int i = 0; i < selectedProducts.length; i++) {
+        if (selectedProducts[i].id == product.id) {
+          isExist = true;
+
+          emit(AddProductsState());
+        } else {
+          // isExist = false;
         }
       }
-
-      emit(AddProductsState());
-      return;
-    } else {
-      // for (int i = 0; i < selectedProducts.length; i++) {
-      //   //  product already exists in list
-
-      //   if (selectedProducts[i].code == product.code &&
-      //       selectedProducts[i].quantity! > product.userOrderedQuantity) {
-      //     print(
-      //         "+++++++++++++++++++++product already exists in list+++++++++++++++++++++++++++++++++");
-      //     product.userOrderedQuantity++;
-      //     emit(AddProductsState());
-      //     return;
-      //   }
-      //   //product already exists in list
-      //   // if(selectedProducts[i].code==product.code&&selectedProducts[i].quantity! > product.userOrderedQuantity){
-      //   //
-      //   //     print("+++++++++++++++++++++product already exists in list+++++++++++++++++++++++++++++++++");
-      //   //     product.userOrderedQuantity++;
-      //   //     //selectedProducts[i].userOrderedQuantity++;
-      //   //     print(selectedProducts);
-      //   //     emit(AddProductsState());
-      //   //     break;
-      //   //
-      //   // }
-      //   // else{
-      //   //   print("***************product doesn't exist in the list************************");
-      //   //   product.userOrderedQuantity++;
-      //   //   selectedProducts.add(product);
-      //   //   print(selectedProducts);
-      //   //   emit(AddProductsState());
-      //   //   break;
-      //   // }
-      // }
-
-      //    print(
-      //        "____________________selectedProducts doesn't exist __________________________");
-      //    product.userOrderedQuantity++;
-      //    selectedProducts.add(product);
-      //    emit(AddProductsState());
+      if (!isExist) {
+        selectedProducts.add(product);
+      }
     }
+
+    emit(AddProductsState());
+    return;
+    // } else {
+    // for (int i = 0; i < selectedProducts.length; i++) {
+    //   //  product already exists in list
+
+    //   if (selectedProducts[i].code == product.code &&
+    //       selectedProducts[i].quantity! > product.userOrderedQuantity) {
+    //     print(
+    //         "+++++++++++++++++++++product already exists in list+++++++++++++++++++++++++++++++++");
+    //     product.userOrderedQuantity++;
+    //     emit(AddProductsState());
+    //     return;
+    //   }
+    //   //product already exists in list
+    //   // if(selectedProducts[i].code==product.code&&selectedProducts[i].quantity! > product.userOrderedQuantity){
+    //   //
+    //   //     print("+++++++++++++++++++++product already exists in list+++++++++++++++++++++++++++++++++");
+    //   //     product.userOrderedQuantity++;
+    //   //     //selectedProducts[i].userOrderedQuantity++;
+    //   //     print(selectedProducts);
+    //   //     emit(AddProductsState());
+    //   //     break;
+    //   //
+    //   // }
+    //   // else{
+    //   //   print("***************product doesn't exist in the list************************");
+    //   //   product.userOrderedQuantity++;
+    //   //   selectedProducts.add(product);
+    //   //   print(selectedProducts);
+    //   //   emit(AddProductsState());
+    //   //   break;
+    //   // }
+    // }
+
+    //    print(
+    //        "____________________selectedProducts doesn't exist __________________________");
+    //    product.userOrderedQuantity++;
+    //    selectedProducts.add(product);
+    //    emit(AddProductsState());
+    //  }
   }
 
   removeProduct({required ProductModelData product}) {

@@ -10,6 +10,7 @@ import 'package:topsale/core/widgets/custom_button.dart';
 import 'package:topsale/core/widgets/toast.dart';
 import 'package:topsale/features/create_sales_order/cubit/create_sales_order_cubit.dart';
 import 'package:topsale/features/payments/cubit/payments_cubit.dart';
+import 'package:topsale/features/products/cubit/products_cubit.dart';
 
 import '../../../config/routes/app_routes.dart';
 import '../../../core/widgets/custom_arrow_back.dart';
@@ -37,6 +38,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Widget build(BuildContext context) {
     return BlocConsumer<PaymentsCubit, PaymentsState>(
       listener: (context, state) {
+        if (state is SuccessCreatePaymentState) {
+          //context.read<ProductsCubit>().selectedProducts.clear();
+//context.read<ProductsCubit>().;
+        }
+
         // TODO: implement listener
       },
       builder: (context, state) {
