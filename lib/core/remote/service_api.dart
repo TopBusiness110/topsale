@@ -22,7 +22,6 @@ import '../preferences/preferences.dart';
 class ServiceApi {
   final BaseApiConsumer dio;
   ServiceApi(this.dio);
-  final odoo = OdooClient(EndPoints.baseUrl);
   Future<Either<Failure, AllProductsModel>> getAllProducts() async {
     try {
       // String? sessionId = '135b0fdbcf1b433641f448914ed5015d84a5c903';
@@ -42,9 +41,15 @@ class ServiceApi {
   }
 
   Future<String> getSessionId(
-      {required String phone, required String password}) async {
-    final odoResponse = await odoo.authenticate(EndPoints.db, 'admin', 'admin');
-    //final odoResponse = await odoo.authenticate(EndPoints.db, phone, password);
+      {required String phone,
+      required String password,
+      String? baseUrl,
+      String? database}) async {
+    final odoo = OdooClient(baseUrl ?? EndPoints.baseUrl);
+
+    final odoResponse =
+        await odoo.authenticate(database ?? EndPoints.db, 'admin', 'admin');
+
     final sessionId = odoResponse.id;
     print("getSessionId = $sessionId");
     return sessionId;
@@ -147,16 +152,17 @@ class ServiceApi {
 //       String sessionId = await getSessionId(phone: "api", password: "api");
 
   Future<Either<Failure, AuthModel>> auth(
-      String phoneOrMail, String password,String db) async {
+      String phoneOrMail, String password, String db) async {
+    String? sessionId = await Preferences.instance.getSessionId();
+    await getSessionId(phone: phoneOrMail, password: password);
     try {
       final response = await dio.post(
         EndPoints.auth,
+        options: Options(
+          headers: {"Cookie": "frontend_lang=en_US;session_id=$sessionId"},
+        ),
         body: {
-          "params": {
-            'login': phoneOrMail,
-            "password": password,
-            "db": db
-          },
+          "params": {'login': phoneOrMail, "password": password, "db": db},
         },
       );
       // String sessionId =
@@ -172,21 +178,29 @@ class ServiceApi {
     }
   }
 
-  Future<Either<Failure, AuthModel>> authWithDB(
-      {required String phoneOrMail, required String password,
-     required String db,
-     required String name,
-     required String odooLink,
-      }) async {
+  Future<Either<Failure, AuthModel>> authWithDB({
+    required String phoneOrMail,
+    required String password,
+    required String db,
+    required String name,
+    required String odooLink,
+  }) async {
     try {
+      String? sessionId = await getSessionId(
+          phone: phoneOrMail,
+          password: password,
+          baseUrl: odooLink,
+          database: db);
+
+      EndPoints.baseUrl = odooLink;
+      EndPoints.db = db;
       final response = await dio.post(
-        EndPoints.auth,
+        odooLink + "/auth/",
+        options: Options(
+          headers: {"Cookie": "frontend_lang=en_US;session_id=$sessionId"},
+        ),
         body: {
-          "params": {
-            'login': phoneOrMail,
-            "password": password,
-            "db": db
-          },
+          "params": {'login': phoneOrMail, "password": password, "db": db},
         },
       );
       // String sessionId =
