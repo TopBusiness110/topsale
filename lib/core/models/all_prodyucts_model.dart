@@ -45,7 +45,7 @@ class ProductModelData {
   String? name;
   double? listPrice;
   int? currencyId;
-  String? uomName;
+  dynamic uomName;
   int? uomId;
   int? categId;
   int userOrderedQuantity;
@@ -71,7 +71,7 @@ class ProductModelData {
         name: json["name"],
         listPrice: json["list_price"]?.toDouble(),
         currencyId: json["currency_id"],
-        uomName: json["uom_name"]!,
+        uomName: json["uom_name"],
         uomId: json["uom_id"],
         qty_available: json["qty_available"],
         categId: json["categ_id"],

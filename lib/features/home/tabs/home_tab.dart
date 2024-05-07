@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:topsale/core/utils/decode_image.dart';
 import 'package:topsale/features/home/cubit/home_tab_cubit/home_cubit.dart';
 
 import '../../../config/routes/app_routes.dart';
@@ -19,6 +20,7 @@ class _HomeTabState extends State<HomeTab> {
   @override
   void initState() {
     context.read<HomeCubit>().getUserData();
+    context.read<HomeCubit>().getCompanyCurrency();
 
     // TODO: implement initState
     super.initState();
@@ -39,11 +41,18 @@ class _HomeTabState extends State<HomeTab> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                      ),
-                      child: Image.asset(AssetsManager.profile),
+                    SizedBox(
+                      width: 80,
+                     
+                      child: cubit.profileImage.toString() == "false"
+                          ? Image.asset('assets/images/splash.png',
+                              color: AppColors.primary, fit: BoxFit.cover)
+                          : ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                            child: DecodedImage(
+                                base64String: cubit.profileImage,
+                                context: context),
+                          ),
                     ),
                     const SizedBox(
                       width: 5,
@@ -57,21 +66,21 @@ class _HomeTabState extends State<HomeTab> {
                 const SizedBox(
                   width: 5,
                 ),
-                Column(
-                  children: [
-                    Text(
-                      "3265.25 EGP",
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      "الميزاينية الاساسية",
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                  ],
-                ),
+                // Column(
+                //   children: [
+                //     Text(
+                //       "3265.25 EGP",
+                //       style: Theme.of(context).textTheme.bodySmall,
+                //     ),
+                //     const SizedBox(
+                //       height: 10,
+                //     ),
+                //     Text(
+                //       "الميزاينية الاساسية",
+                //       style: Theme.of(context).textTheme.bodySmall,
+                //     ),
+                //   ],
+                // ),
               ],
             ),
             // this property hide the back arrow
@@ -104,25 +113,29 @@ class _HomeTabState extends State<HomeTab> {
                     height: 3,
                   ),
                   itemCount: 5,
+                 
                   itemBuilder: (context, index) {
                     return InkWell(
                         onTap: () {
-                          if (index == 0) {
-                            Navigator.pushNamed(context, Routes.productsRoute);
-                          } else if (index == 1) {
-                            Navigator.pushNamed(
-                                context, Routes.salesOrderedListRoute);
-                            // Navigator.pushNamed(context, Routes.createSalesOrderRoute,arguments: SelectedProducts([]));
-                          } else if (index == 2) {
-                            //  Navigator.pushNamed(context, Routes.returnsListRoute);
-                            Navigator.pushNamed(context, Routes.returnsRoute);
-                          } else if (index == 3) {
-                            Navigator.pushNamed(
-                                context, Routes.customerPaymentsRoute);
-                          } else if (index == 4) {
-                            Navigator.pushNamed(
-                                context, Routes.dismissalNoticeRoute);
-                          }
+                        
+                           if (index == 0) {
+                             Navigator.pushNamed(context, Routes.productsRoute);
+                           } else if (index == 1) {
+                             Navigator.pushNamed(
+                                 context, Routes.salesOrderedListRoute);
+                             // Navigator.pushNamed(context, Routes.createSalesOrderRoute,arguments: SelectedProducts([]));
+                           }
+                            else if (index == 2) {
+                             //  Navigator.pushNamed(context, Routes.returnsListRoute);
+                             Navigator.pushNamed(context, Routes.returnsRoute);
+                           }
+                            else if (index == 3) {
+                             Navigator.pushNamed(
+                                 context, Routes.customerPaymentsRoute);
+                           } else if (index == 4) {
+                             Navigator.pushNamed(
+                                 context, Routes.dismissalNoticeRoute);
+                           }
                         },
                         child: HomeListItem(
                           title: cubit.titles[index],

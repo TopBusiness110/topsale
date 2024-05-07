@@ -30,19 +30,42 @@ class SalesOrderedListCubit extends Cubit<SalesOrderedListState> {
     emit(NewSalesOrderAdded());
   }
 
+
   AllUsersModel? allUsersModel;
-  getAllUsers() async {
+  getAllUsers({
+    int pageId = 1,
+    bool isGetMore = false,
+  }) async {
+    isGetMore
+        ? emit(Loading2GetAllUsersState())
+        : emit(LoadingGetAllUsersState());
     matches.clear();
-    emit(LoadingGetAllUsersState());
-    final response = await api.getAllUsers();
+  
+    final response = await api.getAllUsers(pageId,1000);
     response.fold((l) {
       emit(FailureGetAllUsersState());
     }, (r) {
-      allUsersModel = r;
-      matches.addAll(r.result!);
+
+if (isGetMore) {
+        allUsersModel = AllUsersModel(
+          count: r.count,
+          next: r.next,
+          
+          prev: r.prev,
+          result: [...allUsersModel!.result!, ...r.result!],
+        );
+      } else {
+        allUsersModel = r;
+      }
+
+
+
+      
+      matches.addAll(allUsersModel!.result!);
       emit(SuccessGetAllUsersState());
     });
   }
+
 
   searchInUser() {}
   GetAllOrdersModel? ordersModel;

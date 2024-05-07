@@ -47,14 +47,31 @@ class CustomerPaymentsCubit extends Cubit<CustomerPaymentsState> {
   }
 
   AllUsersModel? allUsersModel;
-  getAllUsers() async {
-    emit(LoadingGetAllUsersState());
-    final response = await api.getAllUsers();
+  getAllUsers({
+    int pageId = 1,
+    bool isGetMore = false,
+  }) async {
+    isGetMore
+        ? emit(Loading2GetAllUsersState())
+        : emit(LoadingGetAllUsersState());
+    matches.clear();
+
+    final response = await api.getAllUsers(pageId, 1000);
     response.fold((l) {
       emit(FailureGetAllUsersState());
     }, (r) {
-      allUsersModel = r;
-      matches.addAll(r.result!);
+      if (isGetMore) {
+        allUsersModel = AllUsersModel(
+          count: r.count,
+          next: r.next,
+          prev: r.prev,
+          result: [...allUsersModel!.result!, ...r.result!],
+        );
+      } else {
+        allUsersModel = r;
+      }
+
+      matches.addAll(allUsersModel!.result!);
       emit(SuccessGetAllUsersState());
     });
   }
@@ -116,6 +133,7 @@ class CustomerPaymentsCubit extends Cubit<CustomerPaymentsState> {
     response.fold((l) => emit(FailureCreatePaymentMethodState()), (r) {
       emit(SuccessCreatePaymentMethodState());
       createPaymentMethodModel = r;
+
       getPaymentById();
       print("***************************************************");
       print(r.toString());

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
+import 'package:topsale/features/home/cubit/home_tab_cubit/home_cubit.dart';
 import 'package:topsale/features/products/cubit/products_cubit.dart';
 import '../../../core/models/all_prodyucts_model.dart';
 import '../../../core/utils/app_colors.dart';
@@ -27,8 +28,11 @@ class ProductGridItem extends StatelessWidget {
                 child: Container(
                     decoration: BoxDecoration(shape: BoxShape.rectangle),
                     margin: EdgeInsets.all(8),
-                    child: DecodedImage(
-                        base64String: product.image1920, context: context)),
+                    child: product.image1920.toString() == "false"
+                        ? Image.asset('assets/images/splash.png',
+                            color: AppColors.primary, fit: BoxFit.cover)
+                        : DecodedImage(
+                            base64String: product.image1920, context: context)),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 2),
@@ -50,7 +54,7 @@ class ProductGridItem extends StatelessWidget {
                           .copyWith(fontSize: 10),
                     ),
                   ),
-                  Text("${product.listPrice.toString()} USD",
+                  Text("${product.listPrice.toString()} ${context.read<HomeCubit>().currencyName}",
                       maxLines: 1,
                       style: Theme.of(context)
                           .textTheme

@@ -320,7 +320,7 @@ class _ExpectedClientsListScreenState extends State<ExpectedClientsListScreen> {
                                             alignment: WrapAlignment.start,
                                             children: [
                                               const Text(
-                                                "الطلب :",
+                                                "الوصف أو الفرصة :",
                                                 style: TextStyle(
                                                     fontSize: 15,
                                                     color: AppColors.lightBlue),

@@ -28,13 +28,34 @@ class CustomerPaymentsScreen extends StatefulWidget {
 
 class _CustomerPaymentsScreenState extends State<CustomerPaymentsScreen> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  late final ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
     context.read<CustomerPaymentsCubit>().getAllJournals();
     context.read<CreateSalesOrderCubit>().getAllUsers();
+    context.read<CreateSalesOrderCubit>().currentClient = '';
+    scrollController.addListener(_scrollListener);
 
     super.initState();
+  }
+
+  _scrollListener() {
+    if (scrollController.position.maxScrollExtent == scrollController.offset) {
+      print('dddddddddbottom');
+      if (BlocProvider.of<CreateSalesOrderCubit>(context).allUsersModel!.next !=
+          null) {
+        BlocProvider.of<CreateSalesOrderCubit>(context).getAllUsers(
+            isGetMore: true,
+            pageId: BlocProvider.of<CreateSalesOrderCubit>(context)
+                    .allUsersModel!
+                    .next ??
+                1);
+        debugPrint('new posts');
+      }
+    } else {
+      print('dddddddddtop');
+    }
   }
 
   @override
@@ -526,6 +547,7 @@ class _CustomerPaymentsScreenState extends State<CustomerPaymentsScreen> {
                             ),
                           )
                         : ListView.separated(
+                            controller: scrollController,
                             itemBuilder: (context, index) {
                               //when we clicked on client
                               return InkWell(

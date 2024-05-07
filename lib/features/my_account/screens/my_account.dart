@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 import 'package:topsale/config/routes/app_routes.dart';
 import 'package:topsale/core/utils/app_colors.dart';
+import 'package:topsale/core/utils/decode_image.dart';
 import 'package:topsale/features/home/cubit/home_tab_cubit/home_cubit.dart';
 import 'package:topsale/features/my_account/components/custom_data_container.dart';
 
@@ -29,17 +30,17 @@ class _MyAccountState extends State<MyAccount> {
             children: [
               Row(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: IconButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, Routes.editAccountRoute);
-                        },
-                        icon: Image.asset(
-                          AssetsManager.editIcon,
-                          width: 25,
-                        )),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.only(right: 8.0),
+                  //   child: IconButton(
+                  //       onPressed: () {
+                  //         Navigator.pushNamed(context, Routes.editAccountRoute);
+                  //       },
+                  //       icon: Image.asset(
+                  //         AssetsManager.editIcon,
+                  //         width: 25,
+                  //       )),
+                  // ),
                   Spacer(),
                   Text(
                     "my_account",
@@ -82,17 +83,17 @@ class _MyAccountState extends State<MyAccount> {
                         SizedBox(
                           height: 3.h,
                         ),
+                        // CustomDataContainer(
+                        //   label: "+201012535465 ",
+                        //   // label: cubit.sharedUserData!.result!.,
+                        //   icon: Icons.phone,
+                        // ),
+                        // SizedBox(
+                        //   height: 3.h,
+                        // ),
                         CustomDataContainer(
-                          label: "+201012535465 ",
                           // label: cubit.sharedUserData!.result!.,
-                          icon: Icons.phone,
-                        ),
-                        SizedBox(
-                          height: 3.h,
-                        ),
-                        CustomDataContainer(
-                          // label: cubit.sharedUserData!.result!.,
-                          label: " mostafa_khalil@gmail.com",
+                          label: cubit.email,
                           icon: Icons.mail,
                         ),
                         const Spacer()
@@ -114,7 +115,20 @@ class _MyAccountState extends State<MyAccount> {
                         radius: 54,
                         // backgroundColor: AppColors.white,
                         // backgroundImage: AssetImage(AssetsManager.aly,),
-                        child: Image.asset(AssetsManager.aly),
+                        child: context
+                                    .read<HomeCubit>()
+                                    .profileImage
+                                    .toString() ==
+                                "false"
+                            ? Image.asset('assets/images/splash.png',
+                                fit: BoxFit.cover)
+                            : ClipRRect(
+                                borderRadius: BorderRadius.circular(100),
+                                child: DecodedImage(
+                                    base64String:
+                                        context.read<HomeCubit>().profileImage,
+                                    context: context),
+                              ),
                       ))
                 ],
               )

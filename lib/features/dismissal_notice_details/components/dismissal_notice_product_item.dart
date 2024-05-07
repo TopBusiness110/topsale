@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:topsale/core/models/all_prodyucts_model.dart';
 import 'package:topsale/core/utils/decode_image.dart';
 import 'package:topsale/features/dismissal_notice/cubit/dismissal_notice_cubit.dart';
+import 'package:topsale/features/home/cubit/home_tab_cubit/home_cubit.dart';
 
 import '../../../core/utils/app_colors.dart';
 
@@ -49,7 +50,7 @@ class DismissalNoticeProductItem extends StatelessWidget {
                           .copyWith(fontSize: 10),
                     ),
                   ),
-                  Text("${product.listPrice.toString()} USD",
+                  Text("${product.listPrice.toString()} ${context.read<HomeCubit>().currencyName}",
                       maxLines: 1,
                       style: Theme.of(context)
                           .textTheme

@@ -34,8 +34,8 @@ class CatchReceiptScreen extends StatelessWidget {
               Center(
                 child: Container(
                   margin: EdgeInsets.only(top: 20),
-                  height: 75.h,
-                  width: 95.w,
+                  // height: 75.h,
+                  // width: 95.w,
                   decoration: const BoxDecoration(
                       borderRadius: BorderRadius.only(
                           topRight: Radius.circular(16),
@@ -100,7 +100,7 @@ class CatchReceiptScreen extends StatelessWidget {
                         child: Divider(),
                       ),
                       Text(
-                        "اجمالي المدفوع: ${catchReceiptModel.amount} USD",
+                        "اجمالي المدفوع: ${catchReceiptModel.amount} ${context.read<HomeCubit>().currencyName}",
                         style: Theme.of(context)
                             .textTheme
                             .displayLarge!

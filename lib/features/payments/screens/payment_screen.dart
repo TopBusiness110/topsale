@@ -9,6 +9,7 @@ import 'package:topsale/core/utils/app_colors.dart';
 import 'package:topsale/core/widgets/custom_button.dart';
 import 'package:topsale/core/widgets/toast.dart';
 import 'package:topsale/features/create_sales_order/cubit/create_sales_order_cubit.dart';
+import 'package:topsale/features/home/cubit/home_tab_cubit/home_cubit.dart';
 import 'package:topsale/features/payments/cubit/payments_cubit.dart';
 import 'package:topsale/features/products/cubit/products_cubit.dart';
 
@@ -121,7 +122,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               const SizedBox(
                                 height: 8,
                               ),
-                              Text("الاجمالي: ${widget.sum} USD",
+                              Text("الاجمالي: ${widget.sum} ${context.read<HomeCubit>().currencyName}",
                                   style: Theme.of(context)
                                       .textTheme
                                       .displayMedium!

@@ -24,34 +24,36 @@ class ReceiptScreen extends StatelessWidget {
         // TODO: implement listener
       },
       builder: (context, state) {
-
         ReceiptCubit cubit = context.read<ReceiptCubit>();
-       
+
         return WillPopScope(
           onWillPop: () async {
-            Navigator.pushNamed(context, Routes.homeRoute);
+            print('sssss');
+            Navigator.pushNamedAndRemoveUntil(
+                context, Routes.homeRoute, (route) => false);
+            context.read<ProductsCubit>().selectedProducts = [];
 
             return await true;
           },
           child: Scaffold(
             backgroundColor: AppColors.primary,
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 10.h,
-                ),
-                Center(
-                  child: Container(
-                    height: 83.h,
-                    width: 95.w,
-                    decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(16),
-                            topLeft: Radius.circular(16)),
-                        color: AppColors.white),
-                    child: SingleChildScrollView(
-                      physics: const AlwaysScrollableScrollPhysics(),
+            body: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 10.h,
+                  ),
+                  Center(
+                    child: Container(
+                      // height: 83.h,
+                      // width: 95.w,
+                      decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(16),
+                              topLeft: Radius.circular(16)),
+                          color: AppColors.white),
                       child: Column(
                         children: [
                           Screenshot(
@@ -122,98 +124,136 @@ class ReceiptScreen extends StatelessWidget {
                                         EdgeInsets.symmetric(horizontal: 6.w),
                                     child: Divider(),
                                   ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Text(
-                                        "اسم المنتج",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium!
-                                            .copyWith(color: AppColors.primary),
-                                      ),
-                                      SizedBox(
-                                        width: 30.w,
-                                      ),
-                                      Text(
-                                        "كمية",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium!
-                                            .copyWith(color: AppColors.primary),
-                                      ),
-                                      SizedBox(
-                                        width: 5.w,
-                                      ),
-                                      Text(
-                                        "اجمالي",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium!
-                                            .copyWith(color: AppColors.primary),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "اسم المنتج",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .copyWith(
+                                                  color: AppColors.primary),
+                                        ),
+                                        // SizedBox(
+                                        //   width: 30.w,
+                                        // ),
+                                        Text(
+                                          "كمية",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .copyWith(
+                                                  color: AppColors.primary),
+                                        ),
+                                        //   SizedBox(
+                                        //     width: 5.w,
+                                        //   ),
+                                        Text(
+                                          "اجمالي",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .copyWith(
+                                                  color: AppColors.primary),
+                                        ),
+                                      ],
+                                    ),
                                   ),
 
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Text(
-                                        context
-                                            .read<ProductsCubit>()
-                                            .selectedProducts[0]
-                                            .name!,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium!
-                                            .copyWith(color: AppColors.primary),
-                                      ),
-                                      SizedBox(
-                                        width: 20.w,
-                                      ),
-                                      Text(
-                                        context
-                                            .read<ProductsCubit>()
-                                            .selectedProducts[0]
-                                            .userOrderedQuantity
-                                            .toString(),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium!
-                                            .copyWith(color: AppColors.primary),
-                                      ),
-                                      SizedBox(
-                                        width: 5.w,
-                                      ),
-                                      Text(
-                                        context
-                                            .read<CreateSalesOrderCubit>()
-                                            .sum
-                                            .toString(),
-                                        // context
-                                        //     .read<ProductsCubit>()
-                                        //     .selectedProducts[0]
-                                        //     .listPrice
-                                        //     .toString(),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium!
-                                            .copyWith(color: AppColors.primary),
-                                      ),
-                                    ],
-                                  ),
+                                  ListView.builder(
+                                      shrinkWrap: true,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      itemCount: context
+                                          .read<ProductsCubit>()
+                                          .selectedProducts
+                                          .length,
+                                      itemBuilder: (context, index) {
+                                        return Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Flexible(
+                                                flex: 1,
+                                                child: Text(
+                                                  context
+                                                      .read<ProductsCubit>()
+                                                      .selectedProducts[index]
+                                                      .name!,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium!
+                                                      .copyWith(
+                                                          color: AppColors
+                                                              .primary),
+                                                ),
+                                              ),
+                                              //  SizedBox(
+                                              //    width: 20.w,
+                                              //  ),
+                                              Flexible(
+                                                flex: 1,
+                                                child: Text(
+                                                  context
+                                                      .read<ProductsCubit>()
+                                                      .selectedProducts[index]
+                                                      .userOrderedQuantity
+                                                      .toString(),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium!
+                                                      .copyWith(
+                                                          color: AppColors
+                                                              .primary),
+                                                ),
+                                              ),
+                                              // SizedBox(
+                                              //   width: 5.w,
+                                              // ),
+                                              Flexible(
+                                                flex: 1,
+                                                child: Text(
+                                                  "${context.read<ProductsCubit>().selectedProducts[index].userOrderedQuantity * context.read<ProductsCubit>().selectedProducts[index].listPrice!}",
+
+                                                  //    context
+                                                  //        .read<
+                                                  //            CreateSalesOrderCubit>()
+                                                  //        .sum
+                                                  //        .toString(),
+                                                  // context
+                                                  //     .read<ProductsCubit>()
+                                                  //     .selectedProducts[0]
+                                                  //     .listPrice
+                                                  //     .toString(),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium!
+                                                      .copyWith(
+                                                          color: AppColors
+                                                              .primary),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }),
+
                                   Padding(
                                     padding:
                                         EdgeInsets.symmetric(horizontal: 6.w),
                                     child: Divider(),
                                   ),
                                   Text(
-                                    "الضريبة: 5.00 USD",
+                                    "الضريبة: 5.00 ${context.read<HomeCubit>().currencyName}",
                                     style: Theme.of(context)
                                         .textTheme
                                         .displayLarge!
@@ -225,7 +265,7 @@ class ReceiptScreen extends StatelessWidget {
                                     child: Divider(),
                                   ),
                                   Text(
-                                    "الاجمالي: ${context.read<CreateSalesOrderCubit>().sum + 5} USD",
+                                    "الاجمالي: ${context.read<CreateSalesOrderCubit>().sum + 5} ${context.read<HomeCubit>().currencyName}",
                                     style: Theme.of(context)
                                         .textTheme
                                         .displayLarge!
@@ -237,7 +277,7 @@ class ReceiptScreen extends StatelessWidget {
                                     child: Divider(),
                                   ),
                                   Text(
-                                    "المدفوع: 00.00 USD",
+                                    "المدفوع: 00.00 ${context.read<HomeCubit>().currencyName}",
                                     style: Theme.of(context)
                                         .textTheme
                                         .displayLarge!
@@ -247,7 +287,7 @@ class ReceiptScreen extends StatelessWidget {
                                     height: 5,
                                   ),
                                   Text(
-                                    "الباقي: ${context.read<CreateSalesOrderCubit>().sum + 5} USD",
+                                    "الباقي: ${context.read<CreateSalesOrderCubit>().sum + 5} ${context.read<HomeCubit>().currencyName}",
                                     style: Theme.of(context)
                                         .textTheme
                                         .displayLarge!
@@ -297,12 +337,15 @@ class ReceiptScreen extends StatelessWidget {
                                 await cubit.captureScreenshot();
                                 //  Navigator.pushReplacementNamed(context, Routes.receiptRoute);
                               }),
+                          SizedBox(
+                            height: 2.h,
+                          ),
                         ],
                       ),
                     ),
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
           ),
         );

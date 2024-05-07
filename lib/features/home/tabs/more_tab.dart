@@ -130,17 +130,19 @@ class MoreTab extends StatelessWidget {
               child: SizedBox(
                 height: 60.h,
                 child: ListView.builder(
-                  itemCount: 5,
+                  itemCount: labels.length,
                   itemBuilder: (context, index) {
                     return InkWell(
                         onTap: () {
                           if (index == 0) {
                             Navigator.pushNamed(context, Routes.myAccountRoute);
-                          } else if (index == 2) {
-                            Navigator.pushNamed(context, Routes.reportsRoute);
-                          } else if (index == 3) {
+                          }
+                          //  else if (index == 2) {
+                          //   Navigator.pushNamed(context, Routes.reportsRoute);
+                          // }
+                          else if (index == 2) {
                             showAlertDialog(context);
-                          } else if (index == 4) {
+                          } else if (index == 3) {
                             context.read<HomeCubit>().changeTabs(0);
                             Preferences.instance.removeUserName();
                             Navigator.pushNamedAndRemoveUntil(

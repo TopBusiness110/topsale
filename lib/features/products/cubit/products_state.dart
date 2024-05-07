@@ -17,6 +17,7 @@ class AllCategoriesFailureState extends ProductsState {}
 
 class AllCategoriesSuccessState extends ProductsState {}
 class LoadingAllProductsState extends ProductsState {}
+class Loading2AllProductsState extends ProductsState {}
 
 class AllProductsFailureState extends ProductsState {}
 

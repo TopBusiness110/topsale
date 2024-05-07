@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:topsale/core/models/product_model.dart';
 import 'package:topsale/core/remote/service_api.dart';
@@ -119,13 +120,61 @@ class ProductsCubit extends Cubit<ProductsState> {
   }
 
   AllProductsModel? productsModel;
-  getAllProducts() async {
-    emit(LoadingAllProductsState());
+  getAllProducts({
+    int pageId = 1,
+    bool isGetMore = false,
+  }) async {
+    isGetMore
+        ? emit(Loading2AllProductsState())
+        : emit(LoadingAllProductsState());
+    // emit(LoadingAllProductsState());
     // authModel = await Preferences.instance.getUserModel2();
-    final response = await api.getAllProducts();
+    final response = await api.getAllProducts(pageId);
     response.fold((l) => emit(AllProductsFailureState()), (r) {
+      if (isGetMore) {
+        productsModel = AllProductsModel(
+          count: r.count,
+          next: r.next,
+          prev: r.prev,
+          result: [...productsModel!.result!, ...r.result!],
+        );
+      } else {
+        productsModel = r;
+      }
+
       emit(AllProductsSuccessState());
-      productsModel = r;
+
+      print("***************************************************");
+      print(productsModel.toString());
+      print("**************************${r.result.toString()}");
+      // r.result!.map((e) => print(e.image1920));
+    });
+  }
+  TextEditingController searchController = TextEditingController();
+  AllProductsModel? searchedproductsModel;
+  searchProducts({
+    int pageId = 1,
+    bool isGetMore = false,
+    required String productName ,
+  }) async {
+    isGetMore
+        ? emit(Loading2AllProductsState())
+        : emit(LoadingAllProductsState());
+
+    final response = await api.searchProducts(pageId, productName);
+    response.fold((l) => emit(AllProductsFailureState()), (r) {
+      if (isGetMore) {
+        productsModel = AllProductsModel(
+          count: r.count,
+          next: r.next,
+          prev: r.prev,
+          result: [...productsModel!.result!, ...r.result!],
+        );
+      } else {
+        searchedproductsModel = r;
+      }
+
+      emit(AllProductsSuccessState());
 
       print("***************************************************");
       print(productsModel.toString());

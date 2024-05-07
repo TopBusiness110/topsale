@@ -16,6 +16,7 @@ class DecodedImage extends StatelessWidget {
       Uint8List bytes = base64.decode(base64String);
 
       image = Image.memory(
+       
         Uint8List.fromList(bytes),
         fit: BoxFit.cover,
       );

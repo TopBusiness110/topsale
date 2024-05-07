@@ -14,6 +14,7 @@ import 'package:topsale/core/widgets/custom_button.dart';
 import 'package:topsale/core/widgets/custom_textfield.dart';
 import 'package:topsale/features/cart/cart_cubit.dart';
 import 'package:topsale/features/create_sales_order/cubit/create_sales_order_cubit.dart';
+import 'package:topsale/features/home/cubit/home_tab_cubit/home_cubit.dart';
 import 'package:topsale/features/payments/cubit/payments_cubit.dart';
 import 'package:topsale/features/payments/screens/payment_screen.dart';
 import 'package:topsale/features/products/cubit/products_cubit.dart';
@@ -34,6 +35,7 @@ class CreateSalesOrder extends StatefulWidget {
 
 class _CreateSalesOrderState extends State<CreateSalesOrder> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  late final ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
@@ -43,7 +45,27 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
         .read<CreateSalesOrderCubit>()
         .calculateTotalPrice(widget.selectedProducts!);
     context.read<CreateSalesOrderCubit>().getAllUsers();
+    context.read<CreateSalesOrderCubit>().currentClient = "";
     context.read<PaymentsCubit>().getAllJournals();
+    scrollController.addListener(_scrollListener);
+  }
+
+  _scrollListener() {
+    if (scrollController.position.maxScrollExtent == scrollController.offset) {
+      print('dddddddddbottom');
+      if (BlocProvider.of<CreateSalesOrderCubit>(context).allUsersModel!.next !=
+          null) {
+        BlocProvider.of<CreateSalesOrderCubit>(context).getAllUsers(
+            isGetMore: true,
+            pageId: BlocProvider.of<CreateSalesOrderCubit>(context)
+                    .allUsersModel!
+                    .next ??
+                1);
+        debugPrint('new posts');
+      }
+    } else {
+      print('dddddddddtop');
+    }
   }
 
   @override
@@ -55,6 +77,7 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
       builder: (context, state) {
         CreateSalesOrderCubit cubit = context.read<CreateSalesOrderCubit>();
         ProductsCubit productCubit = context.read<ProductsCubit>();
+
         return Scaffold(
           backgroundColor: AppColors.primary,
           body: Stack(
@@ -136,7 +159,7 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                                       color: AppColors.blue2),
                                   child: Column(
                                     children: [
-                                      Expanded(
+                                      Flexible(
                                         child: ListView.separated(
                                           itemBuilder: (context, index) {
                                             return InkWell(
@@ -146,165 +169,179 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                                                     MainAxisAlignment
                                                         .spaceBetween,
                                                 children: [
-                                                  Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      //name & code
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [
-                                                          Text(
-                                                              // "${cubit.currentClient} - ${cubit.selectedProducts[index]} ",
-                                                              "${widget.selectedProducts?.products[index].name}",
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .bodySmall),
-                                                          SizedBox(
-                                                            width: 6.w,
-                                                          ),
-                                                          Text(
-                                                            "${widget.selectedProducts?.products[index].id}",
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .bodySmall!
-                                                                .copyWith(
-                                                                    fontSize:
-                                                                        10,
-                                                                    color: AppColors
-                                                                        .white
-                                                                        .withOpacity(
-                                                                            0.5)),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      SizedBox(
-                                                        height: 1.h,
-                                                      ),
-                                                      //price
-                                                      Text(
-                                                        "\$ ${widget.selectedProducts?.products[index].listPrice}",
-                                                        textDirection:
-                                                            TextDirection.ltr,
-                                                        // textAlign: TextAlign.start,
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .bodySmall!
-                                                            .copyWith(
-                                                                fontSize: 10,
-                                                                color: AppColors
-                                                                    .white
-                                                                    .withOpacity(
-                                                                        0.5)),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 1.h,
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                right: 5.w),
-                                                        child: Row(
+                                                  Flexible(
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        //name & code
+                                                        Row(
                                                           mainAxisAlignment:
                                                               MainAxisAlignment
-                                                                  .center,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .center,
+                                                                  .spaceBetween,
                                                           children: [
-                                                            //number
-                                                            Text(
-                                                              "number",
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .bodySmall,
-                                                            ).tr(),
+                                                            Flexible(
+                                                              child: Text(
+                                                                  // "${cubit.currentClient} - ${cubit.selectedProducts[index]} ",
+                                                                  "${widget.selectedProducts?.products[index].name}",
+                                                                  maxLines: 2,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                  style: Theme.of(
+                                                                          context)
+                                                                      .textTheme
+                                                                      .bodySmall),
+                                                            ),
                                                             SizedBox(
-                                                              width: 1.h,
+                                                              width: 6.w,
                                                             ),
-                                                            //add button
-                                                            InkWell(
-                                                              onTap: () {
-                                                                cubit.addProduct(
-                                                                    product: widget
-                                                                            .selectedProducts!
-                                                                            .products[
-                                                                        index],
-                                                                    context:
-                                                                        context);
-                                                                cubit.calculateTotalPrice(
-                                                                    widget
-                                                                        .selectedProducts!);
-                                                              },
-                                                              child:
-                                                                  const CircleAvatar(
-                                                                radius: 12,
-                                                                backgroundColor:
-                                                                    AppColors
-                                                                        .lightBlue,
-                                                                child: Icon(
-                                                                  Icons.add,
-                                                                  size: 13,
-                                                                  color:
-                                                                      AppColors
-                                                                          .white,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            //userOrderedQuantity
                                                             Padding(
                                                               padding:
                                                                   const EdgeInsets
-                                                                      .all(
-                                                                      12.0),
+                                                                      .symmetric(
+                                                                      horizontal:
+                                                                          8.0),
                                                               child: Text(
-                                                                "${widget.selectedProducts?.products[index].userOrderedQuantity}",
+                                                                "${widget.selectedProducts?.products[index].id}",
+                                                                style: Theme.of(
+                                                                        context)
+                                                                    .textTheme
+                                                                    .bodySmall!
+                                                                    .copyWith(
+                                                                        fontSize:
+                                                                            10,
+                                                                        color: AppColors
+                                                                            .white
+                                                                            .withOpacity(0.5)),
                                                               ),
                                                             ),
-                                                            //remove button
-                                                            InkWell(
-                                                              onTap: () {
-                                                                cubit.removeProduct(
-                                                                    product: widget
-                                                                            .selectedProducts!
-                                                                            .products[
-                                                                        index],
-                                                                    products: widget
-                                                                        .selectedProducts
-                                                                        ?.products,
-                                                                    context:
-                                                                        context);
-                                                                cubit.calculateTotalPrice(
-                                                                    widget
-                                                                        .selectedProducts!);
-                                                              },
-                                                              child:
-                                                                  const CircleAvatar(
-                                                                radius: 12,
-                                                                backgroundColor:
-                                                                    AppColors
-                                                                        .lightBlue,
-                                                                child: Icon(
-                                                                  Icons.remove,
-                                                                  size: 13,
-                                                                  color:
-                                                                      AppColors
-                                                                          .white,
-                                                                ),
-                                                              ),
-                                                            )
                                                           ],
                                                         ),
-                                                      ),
-                                                    ],
+                                                        SizedBox(
+                                                          height: 1.h,
+                                                        ),
+                                                        //price
+                                                        Text(
+                                                          "\$ ${widget.selectedProducts?.products[index].listPrice}",
+                                                          textDirection:
+                                                              TextDirection.ltr,
+                                                          // textAlign: TextAlign.start,
+                                                          style: Theme.of(
+                                                                  context)
+                                                              .textTheme
+                                                              .bodySmall!
+                                                              .copyWith(
+                                                                  fontSize: 10,
+                                                                  color: AppColors
+                                                                      .white
+                                                                      .withOpacity(
+                                                                          0.5)),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 1.h,
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  right: 5.w),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              //number
+                                                              Text(
+                                                                "number",
+                                                                style: Theme.of(
+                                                                        context)
+                                                                    .textTheme
+                                                                    .bodySmall,
+                                                              ).tr(),
+                                                              SizedBox(
+                                                                width: 1.h,
+                                                              ),
+                                                              //add button
+                                                              InkWell(
+                                                                onTap: () {
+                                                                  cubit.addProduct(
+                                                                      product: widget
+                                                                              .selectedProducts!
+                                                                              .products[
+                                                                          index],
+                                                                      context:
+                                                                          context);
+                                                                  cubit.calculateTotalPrice(
+                                                                      widget
+                                                                          .selectedProducts!);
+                                                                },
+                                                                child:
+                                                                    const CircleAvatar(
+                                                                  radius: 12,
+                                                                  backgroundColor:
+                                                                      AppColors
+                                                                          .lightBlue,
+                                                                  child: Icon(
+                                                                    Icons.add,
+                                                                    size: 13,
+                                                                    color: AppColors
+                                                                        .white,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              //userOrderedQuantity
+                                                              Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .all(
+                                                                        12.0),
+                                                                child: Text(
+                                                                  "${widget.selectedProducts?.products[index].userOrderedQuantity}",
+                                                                ),
+                                                              ),
+                                                              //remove button
+                                                              InkWell(
+                                                                onTap: () {
+                                                                  cubit.removeProduct(
+                                                                      product: widget
+                                                                              .selectedProducts!
+                                                                              .products[
+                                                                          index],
+                                                                      products: widget
+                                                                          .selectedProducts
+                                                                          ?.products,
+                                                                      context:
+                                                                          context);
+                                                                  cubit.calculateTotalPrice(
+                                                                      widget
+                                                                          .selectedProducts!);
+                                                                },
+                                                                child:
+                                                                    const CircleAvatar(
+                                                                  radius: 12,
+                                                                  backgroundColor:
+                                                                      AppColors
+                                                                          .lightBlue,
+                                                                  child: Icon(
+                                                                    Icons
+                                                                        .remove,
+                                                                    size: 13,
+                                                                    color: AppColors
+                                                                        .white,
+                                                                  ),
+                                                                ),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
                                                   Container(
                                                       width: 20.w,
@@ -362,7 +399,7 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                       padding: const EdgeInsets.symmetric(
                           vertical: 8.0, horizontal: 20),
                       child: Text(
-                        "الاجمالي: ${cubit.sum} USD",
+                        "الاجمالي: ${cubit.sum} ${context.read<HomeCubit>().currencyName}",
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ),
@@ -393,10 +430,10 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                   ),
                   BlocConsumer<CreateSalesOrderCubit, CreateSalesOrderState>(
                       listener: (context, state) {
-                    if (state is SuccessCreateSaleOrderState) {
-                      print("successdddd");
-                      showAlertDialog(context);
-                    }
+                    //  if (state is SuccessCreateSaleOrderState) {
+                    //    print("successdddd");
+                    //
+                    //  }
                   }, builder: (context, state) {
                     return CustomButton(
                       backgroundColor: AppColors.lightBlue,
@@ -419,9 +456,10 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                         } else if (widget
                                 .selectedProducts!.products.isNotEmpty &&
                             cubit.currentClient != "") {
-                          cubit.createSaleOrder(
-                            context,
-                          );
+                          showAlertDialog(context);
+                          // cubit.createSaleOrder(
+                          //   context,
+                          // );
                         } else {
                           // ScaffoldMessenger.of(context)
                           //     .showSnackBar(const SnackBar(
@@ -509,19 +547,12 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                     }, builder: (context, state) {
                       return ElevatedButton(
                         onPressed: () {
-                          cubit.createSaleOrderLine(context,
-                              productId: productCubit.selectedProducts[0].id!,
-                              productQuantity: productCubit
-                                  .selectedProducts[0].userOrderedQuantity);
-
-                          // Navigator.pushNamed(
-                          //     context,
-                          //     Routes.paymentRoute,
-                          //     arguments: cubit.sum,
-                          //     () {
-
-                          //     });
-                          //save client name and its products
+                          cubit.createSaleOrder(
+                            context,
+                            // productId: productCubit.selectedProducts[0].id!,
+                            // productQuantity: productCubit
+                            //     .selectedProducts[0].userOrderedQuantity
+                          );
                           print(
                               "++++++++++++++++++++++++++++++++++++++++++++++");
                           print(widget.selectedProducts?.products);
@@ -640,10 +671,16 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                             ),
                           )
                         : ListView.separated(
+                            controller: scrollController,
                             itemBuilder: (context, index) {
                               //when we clicked on client
                               return InkWell(
                                 onTap: () {
+                                  print(
+                                      "ffffffffff ${cubit.matches[index].name}");
+                                  print(
+                                      "ffffffffff ${cubit.matches[index].id}");
+
                                   cubit.matches.isEmpty
                                       ? cubit.selectClientName(
                                           clients[index].name!,

@@ -17,12 +17,33 @@ class SalesOrderedListScreen extends StatefulWidget {
 }
 
 class _SalesOrderedListScreenState extends State<SalesOrderedListScreen> {
+  late final ScrollController scrollController = ScrollController();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     context.read<SalesOrderedListCubit>().getAllOrders();
     context.read<SalesOrderedListCubit>().getAllUsers();
+    scrollController.addListener(_scrollListener);
+  }
+
+  _scrollListener() {
+    if (scrollController.position.maxScrollExtent == scrollController.offset) {
+      print('dddddddddbottom');
+      if (BlocProvider.of<SalesOrderedListCubit>(context).allUsersModel!.next !=
+          null) {
+        BlocProvider.of<SalesOrderedListCubit>(context).getAllUsers(
+            isGetMore: true,
+            pageId: BlocProvider.of<SalesOrderedListCubit>(context)
+                    .allUsersModel!
+                    .next ??
+                1);
+        debugPrint('new posts');
+      }
+    } else {
+      print('dddddddddtop');
+    }
   }
 
   @override
@@ -142,16 +163,16 @@ class _SalesOrderedListScreenState extends State<SalesOrderedListScreen> {
                                                 "name :${cubit.matches[index].name}");
                                           },
                                           child: Text(
-                                            cubit.matches
-                                                    .where((element) =>
-                                                        (element.id ==
-                                                            cubit
-                                                                .ordersModel
-                                                                ?.result![index]
-                                                                .partnerId))
-                                                    .first
-                                                    .name ??
-                                                "",
+                                            // cubit.matches
+                                            //         .where((element) =>
+                                            //             (element.id ==
+                                            //                 cubit
+                                            //                     .ordersModel
+                                            //                     ?.result![index]
+                                            //                     .partnerId))
+                                            //         .first
+                                            //         .name ??
+                                            "",
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodySmall,

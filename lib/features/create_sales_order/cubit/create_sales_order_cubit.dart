@@ -31,37 +31,51 @@ class CreateSalesOrderCubit extends Cubit<CreateSalesOrderState> {
 /////////////////////////
 
   DefaultModel? createOrderModel;
-
   createSaleOrder(
     BuildContext context,
   ) async {
     emit(LoadingCreateSaleOrderState());
+    print(
+        "hhhhhhhhhhhhhhhhhhhhhhhhhhhhh${context.read<ProductsCubit>().selectedProducts.length}");
 
-    final response = await api.createSaleOrder(currentClientId);
+    final response = await api
+        .createSaleOrder(context.read<CreateSalesOrderCubit>().currentClientId);
     response.fold((l) {
       print('gggggggg');
-
       emit(FailureCreateSaleOrderState());
     }, (r) async {
-      print('gggggggggggggggg');
       if (r.result != null) {
         createOrderModel = r;
-        emit(SuccessCreateSaleOrderState());
+        for (int i = 0;
+            i < context.read<ProductsCubit>().selectedProducts.length;
+            i++) {
+          await createSaleOrderLine(context,
+              productId: context.read<ProductsCubit>().selectedProducts[i].id!,
+              productQuantity: context
+                  .read<ProductsCubit>()
+                  .selectedProducts[i]
+                  .userOrderedQuantity,
+              orderId: r.result!);
+        }
       } else {}
     });
+
+    emit(SuccessCreateSaleOrderState());
+    // Navigator.pushNamedAndRemoveUntil(
+    //     context, Routes.homeRoute, (route) => false);
   }
 
   DefaultModel? createOrderLineModel;
   createSaleOrderLine(BuildContext context,
-      {required int productId, required int productQuantity}) async {
+      {required int orderId,
+      required int productId,
+      required productQuantity}) async {
     emit(LoadingCreateSaleOrderLineState());
     final response = await api.createSaleOrderLines(
-        orderId: createOrderModel!.result!,
+        orderId: orderId,
         productId: productId,
         productQuantity: productQuantity);
     response.fold((l) {
-      print('gggggggg');
-
       emit(FailureCreateSaleOrderLineState());
     }, (r) async {
       print('gggggggggggggggg');
@@ -71,6 +85,45 @@ class CreateSalesOrderCubit extends Cubit<CreateSalesOrderState> {
       } else {}
     });
   }
+// createSaleOrder(
+//   BuildContext context,
+// ) async {
+//   emit(LoadingCreateSaleOrderState());
+//
+//   final response = await api.createSaleOrder(currentClientId);
+//   response.fold((l) {
+//     print('gggggggg');
+//
+//     emit(FailureCreateSaleOrderState());
+//   }, (r) async {
+//     print('gggggggggggggggg');
+//     if (r.result != null) {
+//       createOrderModel = r;
+//       emit(SuccessCreateSaleOrderState());
+//     } else {}
+//   });
+// }
+//
+// DefaultModel? createOrderLineModel;
+// createSaleOrderLine(BuildContext context,
+//     {required int productId, required int productQuantity}) async {
+//   emit(LoadingCreateSaleOrderLineState());
+//   final response = await api.createSaleOrderLines(
+//       orderId: createOrderModel!.result!,
+//       productId: productId,
+//       productQuantity: productQuantity);
+//   response.fold((l) {
+//     print('gggggggg');
+//
+//     emit(FailureCreateSaleOrderLineState());
+//   }, (r) async {
+//     print('gggggggggggggggg');
+//     if (r.result != null) {
+//       createOrderLineModel = r;
+//       emit(SuccessCreateSaleOrderLineState());
+//     } else {}
+//   });
+// }
 
 //********** client *******************************
   selectClientName(String name, int id) {
@@ -81,15 +134,31 @@ class CreateSalesOrderCubit extends Cubit<CreateSalesOrderState> {
   }
 
   AllUsersModel? allUsersModel;
-  getAllUsers() async {
+  getAllUsers({
+    int pageId = 1,
+    bool isGetMore = false,
+  }) async {
+    isGetMore
+        ? emit(Loading2GetAllUsersState())
+        : emit(LoadingGetAllUsersState());
     matches.clear();
-    emit(LoadingGetAllUsersState());
-    final response = await api.getAllUsers();
+
+    final response = await api.getAllUsers(pageId, 15);
     response.fold((l) {
       emit(FailureGetAllUsersState());
     }, (r) {
-      allUsersModel = r;
-      matches.addAll(r.result!);
+      if (isGetMore) {
+        allUsersModel = AllUsersModel(
+          count: r.count,
+          next: r.next,
+          prev: r.prev,
+          result: [...allUsersModel!.result!, ...r.result!],
+        );
+      } else {
+        allUsersModel = r;
+      }
+
+      matches.addAll(allUsersModel!.result!);
       emit(SuccessGetAllUsersState());
     });
   }
@@ -119,12 +188,12 @@ class CreateSalesOrderCubit extends Cubit<CreateSalesOrderState> {
 
   addProduct(
       {required ProductModelData product, required BuildContext context}) {
-    if (product.qty_available! > product.userOrderedQuantity) {
-      //product.userOrderedQuantity = product.userOrderedQuantity + 1;
-      context.read<ProductsCubit>().addProduct(product: product);
+    // if (product.qty_available! > product.userOrderedQuantity) {
+    //product.userOrderedQuantity = product.userOrderedQuantity + 1;
+    context.read<ProductsCubit>().addProduct(product: product);
 
-      emit(AddProductState());
-    }
+    emit(AddProductState());
+    //  }
   }
 
   removeProduct(
