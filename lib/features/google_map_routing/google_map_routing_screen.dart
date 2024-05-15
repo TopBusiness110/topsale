@@ -10,7 +10,6 @@ class GoogleMapRoutingScreen extends StatefulWidget {
 
   const GoogleMapRoutingScreen({Key? key, required this.destinationlatLng})
       : super(key: key);
-
   @override
   State<GoogleMapRoutingScreen> createState() => _GoogleMapRoutingScreenState();
 }
@@ -23,9 +22,9 @@ class _GoogleMapRoutingScreenState extends State<GoogleMapRoutingScreen> {
   LocationData? currentLocation;
 
   PolylinePoints polylinePoints = PolylinePoints();
-  String googleAPiKey = "AIzaSyCqeB0JnSmNrrtuICRJEG3ZJPxC1DLWSmU";
+  String googleAPiKey = "AIzaSyAnjvMAJEmiAv3yeCDUXWv-PboXiT_uaoQ";
   Map<PolylineId, Polyline> polylines = {};
-
+  
 //***********************************************************************************
   // List<LatLng> polylineCoordinates = [];
   List<LatLng> polylineCoordinates = [];

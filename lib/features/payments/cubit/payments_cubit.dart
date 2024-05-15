@@ -77,6 +77,9 @@ class PaymentsCubit extends Cubit<PaymentsState> {
     }, (r) async {
       if (r.result != null) {
         createPaymentModel = r;
+
+
+        
         Navigator.pushReplacementNamed(context, Routes.receiptRoute);
         emit(SuccessCreatePaymentState());
       } else {

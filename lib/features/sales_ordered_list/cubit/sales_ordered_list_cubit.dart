@@ -30,35 +30,74 @@ class SalesOrderedListCubit extends Cubit<SalesOrderedListState> {
     emit(NewSalesOrderAdded());
   }
 
+
   AllUsersModel? allUsersModel;
-  getAllUsers() async {
+  getAllUsers({
+    int pageId = 1,
+    bool isGetMore = false,
+  }) async {
+    isGetMore
+        ? emit(Loading2GetAllUsersState())
+        : emit(LoadingGetAllUsersState());
     matches.clear();
-    emit(LoadingGetAllUsersState());
-    final response = await api.getAllUsers();
+  
+    final response = await api.getAllUsers(pageId,1000);
     response.fold((l) {
       emit(FailureGetAllUsersState());
     }, (r) {
-      allUsersModel = r;
-      matches.addAll(r.result!);
+if (isGetMore) {
+        allUsersModel = AllUsersModel(
+          count: r.count,
+          next: r.next,
+          
+          prev: r.prev,
+          result: [...allUsersModel!.result!, ...r.result!],
+        );
+      } else {
+        allUsersModel = r;
+      }
+
+
+
+      
+      matches.addAll(allUsersModel!.result!);
       emit(SuccessGetAllUsersState());
     });
   }
 
+
   searchInUser() {}
   GetAllOrdersModel? ordersModel;
-  getAllOrders() async {
+  getAllOrders({
+    int pageId = 1,
+    bool isGetMore = false,
+  }) async {
     emit(LoadingAllOrdersState());
     // authModel = await Preferences.instance.getUserModel2();
-    final response = await api.getAllSaleOrderForPartner();
+    final response = await api.getAllSaleOrderForPartner(pageId,15);
     response.fold((l) => emit(AllOrdersFailureState()), (r) {
-      emit(AllOrdersSuccessState());
-      ordersModel = r;
-      r.result?.forEach((element) {});
 
-      print("***************************************************");
-      print(r.toString());
-      print("**************************${r.result.toString()}");
-      // r.result!.map((e) => print(e.image1920));
+
+if (isGetMore) {
+        ordersModel = GetAllOrdersModel(
+          count: r.count,
+          next: r.next,
+          
+          prev: r.prev,
+          result: [...ordersModel!.result!, ...r.result!],
+        );
+      } else {
+        ordersModel = r;
+      }
+
+
+
+          emit(AllOrdersSuccessState());
+      
+    
+    
+   //   r.result?.forEach((element) {});
+
     });
   }
 }

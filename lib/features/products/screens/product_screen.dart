@@ -21,6 +21,7 @@ class ProductsScreen extends StatefulWidget {
 class _ProductsScreenState extends State<ProductsScreen> {
   bool isLoading = true;
   bool isLoadingProducts = true;
+  late final ScrollController scrollController = ScrollController();
   @override
   void initState() {
     print(BlocProvider.of<ProductsCubit>(context).categoriesModel == null);
@@ -32,8 +33,45 @@ class _ProductsScreenState extends State<ProductsScreen> {
       isLoadingProducts = false;
       isLoading = false;
     }
-
+    scrollController.addListener(_scrollListener);
     super.initState();
+  }
+
+  _scrollListener() {
+    if (scrollController.position.maxScrollExtent == scrollController.offset) {
+      print('dddddddddbottom');
+      if (BlocProvider.of<ProductsCubit>(context)
+          .searchController
+          .text
+          .isEmpty) {
+        if (BlocProvider.of<ProductsCubit>(context).productsModel!.next !=
+            null) {
+          BlocProvider.of<ProductsCubit>(context).getAllProducts(
+              isGetMore: true,
+              pageId:
+                  BlocProvider.of<ProductsCubit>(context).productsModel!.next ??
+                      1);
+          debugPrint('new posts');
+        }
+      } else {
+        if (BlocProvider.of<ProductsCubit>(context)
+                .searchedproductsModel!
+                .next !=
+            null) {
+          BlocProvider.of<ProductsCubit>(context).searchProducts(
+              productName:
+                  BlocProvider.of<ProductsCubit>(context).searchController.text,
+              isGetMore: true,
+              pageId: BlocProvider.of<ProductsCubit>(context)
+                      .searchedproductsModel!
+                      .next ??
+                  1);
+          debugPrint('new posts');
+        }
+      }
+    } else {
+      print('dddddddddtop');
+    }
   }
 
   @override
@@ -76,98 +114,125 @@ class _ProductsScreenState extends State<ProductsScreen> {
             ),
           ),
           backgroundColor: AppColors.primary,
-          body: (isLoading || isLoadingProducts)
-              ? Center(
-                  child: CircularProgressIndicator(color: AppColors.yellow),
-                )
-              : SafeArea(
-                  child: Column(
-                    children: [
-                      //text field for search
-                      CustomTextField(
-                        onchange: (keyValue) {
-                          cubit.searchInProducts(
-                              keyValue, cubit.productsModel!.result ?? []);
-                        },
-                        textColor: AppColors.white.withOpacity(0.5),
-                        borderSide:
-                            BorderSide(color: AppColors.lightBlue, width: 2),
-                        title: "search".tr(),
-                        textInputType: TextInputType.text,
-                        backgroundColor: AppColors.primary,
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      SizedBox(
-                          height: MediaQuery.of(context).size.height / 14,
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            scrollDirection: Axis.horizontal,
-                            physics: const BouncingScrollPhysics(),
-                            itemCount: cubit.categoriesModel?.result!.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ProductsOfCategory(
-                                                  categoryId: cubit
-                                                      .categoriesModel!
-                                                      .result![index]
-                                                      .id!,
-                                                  catName: cubit
-                                                      .categoriesModel!
-                                                      .result![index]
-                                                      .name!)));
-                                  //!  nav to api of products of category
-                                },
-                                child: Container(
-                                    alignment: Alignment.center,
-                                    margin: EdgeInsets.all(5),
-                                    decoration: BoxDecoration(
-                                        color: AppColors.lightBlue,
-                                        borderRadius: BorderRadius.circular(
-                                            getSize(context) / 32)),
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 15, vertical: 5),
-                                    child: Text(
-                                      cubit.categoriesModel!.result![index]
-                                          .name!,
-                                    )),
-                              );
-                            },
-                          )),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Expanded(
-                          child: GridView.builder(
-                        shrinkWrap: true,
-                        physics: const BouncingScrollPhysics(),
-                        itemCount: cubit.matches.isEmpty
-                            ? cubit.productsModel?.result!.length
-                            : cubit.matches.length,
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                mainAxisExtent: 230,
-                                crossAxisSpacing: 10,
-                                mainAxisSpacing: 20),
-                        itemBuilder: (context, index) {
-                          return ProductGridItem(
-                              product: cubit.matches.isEmpty
-                                  ? cubit.productsModel!.result![index]
-                                  : cubit.matches[index]);
-                          //products[index],);
-                        },
-                      )),
-                    ],
-                  ),
+          body: SafeArea(
+            child: Column(
+              children: [
+                CustomTextField(
+                  onchange: (keyValue) {
+                    cubit.searchProducts(
+                      productName: keyValue,
+                    );
+                  },
+                  textColor: AppColors.white.withOpacity(0.5),
+                  borderSide: BorderSide(color: AppColors.lightBlue, width: 2),
+                  title: "search".tr(),
+                  textInputType: TextInputType.text,
+                  controller: cubit.searchController,
+                  backgroundColor: AppColors.primary,
                 ),
+                const SizedBox(
+                  height: 10,
+                ),
+                (isLoading || isLoadingProducts)
+                    ? Center(
+                        child:
+                            CircularProgressIndicator(color: AppColors.yellow),
+                      )
+                    : Flexible(
+                        child: Column(
+                          children: [
+                            //text field for search
+
+                            SizedBox(
+                                height: MediaQuery.of(context).size.height / 14,
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.horizontal,
+                                  physics: const BouncingScrollPhysics(),
+                                  itemCount:
+                                      cubit.categoriesModel?.result!.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ProductsOfCategory(
+                                                        categoryId: cubit
+                                                            .categoriesModel!
+                                                            .result![index]
+                                                            .id!,
+                                                        catName: cubit
+                                                            .categoriesModel!
+                                                            .result![index]
+                                                            .name!)));
+                                        //!  nav to api of products of category
+                                      },
+                                      child: Container(
+                                          alignment: Alignment.center,
+                                          margin: EdgeInsets.all(5),
+                                          decoration: BoxDecoration(
+                                              color: AppColors.lightBlue,
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      getSize(context) / 32)),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 15, vertical: 5),
+                                          child: Text(
+                                            cubit.categoriesModel!
+                                                .result![index].name!,
+                                          )),
+                                    );
+                                  },
+                                )),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Expanded(
+                                child: GridView.builder(
+                              shrinkWrap: true,
+                              controller: scrollController,
+                              physics: const BouncingScrollPhysics(),
+                              itemCount: cubit.productsModel == null
+                                  ? 0
+                                  : cubit.searchController.text.isEmpty
+                                      ? cubit.productsModel?.result!.length
+                                      : cubit.searchedproductsModel?.result!
+                                          .length,
+                              //  cubit.matches.isEmpty
+                              //     ? cubit.productsModel?.result!.length
+                              //     : cubit.matches.length,
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15),
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      mainAxisExtent: 230,
+                                      crossAxisSpacing: 10,
+                                      mainAxisSpacing: 20),
+                              itemBuilder: (context, index) {
+                                return ProductGridItem(
+                                    product: cubit.searchController.text.isEmpty
+                                        ? cubit.productsModel!.result![index]
+                                        : cubit.searchedproductsModel!
+                                            .result![index]
+
+                                    // product: cubit.matches.isEmpty
+                                    //     ? cubit.productsModel!.result![index]
+                                    //     : cubit.matches[index]
+
+                                    );
+                                //products[index],);
+                              },
+                            )),
+                          ],
+                        ),
+                      ),
+              ],
+            ),
+          ),
           floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
           floatingActionButton: CircleAvatar(
             radius: 25,

@@ -28,13 +28,38 @@ class CustomerPaymentsScreen extends StatefulWidget {
 
 class _CustomerPaymentsScreenState extends State<CustomerPaymentsScreen> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  late final ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
-    context.read<CustomerPaymentsCubit>().getAllJournals();
+    context.read<CustomerPaymentsCubit>().selectedValue = null;
     context.read<CreateSalesOrderCubit>().getAllUsers();
+    context.read<CreateSalesOrderCubit>().currentClient = '';
+    context.read<CustomerPaymentsCubit>().datePickedController.clear();
+    context.read<CustomerPaymentsCubit>().amountController.clear();
+    context.read<CustomerPaymentsCubit>().memoController.clear();
 
+    scrollController.addListener(_scrollListener);
+    context.read<CustomerPaymentsCubit>().getAllJournals();
     super.initState();
+  }
+
+  _scrollListener() {
+    if (scrollController.position.maxScrollExtent == scrollController.offset) {
+      print('dddddddddbottom');
+      if (BlocProvider.of<CreateSalesOrderCubit>(context).allUsersModel!.next !=
+          null) {
+        BlocProvider.of<CreateSalesOrderCubit>(context).getAllUsers(
+            isGetMore: true,
+            pageId: BlocProvider.of<CreateSalesOrderCubit>(context)
+                    .allUsersModel!
+                    .next ??
+                1);
+        debugPrint('new posts');
+      }
+    } else {
+      print('dddddddddtop');
+    }
   }
 
   @override
@@ -72,6 +97,7 @@ class _CustomerPaymentsScreenState extends State<CustomerPaymentsScreen> {
           resizeToAvoidBottomInset: false,
           backgroundColor: AppColors.primary,
           body: SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
             child: Column(
               children: [
                 SizedBox(
@@ -93,7 +119,7 @@ class _CustomerPaymentsScreenState extends State<CustomerPaymentsScreen> {
                 ),
                 Container(
                   width: double.infinity,
-                  height: 65.h,
+                  // height: 65.h,
                   decoration: const BoxDecoration(
                       color: AppColors.blue2,
                       borderRadius: BorderRadius.only(
@@ -112,7 +138,7 @@ class _CustomerPaymentsScreenState extends State<CustomerPaymentsScreen> {
                           },
                           child: Container(
                             width: 80.w,
-                            height: 6.h,
+                            //  height: 6.h,
                             padding: const EdgeInsets.all(15),
                             decoration: BoxDecoration(
                               border:
@@ -340,14 +366,17 @@ class _CustomerPaymentsScreenState extends State<CustomerPaymentsScreen> {
                                   //   //cubit.clearFields();
                                   // }
                                 }),
-                            CustomButton(
-                                backgroundColor: AppColors.primary,
-                                textColor: AppColors.white,
-                                text: "print".tr(),
-                                onPressed: () {}),
+                            // CustomButton(
+                            //     backgroundColor: AppColors.primary,
+                            //     textColor: AppColors.white,
+                            //     text: "print".tr(),
+                            //     onPressed: () {}),
                           ],
                         ),
-                      )
+                      ),
+                      SizedBox(
+                        height: 3.h,
+                      ),
                     ],
                   ),
                 ),
@@ -526,6 +555,7 @@ class _CustomerPaymentsScreenState extends State<CustomerPaymentsScreen> {
                             ),
                           )
                         : ListView.separated(
+                            controller: scrollController,
                             itemBuilder: (context, index) {
                               //when we clicked on client
                               return InkWell(

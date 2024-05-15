@@ -21,13 +21,34 @@ class DismissalNoticeScreen extends StatefulWidget {
 }
 
 class _DismissalNoticeScreenState extends State<DismissalNoticeScreen> {
+  late final ScrollController scrollController = ScrollController();
+
   @override
   void initState() {
     context.read<DismissalNoticeCubit>().getFromLocations();
     context.read<DismissalNoticeCubit>().getToLocations();
     context.read<DismissalNoticeCubit>().getAllProducts();
+    scrollController.addListener(_scrollListener);
 
     super.initState();
+  }
+
+  _scrollListener() {
+    if (scrollController.position.maxScrollExtent == scrollController.offset) {
+      print('dddddddddbottom');
+      if (BlocProvider.of<DismissalNoticeCubit>(context).productsModel!.next !=
+          null) {
+        BlocProvider.of<DismissalNoticeCubit>(context).getAllProducts(
+            isGetMore: true,
+            pageId: BlocProvider.of<DismissalNoticeCubit>(context)
+                    .productsModel!
+                    .next ??
+                1);
+        debugPrint('new posts');
+      }
+    } else {
+      print('dddddddddtop');
+    }
   }
 
   @override
@@ -174,6 +195,7 @@ class _DismissalNoticeScreenState extends State<DismissalNoticeScreen> {
                         child: GridView.builder(
                         itemCount: cubit.productsModel!.result!.length,
                         padding: const EdgeInsets.symmetric(horizontal: 15),
+                        controller: scrollController,
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
@@ -210,7 +232,22 @@ class _DismissalNoticeScreenState extends State<DismissalNoticeScreen> {
                 if (cubit.selectedProducts.isNotEmpty &&
                     cubit.selectedToStockValue != null &&
                     cubit.selectedFromStockValue != null) {
-                  cubit.createPicking();
+                  print(cubit.selectedToStockValue);
+                  if (cubit.selectedToStockValue ==
+                      cubit.selectedFromStockValue) {
+                    Fluttertoast.showToast(
+                        msg: "من فضلك اختر مخزنين مختلفين",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                  } else {
+                    cubit.createPicking();
+                  }
+
+                  //cubit.createPicking();
                 } else {
                   Fluttertoast.showToast(
                       msg: "من فضلك اختر المنتجات والمخزن",

@@ -162,7 +162,7 @@ class AppRoutes {
       case Routes.catchReceiptRoute:
         final catchReceiptModel = settings.arguments as CatchReceiptModel;
         return MaterialPageRoute(
-          builder: (context) => 
+          builder: (context) =>
               CatchReceiptScreen(catchReceiptModel: catchReceiptModel),
         );
 
@@ -192,10 +192,8 @@ class AppRoutes {
         );
 
       case Routes.itineraryDetailsRoute:
-        final shipmentModel = settings.arguments as ShipmentModel;
         return MaterialPageRoute(
-          builder: (context) =>
-              ItineraryDetailsScreen(shipmentModel: shipmentModel),
+          builder: (context) => ItineraryDetailsScreen(),
         );
 
       case Routes.dismissalNoticeDetailsRoute:

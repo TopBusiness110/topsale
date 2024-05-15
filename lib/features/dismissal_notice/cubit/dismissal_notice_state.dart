@@ -20,6 +20,7 @@ class FailureCreateStockMoveState extends DismissalNoticeState {}
 class LoadingCreateStockMoveState extends DismissalNoticeState {}
 class SuccessCreateStockMoveState extends DismissalNoticeState {}
 class LoadingAllProductsState extends DismissalNoticeState {}
+class Loading2AllProductsState extends DismissalNoticeState {}
 
 class AllProductsFailureState extends DismissalNoticeState {}
 

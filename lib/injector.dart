@@ -52,7 +52,7 @@ Future<void> setUp() async {
       //serviceLocator(),
       ));
   serviceLocator.registerFactory(() => HomeCubit(
-      //serviceLocator(),
+        serviceLocator(),
       ));
   serviceLocator.registerFactory(() => ProductsCubit(
         serviceLocator(),
@@ -73,16 +73,16 @@ Future<void> setUp() async {
       //serviceLocator(),
       ));
   serviceLocator.registerFactory(() => ReturnsCubit(
-      //serviceLocator(),
+        serviceLocator(),
       ));
   serviceLocator.registerFactory(() => CustomerPaymentsCubit(
-      serviceLocator(),
+        serviceLocator(),
       ));
   serviceLocator.registerFactory(() => CartCubit(
       //serviceLocator(),
       ));
   serviceLocator.registerFactory(() => DismissalNoticeCubit(
-    serviceLocator(),
+        serviceLocator(),
       ));
   serviceLocator.registerFactory(() => ExpectedClientsCubit(
         serviceLocator(),
@@ -94,7 +94,7 @@ Future<void> setUp() async {
         serviceLocator(),
       ));
   serviceLocator.registerFactory(() => ItineraryCubit(
-      //serviceLocator(),
+        serviceLocator(),
       ));
   serviceLocator.registerFactory(() => ItineraryDetailsCubit(
       //serviceLocator(),

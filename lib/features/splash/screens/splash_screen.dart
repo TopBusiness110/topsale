@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:sizer/sizer.dart';
 import 'package:topsale/config/routes/app_routes.dart';
+import 'package:topsale/core/api/end_points.dart';
 import 'package:topsale/core/preferences/preferences.dart';
 import 'package:topsale/core/utils/app_assets.dart';
 import 'package:topsale/core/utils/app_colors.dart';
@@ -46,6 +47,11 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void initialization() async {
+    String database = await Preferences.instance.getDataBaseName() ??
+        "demo17.topbuziness.com";
+    EndPoints.baseUrl = "https://$database";
+    EndPoints.db = database;
+    print(EndPoints.baseUrl);
     // This is where you can initialize the resources needed by your app while
     // the splash screen is displayed.  Remove the following example because
     // delaying the user experience is a bad design practice!

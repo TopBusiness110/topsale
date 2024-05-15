@@ -103,34 +103,74 @@ class DismissalNoticeCubit extends Cubit<DismissalNoticeState> {
   }
 
   List<ProductModelData> selectedProducts = [];
+
   addProduct({required ProductModelData product}) {
-    if (product.qty_available > product.userOrderedQuantity) {
-      print(
-          "____________________selectedProducts.isEmpty __________________________");
-      // product.userOrderedQuantity++;
-      product.userOrderedQuantity++;
-      if (selectedProducts.isEmpty) {
-        selectedProducts.add(product);
-      } else {
-        bool isExist = false;
+    // if (product.qty_available > product.userOrderedQuantity) {
 
-        for (int i = 0; i < selectedProducts.length; i++) {
-          if (selectedProducts[i].id == product.id) {
-            isExist = true;
+    print(
+        "____________________selectedProducts.isEmpty __________________________");
+    // product.userOrderedQuantity++;
+    product.userOrderedQuantity++;
+    if (selectedProducts.isEmpty) {
+      selectedProducts.add(product);
+    } else {
+      bool isExist = false;
 
-            emit(AddProductsState());
-          } else {
-            // isExist = false;
-          }
-        }
-        if (!isExist) {
-          selectedProducts.add(product);
+      for (int i = 0; i < selectedProducts.length; i++) {
+        if (selectedProducts[i].id == product.id) {
+          isExist = true;
+
+          emit(AddProductsState());
+        } else {
+          // isExist = false;
         }
       }
+      if (!isExist) {
+        selectedProducts.add(product);
+      }
+    }
 
-      emit(AddProductsState());
-      return;
-    } else {}
+    emit(AddProductsState());
+    return;
+    // } else {
+    // for (int i = 0; i < selectedProducts.length; i++) {
+    //   //  product already exists in list
+
+    //   if (selectedProducts[i].code == product.code &&
+    //       selectedProducts[i].quantity! > product.userOrderedQuantity) {
+    //     print(
+    //         "+++++++++++++++++++++product already exists in list+++++++++++++++++++++++++++++++++");
+    //     product.userOrderedQuantity++;
+    //     emit(AddProductsState());
+    //     return;
+    //   }
+    //   //product already exists in list
+    //   // if(selectedProducts[i].code==product.code&&selectedProducts[i].quantity! > product.userOrderedQuantity){
+    //   //
+    //   //     print("+++++++++++++++++++++product already exists in list+++++++++++++++++++++++++++++++++");
+    //   //     product.userOrderedQuantity++;
+    //   //     //selectedProducts[i].userOrderedQuantity++;
+    //   //     print(selectedProducts);
+    //   //     emit(AddProductsState());
+    //   //     break;
+    //   //
+    //   // }
+    //   // else{
+    //   //   print("***************product doesn't exist in the list************************");
+    //   //   product.userOrderedQuantity++;
+    //   //   selectedProducts.add(product);
+    //   //   print(selectedProducts);
+    //   //   emit(AddProductsState());
+    //   //   break;
+    //   // }
+    // }
+
+    //    print(
+    //        "____________________selectedProducts doesn't exist __________________________");
+    //    product.userOrderedQuantity++;
+    //    selectedProducts.add(product);
+    //    emit(AddProductsState());
+    //  }
   }
 
   removeProduct({required ProductModelData product}) {
@@ -144,13 +184,29 @@ class DismissalNoticeCubit extends Cubit<DismissalNoticeState> {
   }
 
   AllProductsModel? productsModel;
-  getAllProducts() async {
-    emit(LoadingAllProductsState());
+  getAllProducts({
+    int pageId = 1,
+    bool isGetMore = false,
+  }) async {
+    isGetMore
+        ? emit(Loading2AllProductsState())
+        : emit(LoadingAllProductsState());
+    // emit(LoadingAllProductsState());
     // authModel = await Preferences.instance.getUserModel2();
-    final response = await api.getAllProducts();
+    final response = await api.getAllProducts(pageId);
     response.fold((l) => emit(AllProductsFailureState()), (r) {
+      if (isGetMore) {
+        productsModel = AllProductsModel(
+          count: r.count,
+          next: r.next,
+          prev: r.prev,
+          result: [...productsModel!.result!, ...r.result!],
+        );
+      } else {
+        productsModel = r;
+      }
+
       emit(AllProductsSuccessState());
-      productsModel = r;
 
       print("***************************************************");
       print(productsModel.toString());

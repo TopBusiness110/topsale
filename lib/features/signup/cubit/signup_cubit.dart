@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 import 'package:topsale/config/routes/app_routes.dart';
+import 'package:topsale/core/api/end_points.dart';
 import 'package:topsale/core/models/login_model.dart';
 import 'package:topsale/core/preferences/preferences.dart';
 import 'package:topsale/core/remote/service_api.dart';
@@ -41,13 +42,15 @@ class SignupCubit extends Cubit<SignupState> {
       if (r.result != null) {
         authModel = r;
     String sessionId =
-            await api.getSessionId(phone: phoneOrMail, password: password);
+            await api.getSessionId(phone: phoneOrMail, password: password,);
         print('lllllllll $sessionId');
         emit(SuccessSignupState());
         await Preferences.instance.setSessionId(sessionId);
              await Preferences.instance.setUserName(phoneOrMail);
         await Preferences.instance.setUserPass(password);
         await Preferences.instance.setDataBaseName(db);
+        EndPoints.baseUrl = "https://$db";
+        EndPoints.db = db;
       
         Navigator.pop(context);
         Preferences.instance.setUser2(r);

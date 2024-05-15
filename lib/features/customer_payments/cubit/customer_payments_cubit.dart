@@ -1,6 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:share/share.dart';
 import 'package:topsale/core/models/all_journals_model.dart';
 import 'package:topsale/core/models/allusers_model.dart';
 import 'package:topsale/core/models/client_model.dart';
@@ -8,6 +12,8 @@ import 'package:topsale/core/models/defaul_model.dart';
 import 'package:topsale/core/models/get_payment_by_id.dart';
 import 'package:topsale/core/models/update_payment_state_model.dart';
 import 'package:topsale/core/remote/service_api.dart';
+import 'dart:io';
+import 'dart:typed_data';
 
 import '../../../core/methods/clients.dart';
 
@@ -47,14 +53,31 @@ class CustomerPaymentsCubit extends Cubit<CustomerPaymentsState> {
   }
 
   AllUsersModel? allUsersModel;
-  getAllUsers() async {
-    emit(LoadingGetAllUsersState());
-    final response = await api.getAllUsers();
+  getAllUsers({
+    int pageId = 1,
+    bool isGetMore = false,
+  }) async {
+    isGetMore
+        ? emit(Loading2GetAllUsersState())
+        : emit(LoadingGetAllUsersState());
+    matches.clear();
+
+    final response = await api.getAllUsers(pageId, 1000);
     response.fold((l) {
       emit(FailureGetAllUsersState());
     }, (r) {
-      allUsersModel = r;
-      matches.addAll(r.result!);
+      if (isGetMore) {
+        allUsersModel = AllUsersModel(
+          count: r.count,
+          next: r.next,
+          prev: r.prev,
+          result: [...allUsersModel!.result!, ...r.result!],
+        );
+      } else {
+        allUsersModel = r;
+      }
+
+      matches.addAll(allUsersModel!.result!);
       emit(SuccessGetAllUsersState());
     });
   }
@@ -116,7 +139,7 @@ class CustomerPaymentsCubit extends Cubit<CustomerPaymentsState> {
     response.fold((l) => emit(FailureCreatePaymentMethodState()), (r) {
       emit(SuccessCreatePaymentMethodState());
       createPaymentMethodModel = r;
-      getPaymentById();
+      getMovieId();
       print("***************************************************");
       print(r.toString());
       print("**************************${r.result.toString()}");
@@ -127,18 +150,29 @@ class CustomerPaymentsCubit extends Cubit<CustomerPaymentsState> {
   GetPaymentByIdModel? getPaymentByIdModel;
   getPaymentById() async {
     emit(LoadingGetPaymentByIdState());
-
     // authModel = await Preferences.instance.getUserModel2();
     final response =
         await api.getPaymentById(paymentId: createPaymentMethodModel!.result!);
     response.fold((l) => emit(FailureGetPaymentByIdState()), (r) {
       emit(SuccessGetPaymentByIdState());
       getPaymentByIdModel = r;
-      updatePaymentStates();
+
       print("***************************************************");
       print(r.toString());
       print("**************************${r.result.toString()}");
       // r.result!.map((e) => print(e.image1920));
+    });
+  }
+
+  GetPaymentByIdModel? getMoveIdModel;
+  getMovieId() async {
+    emit(LoadingGetPaymentByIdState());
+    final response =
+        await api.getPaymentById(paymentId: createPaymentMethodModel!.result!);
+    response.fold((l) => emit(FailureGetPaymentByIdState()), (r) {
+      emit(SuccessGetPaymentByIdState());
+      getMoveIdModel = r;
+      updatePaymentStates();
     });
   }
 
@@ -148,14 +182,28 @@ class CustomerPaymentsCubit extends Cubit<CustomerPaymentsState> {
 
     // authModel = await Preferences.instance.getUserModel2();
     final response = await api.updatePaymentState(
-        paymentId: getPaymentByIdModel!.result![0].moveId!);
+        paymentId: getMoveIdModel!.result![0].moveId!);
     response.fold((l) => emit(FailureUpdatePaymentState()), (r) {
       emit(SuccessUpdatePaymentState());
       updatePaymentStateModel = r;
-      print("***************************************************");
-      print(r.toString());
-      print("**************************${r.result.toString()}");
+      getPaymentById();
       // r.result!.map((e) => print(e.image1920));
     });
+  }
+
+  ScreenshotController screenshotController = ScreenshotController();
+
+  captureScreenshot() async {
+    Uint8List? imageInUnit8List =
+        await screenshotController.capture(); // store unit8List image here ;
+    final tempDir = await getTemporaryDirectory();
+    File file = await File('${tempDir.path}/image.png').create();
+    file.writeAsBytesSync(imageInUnit8List!.toList(growable: true));
+
+    Share.shareFiles(
+      [file.path],
+      text: "share receipt ",
+    );
+    emit(ScreenshootState());
   }
 }

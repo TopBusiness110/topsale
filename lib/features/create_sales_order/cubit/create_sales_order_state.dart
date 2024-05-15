@@ -15,6 +15,7 @@ class CalculatingTotalPrice extends CreateSalesOrderState {}
 class NoClientsMatchesState extends CreateSalesOrderState {}
 
 class LoadingGetAllUsersState extends CreateSalesOrderState {}
+class Loading2GetAllUsersState extends CreateSalesOrderState {}
 class SuccessGetAllUsersState extends CreateSalesOrderState {}
 class FailureGetAllUsersState extends CreateSalesOrderState {}
 class LoadingCreateSaleOrderState extends CreateSalesOrderState {}

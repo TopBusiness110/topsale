@@ -15,7 +15,7 @@ import '../cubit/expected_clients_cubit/expected_clients_cubit.dart';
 //العملاء المحتملين
 class ExpectedClientsTab extends StatelessWidget {
   ExpectedClientsTab({super.key});
-    GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -118,15 +118,15 @@ class ExpectedClientsTab extends StatelessWidget {
                               ],
                             ),
                           ),
-                          CustomTextField(
-                            controller: cubit.emailController,
-                            title: "email".tr(),
-                            textInputType: TextInputType.emailAddress,
-                            textColor: AppColors.white.withOpacity(0.5),
-                            backgroundColor: AppColors.primary,
-                            horizantalTape: 5,
-                            // validatorMessage: "Enter The Email",
-                          ),
+                          // CustomTextField(
+                          //   controller: cubit.emailController,
+                          //   title: "email".tr(),
+                          //   textInputType: TextInputType.emailAddress,
+                          //   textColor: AppColors.white.withOpacity(0.5),
+                          //   backgroundColor: AppColors.primary,
+                          //   horizantalTape: 5,
+                          //   // validatorMessage: "Enter The Email",
+                          // ),
                           const SizedBox(
                             height: 10,
                           ),

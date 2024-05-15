@@ -13,6 +13,7 @@ class FailureGetJournalsState extends CustomerPaymentsState {}
 class SuccessGetJournalsState extends CustomerPaymentsState {}
 class LoadingGetJournalsState extends CustomerPaymentsState {}
 class LoadingGetAllUsersState extends CustomerPaymentsState {}
+class Loading2GetAllUsersState extends CustomerPaymentsState {}
 class SuccessGetAllUsersState extends CustomerPaymentsState {}
 class FailureGetAllUsersState extends CustomerPaymentsState {}
 
@@ -27,4 +28,6 @@ class FailureGetPaymentByIdState extends CustomerPaymentsState {}
 class LoadingUpdatePaymentState extends CustomerPaymentsState {}
 class SuccessUpdatePaymentState extends CustomerPaymentsState {}
 class FailureUpdatePaymentState extends CustomerPaymentsState {}
+ class ScreenshootState 
+ extends CustomerPaymentsState {}
 

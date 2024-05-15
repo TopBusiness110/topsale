@@ -13,5 +13,6 @@ class AllOrdersFailureState extends SalesOrderedListState {}
 
 class AllOrdersSuccessState extends SalesOrderedListState {}
 class LoadingGetAllUsersState extends SalesOrderedListState {}
+class Loading2GetAllUsersState extends SalesOrderedListState {}
 class SuccessGetAllUsersState extends SalesOrderedListState {}
 class FailureGetAllUsersState extends SalesOrderedListState {}

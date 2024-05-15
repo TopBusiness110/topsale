@@ -45,11 +45,13 @@ class ProductModelData {
   String? name;
   double? listPrice;
   int? currencyId;
-  String? uomName;
+  dynamic uomName;
   int? uomId;
   int? categId;
   int userOrderedQuantity;
   dynamic qty_available;
+  List<int>? taxesId;
+
   dynamic image1920;
 
   ProductModelData({
@@ -57,6 +59,7 @@ class ProductModelData {
     this.name,
     this.listPrice,
     this.currencyId,
+    this.taxesId,
     this.uomName,
     this.uomId,
     this.categId,
@@ -71,8 +74,11 @@ class ProductModelData {
         name: json["name"],
         listPrice: json["list_price"]?.toDouble(),
         currencyId: json["currency_id"],
-        uomName: json["uom_name"]!,
+        uomName: json["uom_name"],
         uomId: json["uom_id"],
+        taxesId: json["taxes_id"] == null
+            ? []
+            : List<int>.from(json["taxes_id"]!.map((x) => x)),
         qty_available: json["qty_available"],
         categId: json["categ_id"],
         image1920: json["image_1920"],
@@ -87,6 +93,8 @@ class ProductModelData {
         "qty_available": qty_available,
         "uom_id": uomId,
         "categ_id": categId,
+        "taxes_id":
+            taxesId == null ? [] : List<dynamic>.from(taxesId!.map((x) => x)),
         "image_1920": image1920,
       };
 }
