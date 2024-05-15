@@ -4,7 +4,7 @@ import 'package:odoo_rpc/odoo_rpc.dart';
 import 'package:topsale/core/models/all_journals_model.dart';
 import 'package:topsale/core/models/all_leads_model.dart';
 import 'package:topsale/core/models/allusers_model.dart';
-import 'package:topsale/core/models/company_currency.dart';
+import 'package:topsale/core/models/company_data_model.dart';
 import 'package:topsale/core/models/currency_name_model.dart';
 import 'package:topsale/core/models/defaul_model.dart';
 import 'package:topsale/core/models/get_all_orders.dart';
@@ -13,6 +13,8 @@ import 'package:topsale/core/models/get_order_details_model.dart';
 import 'package:topsale/core/models/get_orders_model.dart';
 import 'package:topsale/core/models/get_partner_orders_model.dart';
 import 'package:topsale/core/models/get_payment_by_id.dart';
+import 'package:topsale/core/models/get_payment_with_id_model.dart';
+import 'package:topsale/core/models/get_taxes_model.dart';
 import 'package:topsale/core/models/order_details_model.dart';
 import 'package:topsale/core/models/partner_latlong_model.dart';
 import 'package:topsale/core/models/update_payment_state_model.dart';
@@ -125,19 +127,35 @@ class ServiceApi {
     }
   }
 
-  Future<Either<Failure, GetCompanyCurrencyModel>> getCompanyCurrency() async {
+  Future<Either<Failure, GetCompanyDataModel>> getCompanyData() async {
     AuthModel authModel = await Preferences.instance.getUser();
     try {
       String? sessionId = await Preferences.instance.getSessionId();
       final response = await dio.get(
-        EndPoints.companyCurecncy +
-            'query={id, name,currency_id}&filter=[["id","=","${authModel.result!.userCompanies!.currentCompany!}"]]',
+        EndPoints.companyData +
+            'query={id, name,street,currency_id,country_code,account_sale_tax_id,vat,company_registry,logo}&filter=[["id","=","${authModel.result!.userCompanies!.currentCompany!}"]]',
         options: Options(
           headers: {"Cookie": "frontend_lang=en_US;session_id=$sessionId"},
         ),
       );
 
-      return Right(GetCompanyCurrencyModel.fromJson(response));
+      return Right(GetCompanyDataModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+  Future<Either<Failure, GetTaxesModel>> getTaxes(int taxId) async {
+    try {
+      String? sessionId = await Preferences.instance.getSessionId();
+      final response = await dio.get(
+        EndPoints.getTaxes + 'filter=[["id", "=", $taxId]]',
+        options: Options(
+          headers: {"Cookie": "frontend_lang=en_US;session_id=$sessionId"},
+        ),
+      );
+
+      return Right(GetTaxesModel.fromJson(response));
     } on ServerException {
       return Left(ServerFailure());
     }
@@ -170,7 +188,7 @@ class ServiceApi {
         queryParameters: {
           'filter': '[["categ_id", "=", [$categoryId]]]',
           'query':
-              '{id,name,qty_available,list_price,currency_id,uom_name,uom_id,categ_id,image_1920}'
+              '{id,name,qty_available,list_price,taxes_id,currency_id,uom_name,uom_id,categ_id,image_1920}'
         },
         options: Options(
           headers: {"Cookie": "frontend_lang=en_US;session_id=$sessionId"},
@@ -803,6 +821,23 @@ class ServiceApi {
     }
   }
 
+  Future<Either<Failure, GetPaymentWithIdModel>> getPaymentWith(
+      int paymentId) async {
+    String? sessionId = await Preferences.instance.getSessionId();
+    try {
+      final response = await dio.get(
+        EndPoints.createPayment +
+            '?filter=[["id", "=",$paymentId]]&query={name}',
+        options: Options(
+          headers: {"Cookie": "session_id=$sessionId"},
+        ),
+      );
+      return Right(GetPaymentWithIdModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
   Future<Either<Failure, GetLocationModel>> getfromLocations() async {
     // AuthModel authModel = await Preferences.instance.getUser();
     String? sessionId = await Preferences.instance.getSessionId();
@@ -894,14 +929,15 @@ class ServiceApi {
     }
   }
 
-  Future<Either<Failure, GetAllOrdersModel>> getAllSaleOrderForPartner() async {
+  Future<Either<Failure, GetAllOrdersModel>> getAllSaleOrderForPartner(
+      int page, int pageSize) async {
     try {
       String? sessionId = await Preferences.instance.getSessionId();
       AuthModel authModel = await Preferences.instance.getUser();
-      final userId = authModel.result!.userSettings!.id;
+      final userId = authModel.result!.userContext!.uid;
       final response = await dio.get(
         EndPoints.saleOrder +
-            '?filter=[["user_id", "=",$userId]]&query={id,partner_id,display_name,state,write_date,amount_total}',
+            '?filter=[["user_id", "=",$userId]]&query={id,partner_id,display_name,state,write_date,amount_total}&page_size=$pageSize&page=$page',
         options: Options(
           headers: {"Cookie": "session_id=$sessionId"},
         ),
@@ -972,7 +1008,7 @@ class ServiceApi {
 
       final response = await dio.get(
         EndPoints.createPayment +
-            '?query={move_id}&filter=[["id", "=",$paymentId]]',
+            '?query={move_id,name,display_name,sequence_prefix}&filter=[["id", "=",$paymentId]]',
         options: Options(
           headers: {"Cookie": "session_id=$sessionId"},
         ),

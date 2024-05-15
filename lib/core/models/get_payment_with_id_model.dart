@@ -9,14 +9,14 @@ GetPaymentWithIdModel getPaymentWithIdModelFromJson(String str) => GetPaymentWit
 String getPaymentWithIdModelToJson(GetPaymentWithIdModel data) => json.encode(data.toJson());
 
 class GetPaymentWithIdModel {
-    List<Result>? result;
+    List<PaymentResult>? result;
 
     GetPaymentWithIdModel({
         this.result,
     });
 
     factory GetPaymentWithIdModel.fromJson(Map<String, dynamic> json) => GetPaymentWithIdModel(
-        result: json["result"] == null ? [] : List<Result>.from(json["result"]!.map((x) => Result.fromJson(x))),
+        result: json["result"] == null ? [] : List<PaymentResult>.from(json["result"]!.map((x) => PaymentResult.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
@@ -24,14 +24,13 @@ class GetPaymentWithIdModel {
     };
 }
 
-class Result {
+class PaymentResult {
     String? name;
-
-    Result({
+    PaymentResult({
         this.name,
     });
 
-    factory Result.fromJson(Map<String, dynamic> json) => Result(
+    factory PaymentResult.fromJson(Map<String, dynamic> json) => PaymentResult(
         name: json["name"],
     );
 

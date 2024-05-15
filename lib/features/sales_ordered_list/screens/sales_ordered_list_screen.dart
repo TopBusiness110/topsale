@@ -24,19 +24,19 @@ class _SalesOrderedListScreenState extends State<SalesOrderedListScreen> {
     // TODO: implement initState
     super.initState();
     context.read<SalesOrderedListCubit>().getAllOrders();
-    context.read<SalesOrderedListCubit>().getAllUsers();
+    //context.read<SalesOrderedListCubit>().getAllUsers();
     scrollController.addListener(_scrollListener);
   }
 
   _scrollListener() {
     if (scrollController.position.maxScrollExtent == scrollController.offset) {
       print('dddddddddbottom');
-      if (BlocProvider.of<SalesOrderedListCubit>(context).allUsersModel!.next !=
+      if (BlocProvider.of<SalesOrderedListCubit>(context).ordersModel!.next !=
           null) {
-        BlocProvider.of<SalesOrderedListCubit>(context).getAllUsers(
+        BlocProvider.of<SalesOrderedListCubit>(context).getAllOrders(
             isGetMore: true,
             pageId: BlocProvider.of<SalesOrderedListCubit>(context)
-                    .allUsersModel!
+                    .ordersModel!
                     .next ??
                 1);
         debugPrint('new posts');
@@ -94,14 +94,16 @@ class _SalesOrderedListScreenState extends State<SalesOrderedListScreen> {
                   const CustomArrowBack()
                 ],
               ),
-              cubit.ordersModel == null ||
-                      cubit.allUsersModel == null ||
-                      cubit.matches.isEmpty
+              cubit.ordersModel == null
+                  //  ||
+                  //         cubit.allUsersModel == null ||
+                  //         cubit.matches.isEmpty
                   ? Center(
                       child: CircularProgressIndicator(color: AppColors.yellow),
                     )
                   : Expanded(
                       child: ListView.builder(
+                      controller: scrollController,
                       itemCount: cubit.ordersModel?.result!.length,
                       itemBuilder: (context, index) {
                         return Padding(

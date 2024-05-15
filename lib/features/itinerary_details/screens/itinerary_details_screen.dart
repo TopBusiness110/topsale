@@ -173,16 +173,24 @@ class _ItineraryDetailsScreenState extends State<ItineraryDetailsScreen> {
                                   LatLng(currentLocation!.latitude!,
                                       currentLocation!.longitude!);
                             }
-                            // openGoogleMapsRoute(widget.shipmentModel.clientLat!, widget.shipmentModel.clientLng!,currentLocation!.latitude!,currentLocation!.longitude!);
-                            Navigator.pushNamed(
-                                context, Routes.googleMapRoutingRoute,
-                                arguments: LatLng(
-                                    cubit.getPartnerLatLongModel!.result![0]
-                                            .partnerLatitude ??
-                                        0.0,
-                                    cubit.getPartnerLatLongModel!.result![0]
-                                            .partnerLongitude ??
-                                        0.0));
+                            openGoogleMapsRoute(
+                                currentLocation!.latitude!,
+                                currentLocation!.longitude!,
+                                cubit.getPartnerLatLongModel!.result![0]
+                                        .partnerLatitude ??
+                                    0.0,
+                                cubit.getPartnerLatLongModel!.result![0]
+                                        .partnerLongitude ??
+                                    0.0);
+                            // Navigator.pushNamed(
+                            //     context, Routes.googleMapRoutingRoute,
+                            //     arguments: LatLng(
+                            //         cubit.getPartnerLatLongModel!.result![0]
+                            //                 .partnerLatitude ??
+                            //             0.0,
+                            //         cubit.getPartnerLatLongModel!.result![0]
+                            //                 .partnerLongitude ??
+                            //             0.0));
                           }),
                       CustomButton(
                           fontSize: 14,

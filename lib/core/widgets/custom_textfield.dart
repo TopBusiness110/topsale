@@ -22,7 +22,7 @@ class CustomTextField extends StatelessWidget {
     this.readOnly = false,
     this.onTap,
     this.contentPadding =
-        const EdgeInsets.symmetric(vertical: 0, horizontal: 14), this.horizantalTape=20, this.isEdite = false,
+        const EdgeInsets.symmetric(vertical: 0, horizontal: 14), this.horizantalTape=20, this.isEdite = false, this.onSubmit,
   }) : super(key: key);
   final Widget? suffixWidget;
   final bool readOnly;
@@ -39,6 +39,7 @@ class CustomTextField extends StatelessWidget {
   final bool? isEdite;
   final double? horizantalTape;
   final Function(String)? onchange;
+  final void Function(String)? onSubmit;
   final TextInputType textInputType;
   final TextEditingController? controller;
   final EdgeInsetsGeometry contentPadding;
@@ -50,13 +51,15 @@ class CustomTextField extends StatelessWidget {
       child: TextFormField(
         
         onTap:onTap ,
+        
          readOnly: readOnly,
         controller: controller,
         keyboardType: textInputType,
         obscureText: isPassword,
+        onFieldSubmitted: onSubmit,
         enabled: isEnable,
         textAlign: TextAlign.start,
-        style: const TextStyle(fontSize: 14,color: AppColors.white),
+        style:  TextStyle(fontSize: 14,color: textColor),
         decoration: InputDecoration(
           contentPadding: contentPadding,
           hintStyle: TextStyle(

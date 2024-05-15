@@ -14,6 +14,8 @@ import 'package:topsale/core/widgets/custom_button.dart';
 import 'package:topsale/core/widgets/custom_textfield.dart';
 import 'package:topsale/features/cart/cart_cubit.dart';
 import 'package:topsale/features/create_sales_order/cubit/create_sales_order_cubit.dart';
+import 'package:topsale/features/create_sales_order/widget/custom_add_link_sheet.dart';
+import 'package:topsale/features/create_sales_order/widget/show_bottom_sheet.dart';
 import 'package:topsale/features/home/cubit/home_tab_cubit/home_cubit.dart';
 import 'package:topsale/features/payments/cubit/payments_cubit.dart';
 import 'package:topsale/features/payments/screens/payment_screen.dart';
@@ -35,6 +37,8 @@ class CreateSalesOrder extends StatefulWidget {
 
 class _CreateSalesOrderState extends State<CreateSalesOrder> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  TextEditingController editController = TextEditingController();
+
   late final ScrollController scrollController = ScrollController();
 
   @override
@@ -45,7 +49,6 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
         .read<CreateSalesOrderCubit>()
         .calculateTotalPrice(widget.selectedProducts!);
     context.read<CreateSalesOrderCubit>().getAllUsers();
-    context.read<CreateSalesOrderCubit>().currentClient = "";
     context.read<PaymentsCubit>().getAllJournals();
     scrollController.addListener(_scrollListener);
   }
@@ -116,7 +119,7 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                         },
                         child: Container(
                           width: 80.w,
-                          height: 6.h,
+                          // height: 6.h,
                           padding: const EdgeInsets.all(15),
                           decoration: BoxDecoration(
                             border:
@@ -206,7 +209,7 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                                                                       horizontal:
                                                                           8.0),
                                                               child: Text(
-                                                                "${widget.selectedProducts?.products[index].id}",
+                                                                "${widget.selectedProducts?.products[index].uomName}",
                                                                 style: Theme.of(
                                                                         context)
                                                                     .textTheme
@@ -224,23 +227,103 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                                                         SizedBox(
                                                           height: 1.h,
                                                         ),
-                                                        //price
-                                                        Text(
-                                                          "\$ ${widget.selectedProducts?.products[index].listPrice}",
-                                                          textDirection:
-                                                              TextDirection.ltr,
-                                                          // textAlign: TextAlign.start,
-                                                          style: Theme.of(
-                                                                  context)
-                                                              .textTheme
-                                                              .bodySmall!
-                                                              .copyWith(
-                                                                  fontSize: 10,
+                                                        Center(
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              GestureDetector(
+                                                                onTap: () {
+                                                                  showMyBottomSheet(
+                                                                      CustomEditText(
+                                                                        controller:
+                                                                            editController,
+                                                                        onSubmit:
+                                                                            (c) {
+                                                                          if (editController
+                                                                              .text
+                                                                              .isNotEmpty) {
+                                                                            setState(() {
+                                                                              widget.selectedProducts?.products[index].listPrice = double.parse(editController.text);
+                                                                              cubit.calculateTotalPrice(widget.selectedProducts!);
+                                                                              editController.clear();
+                                                                            });
+                                                                          }
+
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                        },
+                                                                        onPressed:
+                                                                            () {
+                                                                          if (editController
+                                                                              .text
+                                                                              .isNotEmpty) {
+                                                                            setState(() {
+                                                                              widget.selectedProducts?.products[index].listPrice = double.parse(editController.text);
+                                                                              cubit.calculateTotalPrice(widget.selectedProducts!);
+                                                                              editController.clear();
+                                                                            });
+                                                                          }
+
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                        },
+                                                                      ),
+                                                                      context);
+                                                                },
+                                                                child: Icon(
+                                                                  Icons.edit,
                                                                   color: AppColors
-                                                                      .white
-                                                                      .withOpacity(
-                                                                          0.5)),
+                                                                      .lightYellow,
+                                                                ),
+                                                              ),
+                                                              Flexible(
+                                                                child: Text(
+                                                                  "${context.read<HomeCubit>().currencyName} ${widget.selectedProducts?.products[index].listPrice}",
+                                                                  textDirection:
+                                                                      TextDirection
+                                                                          .ltr,
+                                                                  // textAlign: TextAlign.start,
+                                                                  style: Theme.of(
+                                                                          context)
+                                                                      .textTheme
+                                                                      .bodySmall!
+                                                                      .copyWith(
+                                                                          fontSize:
+                                                                              10,
+                                                                          color: AppColors
+                                                                              .white
+                                                                              .withOpacity(0.5)),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                width: 6.w,
+                                                              ),
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .symmetric(
+                                                                    horizontal:
+                                                                        8.0),
+                                                                child: Text(
+                                                                  "الإجمالي: ${widget.selectedProducts!.products[index].listPrice! * widget.selectedProducts!.products[index].userOrderedQuantity} ${context.read<HomeCubit>().currencyName}",
+                                                                  style: Theme.of(
+                                                                          context)
+                                                                      .textTheme
+                                                                      .bodySmall!
+                                                                      .copyWith(
+                                                                          fontSize:
+                                                                              10,
+                                                                          color: AppColors
+                                                                              .white
+                                                                              .withOpacity(0.5)),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
                                                         ),
+                                                        //price
+
                                                         SizedBox(
                                                           height: 1.h,
                                                         ),
@@ -251,92 +334,167 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                                                           child: Row(
                                                             mainAxisAlignment:
                                                                 MainAxisAlignment
-                                                                    .center,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .center,
+                                                                    .spaceEvenly,
                                                             children: [
-                                                              //number
-                                                              Text(
-                                                                "number",
-                                                                style: Theme.of(
-                                                                        context)
-                                                                    .textTheme
-                                                                    .bodySmall,
-                                                              ).tr(),
-                                                              SizedBox(
-                                                                width: 1.h,
-                                                              ),
-                                                              //add button
-                                                              InkWell(
+                                                              GestureDetector(
                                                                 onTap: () {
-                                                                  cubit.addProduct(
-                                                                      product: widget
-                                                                              .selectedProducts!
-                                                                              .products[
-                                                                          index],
-                                                                      context:
-                                                                          context);
-                                                                  cubit.calculateTotalPrice(
-                                                                      widget
-                                                                          .selectedProducts!);
+                                                                  setState(() {
+                                                                    widget
+                                                                        .selectedProducts
+                                                                        ?.products[
+                                                                            index]
+                                                                        .userOrderedQuantity = 0;
+                                                                    context
+                                                                        .read<
+                                                                            ProductsCubit>()
+                                                                        .removeProduct(
+                                                                            product:
+                                                                                widget.selectedProducts!.products[index]);
+
+                                                                    cubit.calculateTotalPrice(
+                                                                        widget
+                                                                            .selectedProducts!);
+                                                                  });
                                                                 },
-                                                                child:
-                                                                    const CircleAvatar(
-                                                                  radius: 12,
-                                                                  backgroundColor:
-                                                                      AppColors
-                                                                          .lightBlue,
-                                                                  child: Icon(
-                                                                    Icons.add,
-                                                                    size: 13,
-                                                                    color: AppColors
-                                                                        .white,
-                                                                  ),
+                                                                child: Icon(
+                                                                  Icons.delete,
+                                                                  color: AppColors
+                                                                      .lightYellow,
                                                                 ),
                                                               ),
-                                                              //userOrderedQuantity
-                                                              Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                        .all(
-                                                                        12.0),
-                                                                child: Text(
-                                                                  "${widget.selectedProducts?.products[index].userOrderedQuantity}",
-                                                                ),
-                                                              ),
-                                                              //remove button
-                                                              InkWell(
-                                                                onTap: () {
-                                                                  cubit.removeProduct(
-                                                                      product: widget
-                                                                              .selectedProducts!
-                                                                              .products[
-                                                                          index],
-                                                                      products: widget
-                                                                          .selectedProducts
-                                                                          ?.products,
-                                                                      context:
-                                                                          context);
-                                                                  cubit.calculateTotalPrice(
-                                                                      widget
-                                                                          .selectedProducts!);
-                                                                },
-                                                                child:
-                                                                    const CircleAvatar(
-                                                                  radius: 12,
-                                                                  backgroundColor:
-                                                                      AppColors
-                                                                          .lightBlue,
-                                                                  child: Icon(
-                                                                    Icons
-                                                                        .remove,
-                                                                    size: 13,
-                                                                    color: AppColors
-                                                                        .white,
+                                                              Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  //number
+                                                                  Text(
+                                                                    "number",
+                                                                    style: Theme.of(
+                                                                            context)
+                                                                        .textTheme
+                                                                        .bodySmall,
+                                                                  ).tr(),
+                                                                  SizedBox(
+                                                                    width: 1.h,
                                                                   ),
-                                                                ),
-                                                              )
+
+                                                                  //add button
+                                                                  // InkWell(
+                                                                  //   onTap: () {
+                                                                  //     cubit.addProduct(
+                                                                  //         product: widget
+                                                                  //                 .selectedProducts!
+                                                                  //                 .products[
+                                                                  //             index],
+                                                                  //         context:
+                                                                  //             context);
+                                                                  //     cubit.calculateTotalPrice(
+                                                                  //         widget
+                                                                  //             .selectedProducts!);
+                                                                  //   },
+                                                                  //   child:
+                                                                  //       const CircleAvatar(
+                                                                  //     radius: 12,
+                                                                  //     backgroundColor:
+                                                                  //         AppColors
+                                                                  //             .lightBlue,
+                                                                  //     child: Icon(
+                                                                  //       Icons.add,
+                                                                  //       size: 13,
+                                                                  //       color: AppColors
+                                                                  //           .white,
+                                                                  //     ),
+                                                                  //   ),
+                                                                  // ),
+                                                                  //userOrderedQuantity
+                                                                  Padding(
+                                                                    padding:
+                                                                        const EdgeInsets
+                                                                            .all(
+                                                                            12.0),
+                                                                    child: Text(
+                                                                      "${widget.selectedProducts?.products[index].userOrderedQuantity}",
+                                                                    ),
+                                                                  ),
+                                                                  GestureDetector(
+                                                                    onTap: () {
+                                                                      showMyBottomSheet(
+                                                                          CustomEditText(
+                                                                            controller:
+                                                                                editController,
+                                                                            onSubmit:
+                                                                                (c) {
+                                                                              if (editController.text.isNotEmpty) {
+                                                                                setState(() {
+                                                                                  widget.selectedProducts?.products[index].userOrderedQuantity = int.parse(editController.text);
+                                                                                  cubit.calculateTotalPrice(widget.selectedProducts!);
+                                                                                  editController.clear();
+                                                                                });
+                                                                              }
+
+                                                                              Navigator.pop(context);
+                                                                            },
+                                                                            onPressed:
+                                                                                () {
+                                                                              if (editController.text.isNotEmpty) {
+                                                                                setState(() {
+                                                                                  widget.selectedProducts?.products[index].userOrderedQuantity = int.parse(editController.text);
+                                                                                  cubit.calculateTotalPrice(widget.selectedProducts!);
+                                                                                  editController.clear();
+                                                                                });
+                                                                              }
+
+                                                                              Navigator.pop(context);
+                                                                            },
+                                                                          ),
+                                                                          context);
+                                                                    },
+                                                                    child: Icon(
+                                                                      Icons
+                                                                          .edit,
+                                                                      color: AppColors
+                                                                          .lightYellow,
+                                                                    ),
+                                                                  )
+                                                                  //remove button
+                                                                  ,
+                                                                  // InkWell(
+                                                                  //   onTap: () {
+                                                                  //     cubit.removeProduct(
+                                                                  //         product: widget
+                                                                  //                 .selectedProducts!
+                                                                  //                 .products[
+                                                                  //             index],
+                                                                  //         products: widget
+                                                                  //             .selectedProducts
+                                                                  //             ?.products,
+                                                                  //         context:
+                                                                  //             context);
+                                                                  //     cubit.calculateTotalPrice(
+                                                                  //         widget
+                                                                  //             .selectedProducts!);
+                                                                  //   },
+                                                                  //   child:
+                                                                  //       const CircleAvatar(
+                                                                  //     radius: 12,
+                                                                  //     backgroundColor:
+                                                                  //         AppColors
+                                                                  //             .lightBlue,
+                                                                  //     child: Icon(
+                                                                  //       Icons
+                                                                  //           .remove,
+                                                                  //       size: 13,
+                                                                  //       color: AppColors
+                                                                  //           .white,
+                                                                  //     ),
+                                                                  //   ),
+                                                                  // )
+                                                                ],
+                                                              ),
                                                             ],
                                                           ),
                                                         ),
@@ -428,12 +586,11 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                     },
                     text: "add_product+",
                   ),
-                  BlocConsumer<CreateSalesOrderCubit, CreateSalesOrderState>(
+                  BlocConsumer<ProductsCubit, ProductsState>(
                       listener: (context, state) {
-                    //  if (state is SuccessCreateSaleOrderState) {
-                    //    print("successdddd");
-                    //
-                    //  }
+                    if (state is SuccessGetTaxesState) {
+                      showAlertDialog(context);
+                    }
                   }, builder: (context, state) {
                     return CustomButton(
                       backgroundColor: AppColors.lightBlue,
@@ -456,10 +613,7 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                         } else if (widget
                                 .selectedProducts!.products.isNotEmpty &&
                             cubit.currentClient != "") {
-                          showAlertDialog(context);
-                          // cubit.createSaleOrder(
-                          //   context,
-                          // );
+                          productCubit.getTaxes();
                         } else {
                           // ScaffoldMessenger.of(context)
                           //     .showSnackBar(const SnackBar(
@@ -524,6 +678,7 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                         print('sssss');
                         Navigator.pop(context);
                         context.read<ProductsCubit>().getAllProducts();
+
                         //context.read<ProductsCubit>().selectedProducts.clear();
 
                         Navigator.push(
@@ -584,6 +739,9 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                     ),
                     ElevatedButton(
                       onPressed: () {
+                        print(productCubit.taxes);
+                        print(productCubit.taxesSum);
+
                         Navigator.pop(context);
                       },
                       style: ElevatedButton.styleFrom(

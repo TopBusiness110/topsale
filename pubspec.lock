@@ -153,6 +153,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.9"
+  e_invoice_generator:
+    dependency: "direct main"
+    description:
+      name: e_invoice_generator
+      sha256: "59fb49a093f8475e48eefb6eb9d8b49ff150a7b4c4b024514ad1eca68a9594b0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.3"
   easy_localization:
     dependency: "direct main"
     description:
@@ -797,6 +805,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.2"
+  qr_bar_code:
+    dependency: transitive
+    description:
+      name: qr_bar_code
+      sha256: f74a31d5d3bbd67c64d7045eead421c88bca9d27e668331fa6c3877bd4ccf6e4
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0"
   sanitize_html:
     dependency: transitive
     description:

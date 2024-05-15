@@ -28,4 +28,6 @@ class FailureGetPaymentByIdState extends CustomerPaymentsState {}
 class LoadingUpdatePaymentState extends CustomerPaymentsState {}
 class SuccessUpdatePaymentState extends CustomerPaymentsState {}
 class FailureUpdatePaymentState extends CustomerPaymentsState {}
+ class ScreenshootState 
+ extends CustomerPaymentsState {}
 

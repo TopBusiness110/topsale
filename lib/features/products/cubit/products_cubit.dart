@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import 'package:topsale/core/models/get_taxes_model.dart';
 import 'package:topsale/core/models/product_model.dart';
 import 'package:topsale/core/remote/service_api.dart';
 
@@ -14,10 +15,9 @@ class ProductsCubit extends Cubit<ProductsState> {
   ServiceApi api;
   List<ProductModelData> matches = [];
   List<ProductModelData> selectedProducts = [];
+  List<double> taxes = [];
 
   addProduct({required ProductModelData product}) {
-    // if (product.qty_available > product.userOrderedQuantity) {
-
     print(
         "____________________selectedProducts.isEmpty __________________________");
     // product.userOrderedQuantity++;
@@ -30,7 +30,6 @@ class ProductsCubit extends Cubit<ProductsState> {
       for (int i = 0; i < selectedProducts.length; i++) {
         if (selectedProducts[i].id == product.id) {
           isExist = true;
-
           emit(AddProductsState());
         } else {
           // isExist = false;
@@ -44,44 +43,6 @@ class ProductsCubit extends Cubit<ProductsState> {
     emit(AddProductsState());
     return;
     // } else {
-    // for (int i = 0; i < selectedProducts.length; i++) {
-    //   //  product already exists in list
-
-    //   if (selectedProducts[i].code == product.code &&
-    //       selectedProducts[i].quantity! > product.userOrderedQuantity) {
-    //     print(
-    //         "+++++++++++++++++++++product already exists in list+++++++++++++++++++++++++++++++++");
-    //     product.userOrderedQuantity++;
-    //     emit(AddProductsState());
-    //     return;
-    //   }
-    //   //product already exists in list
-    //   // if(selectedProducts[i].code==product.code&&selectedProducts[i].quantity! > product.userOrderedQuantity){
-    //   //
-    //   //     print("+++++++++++++++++++++product already exists in list+++++++++++++++++++++++++++++++++");
-    //   //     product.userOrderedQuantity++;
-    //   //     //selectedProducts[i].userOrderedQuantity++;
-    //   //     print(selectedProducts);
-    //   //     emit(AddProductsState());
-    //   //     break;
-    //   //
-    //   // }
-    //   // else{
-    //   //   print("***************product doesn't exist in the list************************");
-    //   //   product.userOrderedQuantity++;
-    //   //   selectedProducts.add(product);
-    //   //   print(selectedProducts);
-    //   //   emit(AddProductsState());
-    //   //   break;
-    //   // }
-    // }
-
-    //    print(
-    //        "____________________selectedProducts doesn't exist __________________________");
-    //    product.userOrderedQuantity++;
-    //    selectedProducts.add(product);
-    //    emit(AddProductsState());
-    //  }
   }
 
   removeProduct({required ProductModelData product}) {
@@ -102,6 +63,33 @@ class ProductsCubit extends Cubit<ProductsState> {
         emit(SearchingState());
       }
     }
+  }
+
+  GetTaxesModel? getTaxesModel;
+  double taxesSum = 0;
+
+  getTaxes() async {
+    emit(LoadingGetTaxesState());
+    taxes = [];
+    taxesSum = 0;
+    selectedProducts.forEach((element) async {
+      if (element.taxesId!.isNotEmpty) {
+        final response = await api.getTaxes(element.taxesId![0]);
+        response.fold((l) => emit(FailureGetTaxesState()), (r) {
+          taxes
+              .add(double.parse(r.result![0].displayName!.replaceAll("%", "")));
+          taxesSum += element.listPrice! *
+              element.userOrderedQuantity *
+              double.parse(r.result![0].displayName!.replaceAll("%", "")) /
+              100;
+          print("***************************************************");
+        });
+      } else {
+        taxes.add(0.0);
+      }
+    });
+
+    emit(SuccessGetTaxesState());
   }
 
   AllCategoriesModel? categoriesModel;
@@ -143,19 +131,19 @@ class ProductsCubit extends Cubit<ProductsState> {
       }
 
       emit(AllProductsSuccessState());
-
       print("***************************************************");
       print(productsModel.toString());
       print("**************************${r.result.toString()}");
       // r.result!.map((e) => print(e.image1920));
     });
   }
+
   TextEditingController searchController = TextEditingController();
   AllProductsModel? searchedproductsModel;
   searchProducts({
     int pageId = 1,
     bool isGetMore = false,
-    required String productName ,
+    required String productName,
   }) async {
     isGetMore
         ? emit(Loading2AllProductsState())

@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:topsale/core/models/company_currency.dart';
+import 'package:topsale/core/models/company_data_model.dart';
 import 'package:topsale/core/models/currency_name_model.dart';
 import 'package:topsale/core/models/login_model.dart';
 import 'package:topsale/core/models/user_data_model.dart';
@@ -93,14 +93,14 @@ class HomeCubit extends Cubit<HomeState> {
 //     emit(GettingUserDataState());
 //   }
 
-  GetCompanyCurrencyModel? companyCurrencyNameModel;
-  getCompanyCurrency() async {
+  GetCompanyDataModel? companyDataModel;
+  getCompanyData() async {
     emit(LoadingCompanyCurrencyState());
     // authModel = await Preferences.instance.getUserModel2();
-    final response = await api.getCompanyCurrency();
+    final response = await api.getCompanyData();
     response.fold((l) => emit(FailureCompanyCurrencyState()), (r) {
       emit(SuccessAllCompanyCurrencyState());
-      companyCurrencyNameModel = r;
+      companyDataModel = r;
 
       getCurrencyName();
       print("***************************************************");
@@ -115,7 +115,7 @@ class HomeCubit extends Cubit<HomeState> {
     emit(LoadingCompanyCurrencyState());
     // authModel = await Preferences.instance.getUserModel2();
     final response = await api
-        .getCurrencyName(companyCurrencyNameModel!.result![0].currencyId!);
+        .getCurrencyName(companyDataModel!.result![0].currencyId!);
     response.fold((l) => emit(FailureCompanyCurrencyState()), (r) {
       emit(SuccessAllCompanyCurrencyState());
       getCurrencyNameModel = r;
