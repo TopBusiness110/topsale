@@ -50,30 +50,32 @@ class GetCompanyDataModel {
             : List<dynamic>.from(result!.map((x) => x.toJson())),
       };
 }
+
 class CompanyCurrencyResult {
-    int? id;
-    String? name;
-    String? street;
-    String? countryCode;
-    int? currencyId;
-    int? accountSaleTaxId;
-    String? vat;
-    String? companyRegistry;
-    String? logo;
+  int? id;
+  String? name;
+  dynamic? street;
+  String? countryCode;
+  int? currencyId;
+  int? accountSaleTaxId;
+  dynamic? vat;
+  dynamic? companyRegistry;
+  String? logo;
 
-    CompanyCurrencyResult({
-        this.id,
-        this.name,
-        this.street,
-        this.countryCode,
-        this.currencyId,
-        this.accountSaleTaxId,
-        this.vat,
-        this.companyRegistry,
-        this.logo,
-    });
+  CompanyCurrencyResult({
+    this.id,
+    this.name,
+    this.street,
+    this.countryCode,
+    this.currencyId,
+    this.accountSaleTaxId,
+    this.vat,
+    this.companyRegistry,
+    this.logo,
+  });
 
-    factory CompanyCurrencyResult.fromJson(Map<String, dynamic> json) => CompanyCurrencyResult(
+  factory CompanyCurrencyResult.fromJson(Map<String, dynamic> json) =>
+      CompanyCurrencyResult(
         id: json["id"],
         name: json["name"],
         street: json["street"],
@@ -83,9 +85,9 @@ class CompanyCurrencyResult {
         vat: json["vat"],
         companyRegistry: json["company_registry"],
         logo: json["logo"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
         "street": street,
@@ -95,5 +97,5 @@ class CompanyCurrencyResult {
         "vat": vat,
         "company_registry": companyRegistry,
         "logo": logo,
-    };
+      };
 }

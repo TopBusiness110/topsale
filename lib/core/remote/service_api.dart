@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:odoo_rpc/odoo_rpc.dart';
 import 'package:topsale/core/models/all_journals_model.dart';
 import 'package:topsale/core/models/all_leads_model.dart';
+import 'package:topsale/core/models/all_partners_for_reports_model.dart';
 import 'package:topsale/core/models/allusers_model.dart';
 import 'package:topsale/core/models/company_data_model.dart';
 import 'package:topsale/core/models/currency_name_model.dart';
@@ -11,6 +12,7 @@ import 'package:topsale/core/models/get_all_orders.dart';
 import 'package:topsale/core/models/get_location.dart';
 import 'package:topsale/core/models/get_order_details_model.dart';
 import 'package:topsale/core/models/get_orders_model.dart';
+import 'package:topsale/core/models/get_partner_model.dart';
 import 'package:topsale/core/models/get_partner_orders_model.dart';
 import 'package:topsale/core/models/get_payment_by_id.dart';
 import 'package:topsale/core/models/get_payment_with_id_model.dart';
@@ -82,6 +84,7 @@ class ServiceApi {
 
     final sessionId = odoResponse.id;
     print("getSessionId = $sessionId");
+    await Preferences.instance.setSessionId(sessionId);
     return sessionId;
   }
 
@@ -215,8 +218,27 @@ class ServiceApi {
           headers: {"Cookie": "frontend_lang=en_US;session_id=$sessionId"},
         ),
       );
-
       return Right(AllUsersModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+  Future<Either<Failure, GetAllPartnersReportsModel>> getAllPartnersForReport(
+      int page, int pageSize) async {
+    try {
+      AuthModel authModel = await Preferences.instance.getUser();
+      print("lllllllllll${authModel.result!.userSettings!.id}");
+
+      String? sessionId = await Preferences.instance.getSessionId();
+      final response = await dio.get(
+        EndPoints.getAllPartners +
+            '&page_size=$pageSize&page=$page&filter=[["user_id", "=",${authModel.result!.userContext!.uid}]]',
+        options: Options(
+          headers: {"Cookie": "frontend_lang=en_US;session_id=$sessionId"},
+        ),
+      );
+      return Right(GetAllPartnersReportsModel.fromJson(response));
     } on ServerException {
       return Left(ServerFailure());
     }
@@ -259,7 +281,6 @@ class ServiceApi {
 
   Future<Either<Failure, AuthModel>> auth(
       String phoneOrMail, String password, String db) async {
-    String? sessionId = await Preferences.instance.getSessionId();
     String sessionIddd =
         await getSessionId(phone: phoneOrMail, password: password);
     print('ddddddddddddd $sessionIddd');
@@ -268,7 +289,7 @@ class ServiceApi {
       final response = await dio.post(
         EndPoints.auth,
         options: Options(
-          headers: {"Cookie": "frontend_lang=en_US;session_id=$sessionId"},
+          headers: {"Cookie": "frontend_lang=en_US;session_id=$sessionIddd"},
         ),
         body: {
           "params": {'login': phoneOrMail, "password": password, "db": db},
@@ -759,7 +780,7 @@ class ServiceApi {
     try {
       final response = await dio.get(
         EndPoints.saleOrderLine +
-            '?query={ name,product_uom_qty,product_uom}&filter=[["order_id", "=", $orderId]]',
+            '?query={name,product_uom_qty,price_tax,price_total,price_subtotal,display_name,create_date,order_id,order_partner_id}&filter=[["order_id", "=", $orderId]]',
         options: Options(
           headers: {"Cookie": "session_id=$sessionId"},
         ),
@@ -782,6 +803,23 @@ class ServiceApi {
         ),
       );
       return Right(GetPartnerLatLongModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+  Future<Either<Failure, GetPartnerDetailsModel>> getPartnerDetails(
+      int partnerId) async {
+    String? sessionId = await Preferences.instance.getSessionId();
+    try {
+      final response = await dio.get(
+        EndPoints.addPartner +
+            '$partnerId?query={name,user_id,total_overdue,total_due,sale_order_ids}',
+        options: Options(
+          headers: {"Cookie": "session_id=$sessionId"},
+        ),
+      );
+      return Right(GetPartnerDetailsModel.fromJson(response));
     } on ServerException {
       return Left(ServerFailure());
     }

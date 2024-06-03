@@ -137,12 +137,12 @@ class MoreTab extends StatelessWidget {
                           if (index == 0) {
                             Navigator.pushNamed(context, Routes.myAccountRoute);
                           }
-                          //  else if (index == 2) {
-                          //   Navigator.pushNamed(context, Routes.reportsRoute);
-                          // }
-                          else if (index == 2) {
+                           else if (index == 2) {
+                            Navigator.pushNamed(context, Routes.reportsRoute);
+                          }
+                          else if (index == 3) {
                             showAlertDialog(context);
-                          } else if (index == 3) {
+                          } else if (index == 4) {
                             context.read<HomeCubit>().changeTabs(0);
                             Preferences.instance.removeUserName();
                             Navigator.pushNamedAndRemoveUntil(

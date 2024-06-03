@@ -41,13 +41,19 @@ class MoreListItem extends StatelessWidget {
   }
 }
 
-// List<String> moreImages = [AssetsManager.myAccount,AssetsManager.termsConditionsDelete,AssetsManager.reports,AssetsManager.termsConditionsDelete,AssetsManager.logout];
-// List<String> labels = ["my_account".tr(),"terms_conditions".tr(),"reports".tr(),"delete_account".tr(),"logout".tr()];
 List<String> moreImages = [
   AssetsManager.myAccount,
   AssetsManager.termsConditionsDelete,
+  AssetsManager.reports,
   AssetsManager.termsConditionsDelete,
   AssetsManager.logout
+];
+List<String> labels = [
+  "my_account".tr(),
+  "terms_conditions".tr(),
+  "reports".tr(),
+  "delete_account".tr(),
+  "logout".tr()
 ];
 // List<String> moreImages = [
 //   AssetsManager.myAccount,
@@ -55,12 +61,18 @@ List<String> moreImages = [
 //   AssetsManager.termsConditionsDelete,
 //   AssetsManager.logout
 // ];
-List<String> labels = [
-  "my_account".tr(),
-  "terms_conditions".tr(),
-  "delete_account".tr(),
-  "logout".tr()
-];
+// List<String> moreImages = [
+//   AssetsManager.myAccount,
+//   AssetsManager.termsConditionsDelete,
+//   AssetsManager.termsConditionsDelete,
+//   AssetsManager.logout
+// ];
+// List<String> labels = [
+//   "my_account".tr(),
+//   "terms_conditions".tr(),
+//   "delete_account".tr(),
+//   "logout".tr()
+// ];
 // List<String> labels = [
 //   "my_account".tr(),
 //   "terms_conditions".tr(),

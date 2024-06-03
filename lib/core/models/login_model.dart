@@ -52,26 +52,26 @@ class Result {
   dynamic profileSession;
   dynamic profileCollectors;
   dynamic profileParams;
-  int? maxFileUploadSize;
-  bool? homeActionId;
+  dynamic? maxFileUploadSize;
+  dynamic? homeActionId;
   CacheHashes? cacheHashes;
   Map<String, Currency>? currencies;
   BundleParams? bundleParams;
   UserCompanies? userCompanies;
-  bool? showEffect;
-  bool? displaySwitchCompanyMenu;
+  dynamic? showEffect;
+  dynamic? displaySwitchCompanyMenu;
   List<int>? userId;
-  int? maxTimeBetweenKeysInMs;
+  dynamic? maxTimeBetweenKeysInMs;
   List<dynamic>? webTours;
-  bool? tourDisable;
-  String? notificationType;
-  bool? mapBoxToken;
-  bool? odoobotInitialized;
-  bool? iapCompanyEnrich;
-  bool? ocnTokenKey;
-  bool? fcmProjectId;
-  int? inboxAction;
-  bool? isQuickEditModeEnabled;
+  dynamic? tourDisable;
+  dynamic? notificationType;
+  dynamic? mapBoxToken;
+  dynamic? odoobotInitialized;
+  dynamic? iapCompanyEnrich;
+  dynamic? ocnTokenKey;
+  dynamic? fcmProjectId;
+  dynamic? inboxAction;
+  dynamic? isQuickEditModeEnabled;
 
   Result({
     this.uid,
@@ -392,7 +392,7 @@ class UserSettings {
   bool? usePushToTalk;
   int? voiceActiveDuration;
   List<List<dynamic>>? volumeSettingsIds;
-  bool? homemenuConfig;
+  dynamic? homemenuConfig;
 
   UserSettings({
     this.id,

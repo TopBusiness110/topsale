@@ -192,13 +192,20 @@ class ReceiptScreen extends StatelessWidget {
                                         .bodyMedium!
                                         .copyWith(color: AppColors.primary),
                                   ),
-                                  Text(
-                                    "عنوان الفرع:${context.read<HomeCubit>().companyDataModel!.result![0].street ?? ''}",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .copyWith(color: AppColors.primary),
-                                  ),
+                                  if (context
+                                          .read<HomeCubit>()
+                                          .companyDataModel!
+                                          .result![0]
+                                          .street
+                                          .toString() !=
+                                      "false")
+                                    Text(
+                                      "عنوان الفرع:${context.read<HomeCubit>().companyDataModel!.result![0].street ?? ''}",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .copyWith(color: AppColors.primary),
+                                    ),
                                   Text(
                                     "الرقم الضريبي:${context.read<HomeCubit>().companyDataModel!.result![0].vat ?? 0.0}",
                                     style: Theme.of(context)

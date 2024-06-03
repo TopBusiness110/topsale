@@ -1,7 +1,11 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:topsale/core/models/all_partners_for_reports_model.dart';
 import 'package:topsale/core/models/allusers_model.dart';
 import 'package:topsale/core/models/get_all_orders.dart';
+import 'package:topsale/core/models/get_partner_model.dart';
+import 'package:topsale/core/models/order_details_model.dart';
+import 'package:topsale/core/models/partner_latlong_model.dart';
 import 'package:topsale/core/remote/service_api.dart';
 
 import '../../../core/models/sales_order_model.dart';
@@ -30,26 +34,23 @@ class SalesOrderedListCubit extends Cubit<SalesOrderedListState> {
     emit(NewSalesOrderAdded());
   }
 
-
-  AllUsersModel? allUsersModel;
-  getAllUsers({
+  GetAllPartnersReportsModel? allUsersModel;
+  getAllPartners({
     int pageId = 1,
     bool isGetMore = false,
   }) async {
     isGetMore
         ? emit(Loading2GetAllUsersState())
         : emit(LoadingGetAllUsersState());
-    matches.clear();
-  
-    final response = await api.getAllUsers(pageId,1000);
+
+    final response = await api.getAllPartnersForReport(pageId, 20);
     response.fold((l) {
       emit(FailureGetAllUsersState());
     }, (r) {
-if (isGetMore) {
-        allUsersModel = AllUsersModel(
+      if (isGetMore) {
+        allUsersModel = GetAllPartnersReportsModel(
           count: r.count,
           next: r.next,
-          
           prev: r.prev,
           result: [...allUsersModel!.result!, ...r.result!],
         );
@@ -57,14 +58,92 @@ if (isGetMore) {
         allUsersModel = r;
       }
 
-
-
-      
-      matches.addAll(allUsersModel!.result!);
       emit(SuccessGetAllUsersState());
     });
   }
 
+  double sumTax = 0;
+  double totlalPrice = 0;
+
+  GetOrderDetailsModel? getOrderDetailsModel;
+  getOrderDetails(int? orderId) async {
+    sumTax = 0;
+    totlalPrice = 0;
+    emit(LoadingOrderDetailsState());
+
+    final response = await api.getOrderDetails(orderId!);
+    response.fold((l) => emit(FailureOrderDetailsState()), (r) {
+      emit(SuccessOrderDetailsState());
+      r.result?.forEach((element) {
+        sumTax += element.priceTax!;
+        totlalPrice += element.priceTotal!;
+      });
+      getOrderDetailsModel = r;
+      print("***************************************************");
+      print(r.toString());
+      print("**************************${r.result.toString()}");
+    });
+  }
+
+  double totlalPriceForReports = 0;
+  getOrderDetailss(int? orderId) async {
+    emit(LoadingOrderDetailsState());
+
+    final response = await api.getOrderDetails(orderId!);
+    response.fold((l) => emit(FailureOrderDetailsState()), (r) {
+      emit(SuccessOrderDetailsState());
+
+      ordersListForReports.add(r);
+    });
+  }
+
+  String? getOrderName(String text) {
+    RegExp regExp = RegExp(r'S\d+');
+
+    String? code1 = regExp.firstMatch(text)?.group(0);
+    return code1;
+  }
+
+  List<GetOrderDetailsModel> ordersListForReports = [];
+  GetOrderDetailsModel? getOrderDetailsModelForReports;
+
+  getOrderDetailsForReports(List<int>? ordersInt) async {
+    totlalPriceForReports = 0;
+    ordersListForReports = [];
+    emit(LoadingOrderDetailsState());
+
+    ordersInt!.forEach((element) async {
+      await getOrderDetailss(element);
+    });
+
+    print("ddddddddddddddddd" + "${ordersListForReports.length}");
+    emit(SuccessOrderDetailsState());
+  }
+
+  GetPartnerLatLongModel? getPartnerLatLongModel;
+  getPartnerName(int? partnerId) async {
+    emit(LoadingPartnetLatLongState());
+    final response = await api.getPartnerLatLong(partnerId!);
+    response.fold((l) => emit(FailurePartnetLatLongState()), (r) {
+      emit(SuccessPartnetLatLongState());
+      getPartnerLatLongModel = r;
+      print("***************************************************");
+      print(r.toString());
+      print("**************************${r.result.toString()}");
+    });
+  }
+
+  GetPartnerDetailsModel? getPartnerDetailsModel;
+  getPartnerDetails(int? partnerId) async {
+    emit(LoadingPartnetLatLongState());
+    final response = await api.getPartnerDetails(partnerId!);
+    response.fold((l) => emit(FailurePartnetLatLongState()), (r) {
+      emit(SuccessPartnetLatLongState());
+      getPartnerDetailsModel = r;
+      print("***************************************************");
+      print(r.toString());
+    });
+  }
 
   searchInUser() {}
   GetAllOrdersModel? ordersModel;
@@ -74,15 +153,12 @@ if (isGetMore) {
   }) async {
     emit(LoadingAllOrdersState());
     // authModel = await Preferences.instance.getUserModel2();
-    final response = await api.getAllSaleOrderForPartner(pageId,15);
+    final response = await api.getAllSaleOrderForPartner(pageId, 15);
     response.fold((l) => emit(AllOrdersFailureState()), (r) {
-
-
-if (isGetMore) {
+      if (isGetMore) {
         ordersModel = GetAllOrdersModel(
           count: r.count,
           next: r.next,
-          
           prev: r.prev,
           result: [...ordersModel!.result!, ...r.result!],
         );
@@ -90,14 +166,9 @@ if (isGetMore) {
         ordersModel = r;
       }
 
+      emit(AllOrdersSuccessState());
 
-
-          emit(AllOrdersSuccessState());
-      
-    
-    
-   //   r.result?.forEach((element) {});
-
+      //   r.result?.forEach((element) {});
     });
   }
 }

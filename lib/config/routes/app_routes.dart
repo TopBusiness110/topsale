@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:topsale/core/models/all_prodyucts_model.dart';
 import 'package:topsale/core/models/selected_products.dart';
+import 'package:topsale/features/%20receipt/screens/receipt_screen%20details.dart';
 import 'package:topsale/features/%20receipt/screens/receipt_screen.dart';
 import 'package:topsale/features/catch_receipt/screens/catch_receipt_screen.dart';
 import 'package:topsale/features/create_sales_order/screens/create_sales_order.dart';
@@ -22,6 +23,7 @@ import 'package:topsale/features/new_product/screens/new_product_screen.dart';
 import 'package:topsale/features/onboarding/screens/onboarding.dart';
 import 'package:topsale/features/payments/screens/payment_screen.dart';
 import 'package:topsale/features/products/screens/product_screen.dart';
+import 'package:topsale/features/reports/screens/report_screen.dart';
 import 'package:topsale/features/reports/screens/reports_screen.dart';
 import 'package:topsale/features/returns/screens/returns_screen.dart';
 import 'package:topsale/features/sales_ordered_list/screens/sales_ordered_list_screen.dart';
@@ -49,6 +51,7 @@ class Routes {
   static const String createSalesOrderRoute = '/createSalesOrder';
   static const String paymentRoute = '/payment';
   static const String receiptRoute = '/ receipt';
+
   static const String returnsRoute = '/ returns';
   static const String customerPaymentsRoute = '/ customerPayments';
   static const String catchReceiptRoute = '/ catchReceipt';
@@ -56,6 +59,7 @@ class Routes {
   static const String myAccountRoute = '/ myAccount';
   static const String editAccountRoute = '/ editAccount';
   static const String reportsRoute = '/ reports';
+  static const String reportRoute = '/ report';
   static const String expectedClientsListRoute = '/ xpectedClientsList';
   static const String itineraryDetailsRoute = '/ itineraryDetails';
   static const String dismissalNoticeDetailsRoute = '/ dismissalNoticeDetails';
@@ -148,7 +152,7 @@ class AppRoutes {
         return MaterialPageRoute(
           builder: (context) => const ReceiptScreen(),
         );
-
+      
       case Routes.returnsRoute:
         return MaterialPageRoute(
           builder: (context) => const ReturnsScreen(),
@@ -185,7 +189,7 @@ class AppRoutes {
         return MaterialPageRoute(
           builder: (context) => const ReportsScreen(),
         );
-
+     
       case Routes.expectedClientsListRoute:
         return MaterialPageRoute(
           builder: (context) => const ExpectedClientsListScreen(),
