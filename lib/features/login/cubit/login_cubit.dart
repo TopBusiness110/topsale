@@ -39,13 +39,10 @@ class LoginCubit extends Cubit<LoginState> {
         print('lllllllll $sessionId');
         emit(SuccessLoginState());
         await Preferences.instance.setSessionId(sessionId);
-
         if (!iSVisitor) {
-
           await Preferences.instance.setUserName(phoneOrMail);
         await Preferences.instance.setUserPass(password);
         }
-        
         Navigator.pop(context);
         Preferences.instance.setUser2(r);
         Navigator.pushNamedAndRemoveUntil(

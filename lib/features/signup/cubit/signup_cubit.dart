@@ -49,10 +49,10 @@ class SignupCubit extends Cubit<SignupState> {
              await Preferences.instance.setUserName(phoneOrMail);
         await Preferences.instance.setUserPass(password);
         await Preferences.instance.setDataBaseName(db);
-        EndPoints.baseUrl = "https://$db";
+        await Preferences.instance.setOdooUrl(odooLink);
+        EndPoints.baseUrl = odooLink;
         EndPoints.db = db;
-      
-        Navigator.pop(context);
+              Navigator.pop(context);
         Preferences.instance.setUser2(r);
 
         Navigator.pushNamedAndRemoveUntil(

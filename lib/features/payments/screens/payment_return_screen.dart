@@ -12,29 +12,29 @@ import 'package:topsale/features/create_sales_order/cubit/create_sales_order_cub
 import 'package:topsale/features/home/cubit/home_tab_cubit/home_cubit.dart';
 import 'package:topsale/features/payments/cubit/payments_cubit.dart';
 import 'package:topsale/features/products/cubit/products_cubit.dart';
+import 'package:topsale/features/returns/cubit/returns_cubit.dart';
 
 import '../../../config/routes/app_routes.dart';
 import '../../../core/widgets/custom_arrow_back.dart';
 
-class PaymentScreen extends StatefulWidget {
-  PaymentScreen(
+class PaymentReturnScreen extends StatefulWidget {
+  PaymentReturnScreen(
       {super.key,
       required this.sum,
       this.onPressed,
-      required this.productId,
-      required this.quantity,
-      required this.partnerId});
+      required this.partnerId,
+      required this.orderId});
   final double sum;
-  final productId;
-  final quantity;
+  final int orderId;
+
   final partnerId;
   final void Function()? onPressed;
 
   @override
-  State<PaymentScreen> createState() => _PaymentScreenState();
+  State<PaymentReturnScreen> createState() => _PaymentReturnScreenState();
 }
 
-class _PaymentScreenState extends State<PaymentScreen> {
+class _PaymentReturnScreenState extends State<PaymentReturnScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<PaymentsCubit, PaymentsState>(
@@ -320,8 +320,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 height: 40,
                                 child: Padding(
                                   padding: EdgeInsets.only(bottom: 0.3.h),
-                                  child: BlocConsumer<CreateSalesOrderCubit,
-                                          CreateSalesOrderState>(
+                                  child: BlocConsumer<ReturnsCubit,
+                                          ReturnsState>(
                                       listener: (context, state) {},
                                       builder: (context, state) {
                                         return CustomButton(
@@ -330,10 +330,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                             text: "confirm".tr(),
                                             onPressed: () {
                                               context
-                                                  .read<CreateSalesOrderCubit>()
-                                                  .orderRelation(
+                                                  .read<ReturnsCubit>()
+                                                  .createSaleOrder(
                                                     context,
-                                                    partnerId: widget.partnerId,
+                                                    widget.orderId,
                                                   );
                                               if (cubit.selectedRadioValue ==
                                                   1) {
@@ -350,19 +350,23 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                                       "please select payment method");
                                                 } else {
                                                   print("payment type: كاش");
-                                                  cubit.createPayment(context,
-                                                      partnerId:
-                                                          widget.partnerId,
-                                                      amount: widget.sum,
-                                                      moveId: context
-                                                          .read<
-                                                              CreateSalesOrderCubit>()
-                                                          .getAccountMoveNumber(context
-                                                              .read<
-                                                                  CreateSalesOrderCubit>()
-                                                              .orderRelationModel!
-                                                              .result
-                                                              .toString())!);
+                                                  if (context
+                                                          .read<ReturnsCubit>()
+                                                          .orderRelationModel !=
+                                                      null)
+                                                    cubit.createPayment(context,
+                                                        partnerId:
+                                                            widget.partnerId,
+                                                        amount: widget.sum,
+                                                        moveId: context
+                                                            .read<
+                                                                ReturnsCubit>()
+                                                            .getAccountMoveNumber(context
+                                                                .read<
+                                                                    ReturnsCubit>()
+                                                                .orderRelationModel!
+                                                                .result
+                                                                .toString())!);
                                                 }
                                               }
                                             });

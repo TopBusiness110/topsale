@@ -168,6 +168,8 @@ class _ReturnsScreenState extends State<ReturnsScreen> {
                                                             .getPartnerOrdersModel!
                                                             .result![index]
                                                             .id!,
+                                                        partnerId: cubit
+                                                            .selectedPartnerId,
                                                       ),
                                                     ),
                                                   );
@@ -557,6 +559,10 @@ class _ReturnsScreenState extends State<ReturnsScreen> {
                                   Navigator.pop(context);
                                   context.read<ReturnsCubit>().getPartnerOrders(
                                       cubit.matches[index].id!);
+                                  context
+                                          .read<ReturnsCubit>()
+                                          .selectedPartnerId =
+                                      cubit.matches[index].id!;
                                 },
                                 child: Padding(
                                   padding: EdgeInsets.all(8.0),

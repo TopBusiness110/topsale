@@ -47,14 +47,14 @@ class ReceiptScreenReports extends StatelessWidget {
           },
           child: Scaffold(
             backgroundColor: AppColors.primary,
-            body: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: cubit.getOrderDetailsModel == null ||
-                      cubit.getPartnerLatLongModel == null
-                  ? Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : Column(
+            body: cubit.getOrderDetailsModel == null ||
+                    cubit.getPartnerLatLongModel == null
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(
@@ -484,7 +484,7 @@ class ReceiptScreenReports extends StatelessWidget {
                         )
                       ],
                     ),
-            ),
+                  ),
           ),
         );
       },

@@ -4,6 +4,7 @@ import 'package:meta/meta.dart';
 import 'package:topsale/config/routes/app_routes.dart';
 import 'package:topsale/core/models/all_journals_model.dart';
 import 'package:topsale/core/models/defaul_model.dart';
+import 'package:topsale/core/models/update_payment_state_model.dart';
 import 'package:topsale/core/remote/service_api.dart';
 
 part 'payments_state.dart';
@@ -43,13 +44,13 @@ class PaymentsCubit extends Cubit<PaymentsState> {
   }
 
   int journalId = 0;
-  
-  selectJournalId( int value) {
+
+  selectJournalId(int value) {
     journalId = value;
-   
 
     emit(ChangingPaymentMethodState());
   }
+
   GetAllJournalsModel? allJournalsModel;
   getAllJournals() async {
     emit(LoadingGetJournalsState());
@@ -68,23 +69,34 @@ class PaymentsCubit extends Cubit<PaymentsState> {
 
   DefaultModel? createPaymentModel;
   createPayment(BuildContext context,
-      {required partnerId, required amount}) async {
+      {required partnerId, required amount,required String moveId}) async {
     emit(LoadingCreatePaymentState());
     final response = await api.createPayment(
-        partnerId: partnerId, amount: amount, journalId:int.parse(selectedValue!) );
+        partnerId: partnerId,
+        amount: amount,
+        journalId: int.parse(selectedValue!));
     response.fold((l) {
       emit(FailureCreatePaymentState());
     }, (r) async {
       if (r.result != null) {
         createPaymentModel = r;
+        updatePaymentStates(moveId);
 
-
-        
-        Navigator.pushReplacementNamed(context, Routes.receiptRoute);
+        // Navigator.pushReplacementNamed(context, Routes.receiptRoute);
         emit(SuccessCreatePaymentState());
       } else {
         emit(FailureCreatePaymentState());
       }
+    });
+  }
+
+  UpdatePaymentStateModel? updatePaymentStateModel;
+  updatePaymentStates(String moveId) async {
+    emit(LoadingUpdatePaymentState());
+    // authModel = await Preferences.instance.getUserModel2();
+    final response = await api.updatePaymentState(paymentId:int.parse (moveId));
+    response.fold((l) => emit(FailureUpdatePaymentState()), (r) {
+      emit(SuccessUpdatePaymentState());
     });
   }
 
@@ -133,7 +145,7 @@ class PaymentsCubit extends Cubit<PaymentsState> {
       if (r.result != null) {
         invoiceModel = r;
         if (selectedRadioValue == 2) {
-          createPayment(context, partnerId: partnerId, amount: amount);
+        //  createPayment(context, partnerId: partnerId, amount: amount);
         } else {
           Navigator.pushReplacementNamed(context, Routes.receiptRoute);
           emit(SuccessInvoiceLinesState());

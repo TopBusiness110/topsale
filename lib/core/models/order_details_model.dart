@@ -61,17 +61,22 @@ class Result {
   dynamic? date;
   dynamic? id;
   dynamic? partnerId;
+  dynamic state;
 
-  Result({
-    this.name,
-    this.productUomQty,
-    this.priceTax,
-    this.priceTotal,this.partnerId,
-    this.priceSubtotal,this.date,this.displayName,this.id
-  });
+  Result(
+      {this.name,
+      this.productUomQty,
+      this.priceTax,
+      this.priceTotal,
+      this.partnerId,
+      this.priceSubtotal,
+      this.date,
+      this.displayName,this.state,
+      this.id});
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
         name: json["name"],
+        state: json["state"],
         productUomQty: json["product_uom_qty"],
         date: json["create_date"],
         displayName: json["display_name"],
@@ -84,6 +89,7 @@ class Result {
 
   Map<String, dynamic> toJson() => {
         "name": name,
+        "state": state,
         "product_uom_qty": productUomQty,
         "display_name": displayName,
         "create_date": date,

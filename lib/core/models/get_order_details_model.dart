@@ -33,8 +33,13 @@ class GetManOrderDetailsModel {
 
 class Result {
   int? id;
-    int? productId;
+  int? productId;
   String? name;
+  dynamic? priceTax;
+  dynamic? priceTotal;
+  dynamic? priceSubtotal;
+  dynamic? priceUnit;
+   List<int>? taxesId;
   String? displayName;
   dynamic productUomQty;
   dynamic userProductUomQty;
@@ -44,7 +49,11 @@ class Result {
       {this.id,
       this.name,
       this.displayName,
-      this.productUomQty,this.productId,
+      this.priceTax,
+      this.priceTotal,this.taxesId,
+      this.priceSubtotal,this.priceUnit,
+      this.productUomQty,
+      this.productId,
       this.orderId,
       this.userProductUomQty});
 
@@ -52,17 +61,31 @@ class Result {
         id: json["id"],
         name: json["name"],
         displayName: json["display_name"],
-        productUomQty: json["product_uom_qty"],
+        priceTax: json["price_tax"]?.toDouble(),
+        priceTotal: json["price_total"]?.toDouble(),
+        priceSubtotal: json["price_subtotal"]?.toDouble(),
+        priceUnit: json["price_unit"]?.toDouble(),
+        productUomQty: json["product_uom_qty"],taxesId: json["taxes_id"] == null
+            ? []
+            : List<int>.from(json["taxes_id"]!.map((x) => x)),
         userProductUomQty: json["product_uom_qty"],
         orderId: json["order_id"],
-              productId: json["product_id"],
+        productId: json["product_id"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
         "display_name": displayName,
+        "price_tax": priceTax,
+        "price_total": priceTotal,
+        "price_subtotal": priceSubtotal,
+        "price_unit": priceUnit,
         "product_uom_qty": productUomQty,
-        "order_id": orderId,"product_id": productId,
+         "taxes_id":
+            taxesId == null ? [] : List<dynamic>.from(taxesId!.map((x) => x)),
+       
+        "order_id": orderId,
+        "product_id": productId,
       };
 }

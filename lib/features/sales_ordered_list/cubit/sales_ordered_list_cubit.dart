@@ -33,7 +33,6 @@ class SalesOrderedListCubit extends Cubit<SalesOrderedListState> {
         total: total));
     emit(NewSalesOrderAdded());
   }
-
   GetAllPartnersReportsModel? allUsersModel;
   getAllPartners({
     int pageId = 1,
@@ -42,8 +41,7 @@ class SalesOrderedListCubit extends Cubit<SalesOrderedListState> {
     isGetMore
         ? emit(Loading2GetAllUsersState())
         : emit(LoadingGetAllUsersState());
-
-    final response = await api.getAllPartnersForReport(pageId, 20);
+    final response = await api.getAllPartnersForReport(pageId, 15);
     response.fold((l) {
       emit(FailureGetAllUsersState());
     }, (r) {
@@ -57,14 +55,12 @@ class SalesOrderedListCubit extends Cubit<SalesOrderedListState> {
       } else {
         allUsersModel = r;
       }
-
       emit(SuccessGetAllUsersState());
     });
   }
 
   double sumTax = 0;
   double totlalPrice = 0;
-
   GetOrderDetailsModel? getOrderDetailsModel;
   getOrderDetails(int? orderId) async {
     sumTax = 0;
@@ -85,6 +81,7 @@ class SalesOrderedListCubit extends Cubit<SalesOrderedListState> {
     });
   }
 
+  int skipped = 0;
   double totlalPriceForReports = 0;
   getOrderDetailss(int? orderId) async {
     emit(LoadingOrderDetailsState());
@@ -92,8 +89,11 @@ class SalesOrderedListCubit extends Cubit<SalesOrderedListState> {
     final response = await api.getOrderDetails(orderId!);
     response.fold((l) => emit(FailureOrderDetailsState()), (r) {
       emit(SuccessOrderDetailsState());
-
-      ordersListForReports.add(r);
+      if (r.result!.isNotEmpty) {
+        ordersListForReports.add(r);
+      } else {
+        skipped++;
+      }
     });
   }
 
@@ -110,6 +110,7 @@ class SalesOrderedListCubit extends Cubit<SalesOrderedListState> {
   getOrderDetailsForReports(List<int>? ordersInt) async {
     totlalPriceForReports = 0;
     ordersListForReports = [];
+    skipped = 0;
     emit(LoadingOrderDetailsState());
 
     ordersInt!.forEach((element) async {

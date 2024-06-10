@@ -6,7 +6,6 @@ import 'dart:convert';
 
 GetAllOrdersModel getAllOrdersModelFromJson(String str) =>
     GetAllOrdersModel.fromJson(json.decode(str));
-
 String getAllOrdersModelToJson(GetAllOrdersModel data) =>
     json.encode(data.toJson());
 

@@ -115,9 +115,13 @@ class _SalesOrderedListScreenState extends State<SalesOrderedListScreen> {
                               GestureDetector(
                                 onTap: () {
                                   Navigator.push(
-                                      context,MaterialPageRoute(builder: (context) => ReceiptScreenDetails(
-                                        index: index,
-                                      ),) );
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ReceiptScreenDetails(
+                                          index: index,
+                                        ),
+                                      ));
                                   cubit.getOrderDetails(
                                       cubit.ordersModel?.result![index].id);
                                   cubit.getPartnerName(cubit
@@ -126,7 +130,6 @@ class _SalesOrderedListScreenState extends State<SalesOrderedListScreen> {
                                 child: Container(
                                   margin: EdgeInsets.only(top: 20),
                                   width: 97.w,
-                                  height: 17.h,
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 10.0, vertical: 20),
                                   decoration: BoxDecoration(
@@ -136,9 +139,12 @@ class _SalesOrderedListScreenState extends State<SalesOrderedListScreen> {
                                           color: AppColors.blue2, width: 2)),
                                   child: Column(
                                     children: [
+                                      SizedBox(
+                                        height: 4.h,
+                                      ),
                                       Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.end,
+                                            MainAxisAlignment.start,
                                         children: [
                                           SvgPicture.asset(
                                               "assets/icon/bill.svg",
@@ -157,50 +163,47 @@ class _SalesOrderedListScreenState extends State<SalesOrderedListScreen> {
                                           ),
                                         ],
                                       ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          SvgPicture.asset(
-                                              "assets/icon/name.svg",
-                                              width: 20),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          InkWell(
-                                            onTap: () {
-                                              print(
-                                                  "id : ${cubit.ordersModel?.result![index].partnerId}");
+                                      // Row(
+                                      //   mainAxisAlignment:
+                                      //       MainAxisAlignment.start,
+                                      //   children: [
+                                      //     SvgPicture.asset(
+                                      //         "assets/icon/name.svg",
+                                      //         width: 20),
+                                      //     SizedBox(
+                                      //       width: 10,
+                                      //     ),
+                                      //     InkWell(
+                                      //       onTap: () {
+                                      //         print(
+                                      //             "id : ${cubit.ordersModel?.result![index].partnerId}");
 
-                                              print(
-                                                  "name :${cubit.matches[index].id}");
-                                              print(
-                                                  "name :${cubit.matches[index].name}");
-                                            },
-                                            child: Text(
-                                              // cubit.matches
-                                              //         .where((element) =>
-                                              //             (element.id ==
-                                              //                 cubit
-                                              //                     .ordersModel
-                                              //                     ?.result![index]
-                                              //                     .partnerId))
-                                              //         .first
-                                              //         .name ??
-                                              "",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 8.w,
-                                          ),
-                                        ],
-                                      ),
+                                      //         print(
+                                      //             "name :${cubit.matches[index].id}");
+                                      //         print(
+                                      //             "name :${cubit.matches[index].name}");
+                                      //       },
+                                      //       child: Text(
+                                      //         // cubit.matches
+                                      //         //         .where((element) =>
+                                      //         //             (element.id ==
+                                      //         //                 cubit
+                                      //         //                     .ordersModel
+                                      //         //                     ?.result![index]
+                                      //         //                     .partnerId))
+                                      //         //         .first
+                                      //         //         .name ??
+                                      //         "",
+                                      //         style: Theme.of(context)
+                                      //             .textTheme
+                                      //             .bodySmall,
+                                      //       ),
+                                      //     ),
+                                      //     SizedBox(
+                                      //       width: 8.w,
+                                      //     ),
+                                      //   ],
+                                      // ),
                                       const SizedBox(
                                         height: 15,
                                       ),

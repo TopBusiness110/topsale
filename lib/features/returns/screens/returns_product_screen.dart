@@ -1,18 +1,23 @@
 import 'package:easy_localization/easy_localization.dart' as easy;
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location/location.dart';
 import 'package:sizer/sizer.dart';
 import 'package:topsale/config/routes/app_routes.dart';
 import 'package:topsale/core/widgets/custom_button.dart';
+import 'package:topsale/features/home/cubit/home_tab_cubit/home_cubit.dart';
+import 'package:topsale/features/payments/screens/payment_return_screen.dart';
 import 'package:topsale/features/returns/cubit/returns_cubit.dart';
 
 import '../../../core/utils/app_colors.dart';
 import '../../../core/widgets/custom_arrow_back.dart';
 
 class ReturnsDetailsScreen extends StatefulWidget {
-  const ReturnsDetailsScreen({super.key, required this.orderId});
+  const ReturnsDetailsScreen(
+      {super.key, required this.orderId, required this.partnerId});
   final int orderId;
+  final int partnerId;
   @override
   State<ReturnsDetailsScreen> createState() => _ReturnsDetailsScreenState();
 }
@@ -27,12 +32,28 @@ class _ReturnsDetailsScreenState extends State<ReturnsDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ReturnsCubit cubit = context.read<ReturnsCubit>();
     return BlocConsumer<ReturnsCubit, ReturnsState>(
       listener: (context, state) {
-        // TODO: implement listener
+        if (state is SuccessGetTaxesState) {
+          print('sssss');
+          // Navigator.pop(context);
+          //  context.read<ProductsCubit>().getAllProducts();
+
+          //context.read<ProductsCubit>().selectedProducts.clear();
+          //  Navigator.push(
+          //      context,
+          //      MaterialPageRoute(
+          //        builder: (context) => PaymentReturnScreen(
+          //          sum: cubit.sum,
+          //          orderId: widget.orderId,
+          //          partnerId: widget.partnerId,
+          //          onPressed: () {},
+          //        ),
+          //      ));
+        }
       },
       builder: (context, state) {
-        ReturnsCubit cubit = context.read<ReturnsCubit>();
         return Scaffold(
           backgroundColor: AppColors.primary,
           body: Column(children: [
@@ -62,124 +83,192 @@ class _ReturnsDetailsScreenState extends State<ReturnsDetailsScreen> {
                       decoration: BoxDecoration(
                           color: AppColors.blue2,
                           borderRadius: BorderRadius.circular(19)),
-                      child: ListView.separated(
-                          itemBuilder: (context, index) {
-                            //when we clicked on client
-                            return InkWell(
-                              onTap: () {},
-                              child: Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Flexible(
-                                          child: Text(
-                                            "${cubit.getManOrderDetailsModel!.result![index].name ?? ''}",
-                                            // "${widget.shipmentModel.clientName}",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium,
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Row(
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 18.0),
+                            child: Text(" الإجمالي  " +
+                                cubit.sum.toString() +
+                                "  ${context.read<HomeCubit>().currencyName}"),
+                          ),
+                          Expanded(
+                            child: ListView.separated(
+                                itemBuilder: (context, index) {
+                                  //when we clicked on client
+                                  return InkWell(
+                                    onTap: () {},
+                                    child: Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
                                             mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
-                                              CircleAvatar(
-                                                radius: 12,
-                                                backgroundColor:
-                                                    AppColors.primary,
-                                                child: IconButton(
-                                                  padding: EdgeInsets.zero,
-                                                  onPressed: () {
-                                                    setState(() {});
-
-                                                    //  if (cubit
-                                                    //          .getManOrderDetailsModel!
-                                                    //          .result![index]
-                                                    //          .productUomQty >
-                                                    //      cubit
-                                                    //          .getManOrderDetailsModel!
-                                                    //          .result![index]
-                                                    //          .userProductUomQty)
-                                                    cubit
-                                                        .getManOrderDetailsModel!
-                                                        .result![index]
-                                                        .userProductUomQty += 1;
-                                                  },
-                                                  icon: const Icon(
-                                                    Icons.add,
-                                                    color: AppColors.yellow,
-                                                    size: 17,
-                                                  ),
+                                              Flexible(
+                                                child: Text(
+                                                  "${cubit.getManOrderDetailsModel!.result![index].name ?? ''}",
+                                                  // "${widget.shipmentModel.clientName}",
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium,
                                                 ),
                                               ),
                                               Padding(
                                                 padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 8.0),
-                                                child: Text(
-                                                  "${cubit.getManOrderDetailsModel!.result![index].userProductUomQty}",
-                                                  textDirection:
-                                                      TextDirection.ltr,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodySmall,
-                                                ),
-                                              ),
-                                              CircleAvatar(
-                                                radius: 12,
-                                                backgroundColor:
-                                                    AppColors.primary,
-                                                child: IconButton(
-                                                  padding: EdgeInsets.zero,
-                                                  onPressed: () {
-                                                    setState(() {});
-
-                                                    if (cubit
+                                                    const EdgeInsets.all(8.0),
+                                                child: Column(
+                                                  children: [
+                                                    Text(cubit
                                                             .getManOrderDetailsModel!
                                                             .result![index]
-                                                            .userProductUomQty >=
-                                                        1)
-                                                      cubit
-                                                          .getManOrderDetailsModel!
-                                                          .result![index]
-                                                          .userProductUomQty -= 1;
-                                                    //  cubit.removeProduct(product: product);
-                                                  },
-                                                  icon: const Icon(
-                                                    Icons.remove,
-                                                    color: AppColors.yellow,
-                                                    size: 17,
-                                                  ),
+                                                            .priceSubtotal
+                                                            .toString() +
+                                                        " ${context.read<HomeCubit>().currencyName}"),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        CircleAvatar(
+                                                          radius: 12,
+                                                          backgroundColor:
+                                                              AppColors.primary,
+                                                          child: IconButton(
+                                                            padding:
+                                                                EdgeInsets.zero,
+                                                            onPressed: () {
+                                                              setState(() {});
+
+                                                              //  if (cubit
+                                                              //          .getManOrderDetailsModel!
+                                                              //          .result![index]
+                                                              //          .productUomQty >
+                                                              //      cubit
+                                                              //          .getManOrderDetailsModel!
+                                                              //          .result![index]
+                                                              //          .userProductUomQty)
+                                                              cubit
+                                                                  .getManOrderDetailsModel!
+                                                                  .result![
+                                                                      index]
+                                                                  .userProductUomQty += 1;
+                                                              cubit
+                                                                  .getManOrderDetailsModel!
+                                                                  .result![
+                                                                      index]
+                                                                  .priceSubtotal = cubit
+                                                                      .getManOrderDetailsModel!
+                                                                      .result![
+                                                                          index]
+                                                                      .userProductUomQty *
+                                                                  cubit
+                                                                      .getManOrderDetailsModel!
+                                                                      .result![
+                                                                          index]
+                                                                      .priceUnit;
+                                                              cubit
+                                                                  .calculateTotalPrice();
+                                                            },
+                                                            icon: const Icon(
+                                                              Icons.add,
+                                                              color: AppColors
+                                                                  .yellow,
+                                                              size: 17,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                                  horizontal:
+                                                                      8.0),
+                                                          child: Text(
+                                                            "${cubit.getManOrderDetailsModel!.result![index].userProductUomQty}",
+                                                            textDirection:
+                                                                TextDirection
+                                                                    .ltr,
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .bodySmall,
+                                                          ),
+                                                        ),
+                                                        CircleAvatar(
+                                                          radius: 12,
+                                                          backgroundColor:
+                                                              AppColors.primary,
+                                                          child: IconButton(
+                                                            padding:
+                                                                EdgeInsets.zero,
+                                                            onPressed: () {
+                                                              setState(() {});
+
+                                                              if (cubit
+                                                                      .getManOrderDetailsModel!
+                                                                      .result![
+                                                                          index]
+                                                                      .userProductUomQty >=
+                                                                  1)
+                                                                cubit
+                                                                    .getManOrderDetailsModel!
+                                                                    .result![
+                                                                        index]
+                                                                    .userProductUomQty -= 1;
+                                                              cubit
+                                                                  .getManOrderDetailsModel!
+                                                                  .result![
+                                                                      index]
+                                                                  .priceSubtotal = cubit
+                                                                      .getManOrderDetailsModel!
+                                                                      .result![
+                                                                          index]
+                                                                      .userProductUomQty *
+                                                                  cubit
+                                                                      .getManOrderDetailsModel!
+                                                                      .result![
+                                                                          index]
+                                                                      .priceUnit;
+                                                              cubit
+                                                                  .calculateTotalPrice();
+                                                              //  cubit.removeProduct(product: product);
+                                                            },
+                                                            icon: const Icon(
+                                                              Icons.remove,
+                                                              color: AppColors
+                                                                  .yellow,
+                                                              size: 17,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
                                             ],
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                          separatorBuilder: (context, index) {
-                            return Divider(
-                              indent: 10,
-                              endIndent: 10,
-                              color: AppColors.white.withOpacity(0.7),
-                              thickness: 1,
-                            );
-                          },
-                          itemCount:
-                              cubit.getManOrderDetailsModel!.result!.length),
+                                  );
+                                },
+                                separatorBuilder: (context, index) {
+                                  return Divider(
+                                    indent: 10,
+                                    endIndent: 10,
+                                    color: AppColors.white.withOpacity(0.7),
+                                    thickness: 1,
+                                  );
+                                },
+                                itemCount: cubit
+                                    .getManOrderDetailsModel!.result!.length),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
             // SizedBox(height: 5,),
@@ -201,9 +290,9 @@ class _ReturnsDetailsScreenState extends State<ReturnsDetailsScreen> {
                     //  for (int i = 0;
                     //      i < cubit.getManOrderDetailsModel!.result!.length;
                     //      i++) {
-                    cubit.createSaleOrder(
-                      context,
-                    );
+
+                  //  cubit.getTaxes();
+                    cubit.createSaleOrder(context, widget.orderId);
                     // }
                     // Navigator.pushNamedAndRemoveUntil(
                     //     context, Routes.homeRoute, (route) => false);

@@ -56,11 +56,11 @@ class CompanyCurrencyResult {
   String? name;
   dynamic? street;
   String? countryCode;
-  int? currencyId;
-  int? accountSaleTaxId;
+  dynamic? currencyId;
+  dynamic? accountSaleTaxId;
   dynamic? vat;
   dynamic? companyRegistry;
-  String? logo;
+  dynamic? logo;
 
   CompanyCurrencyResult({
     this.id,

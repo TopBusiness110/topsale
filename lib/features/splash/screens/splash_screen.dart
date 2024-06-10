@@ -49,8 +49,12 @@ class _SplashScreenState extends State<SplashScreen> {
   void initialization() async {
     String database = await Preferences.instance.getDataBaseName() ??
         "demo17.topbuziness.com";
-    EndPoints.baseUrl = "https://$database";
+          String odooUrl = await Preferences.instance.getOdooUrl() ??
+        "https://demo17.topbuziness.com";
+  
+    
     EndPoints.db = database;
+      EndPoints.baseUrl = odooUrl;
     print(EndPoints.baseUrl);
     // This is where you can initialize the resources needed by your app while
     // the splash screen is displayed.  Remove the following example because
@@ -72,6 +76,7 @@ class _SplashScreenState extends State<SplashScreen> {
             String phoneOrMail = value;
             String password = await Preferences.instance.getUserPass() ?? '';
             String db = await Preferences.instance.getDataBaseName() ?? '';
+            String url = await Preferences.instance.getOdooUrl() ?? '';
 
             context.read<LoginCubit>().login(context,
                 phoneOrMail: phoneOrMail, password: password, db: db);

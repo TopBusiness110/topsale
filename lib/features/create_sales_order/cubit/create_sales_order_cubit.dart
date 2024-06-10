@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:topsale/config/routes/app_routes.dart';
 import 'package:topsale/core/models/all_journals_model.dart';
 import 'package:topsale/core/models/all_prodyucts_model.dart';
 import 'package:topsale/core/models/allusers_model.dart';
 import 'package:topsale/core/models/defaul_model.dart';
+import 'package:topsale/core/models/invoice_details_model.dart';
 import 'package:topsale/core/models/product_model.dart';
+import 'package:topsale/core/models/ware_house_model.dart';
 import 'package:topsale/core/remote/service_api.dart';
 import 'package:topsale/features/products/cubit/products_cubit.dart';
 
@@ -22,14 +25,11 @@ class CreateSalesOrderCubit extends Cubit<CreateSalesOrderState> {
   DateTime dateTime = DateTime.now();
   String billingStatus = "مؤكد";
   String billingNumber = "Xz012345";
-
   String currentClient = '';
   int currentClientId = 0;
   List<UsersList> matches = [];
-
   double sum = 0;
 /////////////////////////
-
   DefaultModel? createOrderModel;
   createSaleOrder(
     BuildContext context,
@@ -37,9 +37,9 @@ class CreateSalesOrderCubit extends Cubit<CreateSalesOrderState> {
     emit(LoadingCreateSaleOrderState());
     print(
         "hhhhhhhhhhhhhhhhhhhhhhhhhhhhh${context.read<ProductsCubit>().selectedProducts.length}");
-
-    final response = await api
-        .createSaleOrder(context.read<CreateSalesOrderCubit>().currentClientId);
+    final response = await api.createSaleOrder(
+        context.read<CreateSalesOrderCubit>().currentClientId,
+        wareHouseSelectedValue??'');
     response.fold((l) {
       print('gggggggg');
       emit(FailureCreateSaleOrderState());
@@ -84,6 +84,97 @@ class CreateSalesOrderCubit extends Cubit<CreateSalesOrderState> {
         emit(SuccessCreateSaleOrderLineState());
       } else {}
     });
+  }
+
+  String? getAccountMoveNumber(String result) {
+    RegExp regExp = RegExp(r'\((\d+),\)');
+    Match? match = regExp.firstMatch(result);
+
+    if (match != null) {
+      String extractedNumber = match.group(1)!;
+      print('Extracted number: $extractedNumber');
+      return extractedNumber;
+    } else {
+      print('No match found');
+      return null;
+    }
+  }
+
+  DefaultModel? orderRelationModel;
+  orderRelation(BuildContext context, {required partnerId}) async {
+    emit(LoadingOrderRelationState());
+    if (createOrderModel != null) {
+      final response = await api.orderRelation(
+        orderId: createOrderModel!.result,
+      );
+      response.fold((l) {
+        emit(FailureOrderRelationState());
+      }, (r) async {
+        if (r.result != null) {
+          orderRelationModel = r;
+          if (getAccountMoveNumber(r.result.toString()) != null) {
+            confirmInvoice(
+              context,
+              partnerId: partnerId,
+              accountMoveNumber: getAccountMoveNumber(r.result.toString()),
+            );
+          }
+          emit(SuccessOrderRelationState());
+        } else {}
+      });
+    } else {
+      print("nullll");
+    }
+  }
+
+  DefaultModel? confirmInvoiceModel;
+  confirmInvoice(BuildContext context,
+      {required accountMoveNumber, required partnerId}) async {
+    emit(LoadingConfirmInvoiceState());
+    if (createOrderModel != null) {
+      final response = await api.confirmInvoice(
+        partnerId: partnerId,
+        accountMoveNumber: accountMoveNumber,
+      );
+      response.fold((l) {
+        emit(FailureConfirmInvoiceState());
+      }, (r) async {
+        print('gggggggggggggggg');
+        if (r.result != null) {
+          confirmInvoiceModel = r;
+          if (orderRelationModel != null)
+            getInvoiceDetails(
+                accountMoveNumber: getAccountMoveNumber(
+                    orderRelationModel!.result.toString()));
+
+          Navigator.pushReplacementNamed(context, Routes.receiptRoute);
+          emit(SuccessConfirmInvoiceState());
+        } else {}
+      });
+    } else {
+      print("nullll");
+    }
+  }
+
+  InvoiceDetailsModel? invoiceDetailsModel;
+  getInvoiceDetails({required dynamic accountMoveNumber}) async {
+    emit(LoadingGetInvoiceDetailsState());
+    if (createOrderModel != null) {
+      final response = await api.getInvoiceDetails(
+        accountMoveNumber: accountMoveNumber,
+      );
+      response.fold((l) {
+        emit(FailureGetInvoiceDetailsState());
+      }, (r) async {
+        if (r.name != null) {
+          invoiceDetailsModel = r;
+
+          emit(SuccessGetInvoiceDetailsState());
+        } else {}
+      });
+    } else {
+      print("nullll");
+    }
   }
 // createSaleOrder(
 //   BuildContext context,
@@ -221,5 +312,36 @@ class CreateSalesOrderCubit extends Cubit<CreateSalesOrderState> {
       }
       emit(CalculatingTotalPrice());
     }
+  }
+
+  int wareHouseId = 0;
+
+  selectJournalId(int value) {
+    wareHouseId = value;
+    emit(ChangingWareHouseState());
+  }
+
+  WareHouseModelResponse? allJournalsModel;
+  getAllWareHouse() async {
+    emit(LoadingGetJournalsState());
+    // authModel = await Preferences.instance.getUserModel2();
+    final response = await api.getWareHouses();
+    response.fold((l) => emit(FailureGetJournalsState()), (r) {
+      emit(SuccessGetJournalsState());
+      allJournalsModel = r;
+      if(r.result!.isNotEmpty)
+      selectPaymentMethod(r.result![0].id.toString());
+      print("***************************************************");
+      print(r.toString());
+      print("**************************${r.result.toString()}");
+      // r.result!.map((e) => print(e.image1920));
+    });
+  }
+
+  String? wareHouseSelectedValue;
+  selectPaymentMethod(value) {
+    wareHouseSelectedValue = value;
+    print(wareHouseSelectedValue);
+    emit(ChangingWareHouseState());
   }
 }

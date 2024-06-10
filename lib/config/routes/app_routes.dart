@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:topsale/core/models/all_prodyucts_model.dart';
 import 'package:topsale/core/models/selected_products.dart';
+import 'package:topsale/features/%20receipt/screens/receipt_return_screen.dart';
 import 'package:topsale/features/%20receipt/screens/receipt_screen%20details.dart';
 import 'package:topsale/features/%20receipt/screens/receipt_screen.dart';
 import 'package:topsale/features/catch_receipt/screens/catch_receipt_screen.dart';
@@ -51,6 +52,7 @@ class Routes {
   static const String createSalesOrderRoute = '/createSalesOrder';
   static const String paymentRoute = '/payment';
   static const String receiptRoute = '/ receipt';
+  static const String receiptReturnsRoute = '/ receiptReturns';
 
   static const String returnsRoute = '/ returns';
   static const String customerPaymentsRoute = '/ customerPayments';
@@ -151,6 +153,11 @@ class AppRoutes {
       case Routes.receiptRoute:
         return MaterialPageRoute(
           builder: (context) => const ReceiptScreen(),
+        );
+      
+      case Routes.receiptReturnsRoute:
+        return MaterialPageRoute(
+          builder: (context) => const ReceiptReturnScreen(),
         );
       
       case Routes.returnsRoute:

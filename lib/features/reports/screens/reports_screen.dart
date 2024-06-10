@@ -72,7 +72,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
         backgroundColor: AppColors.primary,
         body: SafeArea(
@@ -120,12 +120,12 @@ class _ReportsScreenState extends State<ReportsScreen> {
                         style: Theme.of(context).textTheme.displayMedium,
                       ),
                     ),
-                    Tab(
-                      child: Text(
-                        "reports".tr(),
-                        style: Theme.of(context).textTheme.displayMedium,
-                      ),
-                    ),
+                    // Tab(
+                    //   child: Text(
+                    //     "reports".tr(),
+                    //     style: Theme.of(context).textTheme.displayMedium,
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -171,16 +171,33 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                           children: [
                                             GestureDetector(
                                               onTap: () {
-                                                Navigator.pushNamed(context,
-                                                    Routes.reportRoute);
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ReceiptScreenDetails(
+                                                        index: index,
+                                                      ),
+                                                    ));
                                                 cubit.getOrderDetails(cubit
                                                     .ordersModel
                                                     ?.result![index]
                                                     .id);
-                                                cubit.getPartnerDetails(cubit
+                                                cubit.getPartnerName(cubit
                                                     .ordersModel
                                                     ?.result![index]
                                                     .partnerId);
+
+                                                // Navigator.pushNamed(context,
+                                                //     Routes.reportRoute);
+                                                // cubit.getOrderDetails(cubit
+                                                //     .ordersModel
+                                                //     ?.result![index]
+                                                //     .id);
+                                                // cubit.getPartnerDetails(cubit
+                                                //     .ordersModel
+                                                //     ?.result![index]
+                                                //     .partnerId);
                                               },
                                               child: Container(
                                                 margin:
@@ -201,9 +218,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                                         width: 2)),
                                                 child: Column(
                                                   children: [
+                                                    SizedBox(
+                                                      height: 4.h,
+                                                    ),
                                                     Row(
                                                       mainAxisAlignment:
-                                                          MainAxisAlignment.end,
+                                                          MainAxisAlignment
+                                                              .start,
                                                       children: [
                                                         SvgPicture.asset(
                                                             "assets/icon/bill.svg",
@@ -226,52 +247,49 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                                         ),
                                                       ],
                                                     ),
-                                                    const SizedBox(
-                                                      height: 5,
-                                                    ),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        SvgPicture.asset(
-                                                            "assets/icon/name.svg",
-                                                            width: 20),
-                                                        SizedBox(
-                                                          width: 10,
-                                                        ),
-                                                        InkWell(
-                                                          onTap: () {
-                                                            print(
-                                                                "id : ${cubit.ordersModel?.result![index].partnerId}");
+                                                    // Row(
+                                                    //   mainAxisAlignment:
+                                                    //       MainAxisAlignment
+                                                    //           .start,
+                                                    //   children: [
+                                                    //     SvgPicture.asset(
+                                                    //         "assets/icon/name.svg",
+                                                    //         width: 20),
+                                                    //     SizedBox(
+                                                    //       width: 10,
+                                                    //     ),
+                                                    //     InkWell(
+                                                    //       onTap: () {
+                                                    //         print(
+                                                    //             "id : ${cubit.ordersModel?.result![index].partnerId}");
 
-                                                            print(
-                                                                "name :${cubit.matches[index].id}");
-                                                            print(
-                                                                "name :${cubit.matches[index].name}");
-                                                          },
-                                                          child: Text(
-                                                            // cubit.matches
-                                                            //         .where((element) =>
-                                                            //             (element.id ==
-                                                            //                 cubit
-                                                            //                     .ordersModel
-                                                            //                     ?.result![index]
-                                                            //                     .partnerId))
-                                                            //         .first
-                                                            //         .name ??
-                                                            "",
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .bodySmall,
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: 8.w,
-                                                        ),
-                                                      ],
-                                                    ),
+                                                    //         print(
+                                                    //             "name :${cubit.matches[index].id}");
+                                                    //         print(
+                                                    //             "name :${cubit.matches[index].name}");
+                                                    //       },
+                                                    //       child: Text(
+                                                    //         // cubit.matches
+                                                    //         //         .where((element) =>
+                                                    //         //             (element.id ==
+                                                    //         //                 cubit
+                                                    //         //                     .ordersModel
+                                                    //         //                     ?.result![index]
+                                                    //         //                     .partnerId))
+                                                    //         //         .first
+                                                    //         //         .name ??
+                                                    //         "",
+                                                    //         style: Theme.of(
+                                                    //                 context)
+                                                    //             .textTheme
+                                                    //             .bodySmall,
+                                                    //       ),
+                                                    //     ),
+                                                    //     SizedBox(
+                                                    //       width: 8.w,
+                                                    //     ),
+                                                    //   ],
+                                                    // ),
                                                     const SizedBox(
                                                       height: 15,
                                                     ),
@@ -550,13 +568,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
                         ],
                       ),
                     ),
-                    Container(
-                      // width: 70.w,
-                      // height: double.infinity,
-                      decoration: BoxDecoration(
-                          color: AppColors.primary,
-                          borderRadius: BorderRadius.circular(20)),
-                    ),
+                    // Container(
+                    //   // width: 70.w,
+                    //   // height: double.infinity,
+                    //   decoration: BoxDecoration(
+                    //       color: AppColors.primary,
+                    //       borderRadius: BorderRadius.circular(20)),
+                    // ),
                   ],
                 ));
               })

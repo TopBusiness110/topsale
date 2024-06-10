@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart' as easy;
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -49,6 +50,8 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
         .read<CreateSalesOrderCubit>()
         .calculateTotalPrice(widget.selectedProducts!);
     context.read<CreateSalesOrderCubit>().getAllUsers();
+    context.read<CreateSalesOrderCubit>().allJournalsModel = null;
+    context.read<CreateSalesOrderCubit>().getAllWareHouse();
     context.read<PaymentsCubit>().getAllJournals();
     scrollController.addListener(_scrollListener);
   }
@@ -139,6 +142,61 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                           ),
                         ),
                       ),
+                      SizedBox(
+                        height: 3.h,
+                      ),
+                      if (cubit.allJournalsModel != null)
+                        if (cubit.allJournalsModel!.result!.isNotEmpty)
+                          Container(
+                            margin: EdgeInsets.symmetric(horizontal: 5.w),
+                            decoration: BoxDecoration(
+                                color:
+                                    //  cubit.isSelected
+                                    //     ? AppColors.primary
+                                    //     :
+                                    AppColors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: AppColors.primary)),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton2(
+                                dropdownStyleData: const DropdownStyleData(
+                                    decoration: BoxDecoration(
+                                  color: AppColors.white,
+                                )),
+                                value: cubit.wareHouseSelectedValue,
+                                onChanged: (value) {
+                                  cubit.selectPaymentMethod(value);
+                                },
+                                isExpanded: true,
+                                hint: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("اختر المخزن",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displayMedium!
+                                            .copyWith(
+                                                color: AppColors.primary)),
+                                  ],
+                                ),
+                                items: cubit.allJournalsModel!.result!
+                                    .map((item) => DropdownMenuItem<String>(
+                                        value: item.id.toString(),
+                                        child: Text(
+                                          item.name!,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .displayMedium!
+                                              .copyWith(
+                                                color: AppColors.primary,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                        )))
+                                    .toList(),
+                              ),
+                            ),
+                          ),
                       SizedBox(
                         height: 3.h,
                       ),
@@ -610,6 +668,19 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                             backgroundColor: AppColors.red,
                             duration: Duration(milliseconds: 1000),
                           ));
+                        } else if (cubit.allJournalsModel != null &&
+                            cubit.wareHouseSelectedValue == null) {
+                          if (cubit.allJournalsModel!.result!.isNotEmpty)
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                              content: Text(" من فضلك أضف مخزن"),
+                              backgroundColor: AppColors.red,
+                              duration: Duration(milliseconds: 1000),
+                            ));
+                          else {
+                            productCubit.getTaxes();
+                            print("warehose null");
+                          }
                         } else if (widget
                                 .selectedProducts!.products.isNotEmpty &&
                             cubit.currentClient != "") {
@@ -704,6 +775,7 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                         onPressed: () {
                           cubit.createSaleOrder(
                             context,
+
                             // productId: productCubit.selectedProducts[0].id!,
                             // productQuantity: productCubit
                             //     .selectedProducts[0].userOrderedQuantity

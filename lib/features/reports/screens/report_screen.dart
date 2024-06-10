@@ -45,188 +45,201 @@ class _ReportScreenState extends State<ReportScreen> {
               Expanded(
                   child: widget.lentgh == 0
                       ? Center(child: Text("لا يوجد فواتير"))
-                      : widget.lentgh > cubit.ordersListForReports.length
+                      : widget.lentgh - cubit.skipped >
+                              cubit.ordersListForReports.length
                           ? Center(
                               child: CircularProgressIndicator(
                                   color: AppColors.yellow),
                             )
                           : Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 18.0),
-                              child: Column(
-                                children: [
-                                  ListView.builder(
-                                      shrinkWrap: true,
-                                      physics: NeverScrollableScrollPhysics(),
-                                      itemCount:
-                                          cubit.ordersListForReports.length,
-                                      itemBuilder: (context, index) {
-                                        // double price = 0;
-                                        // cubit
-                                        //                           .ordersListForReports[
-                                        //                               index]
-                                        //                           .result!.forEach((element) {
-                                                                    
-                                        //                            price += element.   priceTotal
-                                        //                             });
-
-                                        return GestureDetector(
-                                          onTap: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ReceiptScreenReports(
-                                                    orderId: cubit
-                                                        .ordersListForReports[
-                                                            index]
-                                                        .result![0]
-                                                        .id
-                                                        .toString(),
-                                                    orderDate: cubit
-                                                        .ordersListForReports[
-                                                            index]
-                                                        .result![0]
-                                                        .date
-                                                        .toString(),
-                                                  ),
-                                                ));
-                                            cubit.getOrderDetails(
-                                              cubit.ordersListForReports[index]
-                                                  .result![0].id,
-                                            );
-                                            cubit.getPartnerName(cubit
-                                                .ordersListForReports[index]
-                                                .result![0]
-                                                .partnerId);
-                                          },
-                                          child: Container(
-                                            margin: EdgeInsets.only(top: 20),
-                                            width: 97.w,
-                                            // height: 17.h,
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 10.0, vertical: 20),
-                                            decoration: BoxDecoration(
-                                                color: AppColors.primary,
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                                border: Border.all(
-                                                    color: AppColors.blue2,
-                                                    width: 2)),
-                                            child: Column(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 18.0, vertical: 12),
+                              child: ListView.builder(
+                                  //  shrinkWrap: true,
+                                  //  physics: NeverScrollableScrollPhysics(),
+                                  itemCount: cubit.ordersListForReports.length,
+                                  itemBuilder: (context, index) {
+                                    double price = 0;
+                                    cubit.ordersListForReports[index].result!
+                                        .forEach((element) {
+                                      price += double.parse(
+                                          element.priceTotal.toString());
+                                    });
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ReceiptScreenReports(
+                                                orderId: cubit
+                                                    .ordersListForReports[index]
+                                                    .result![0]
+                                                    .id
+                                                    .toString(),
+                                                orderDate: cubit
+                                                    .ordersListForReports[index]
+                                                    .result![0]
+                                                    .date
+                                                    .toString(),
+                                              ),
+                                            ));
+                                        cubit.getOrderDetails(
+                                          cubit.ordersListForReports[index]
+                                              .result![0].id,
+                                        );
+                                        cubit.getPartnerName(cubit
+                                            .ordersListForReports[index]
+                                            .result![0]
+                                            .partnerId);
+                                      },
+                                      child: Container(
+                                        margin: EdgeInsets.only(top: 20),
+                                        width: 97.w,
+                                        // height: 17.h,
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10.0, vertical: 20),
+                                        decoration: BoxDecoration(
+                                            color: AppColors.primary,
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            border: Border.all(
+                                                color: AppColors.blue2,
+                                                width: 2)),
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Flexible(
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                            "الاسم",
-                                                            style: TextStyle(
-                                                                color: AppColors
-                                                                    .yellow),
-                                                          ),
-                                                          Text(
-                                                            cubit.getOrderName(cubit
-                                                                    .ordersListForReports[
-                                                                        index]
-                                                                    .result![0]
-                                                                    .displayName) ??
-                                                                "",
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .bodySmall,
-                                                          ),
-                                                        ],
+                                                Flexible(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        "الاسم",
+                                                        style: TextStyle(
+                                                            color: AppColors
+                                                                .yellow),
                                                       ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Flexible(
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                            "التاريخ",
-                                                            style: TextStyle(
-                                                                color: AppColors
-                                                                    .yellow),
-                                                          ),
-                                                          Text(
-                                                            //  "fgdsjhdskfhjdskhffgdsjhdskfhjdskhffgdsjhdskfhjdskhffgdsjhdskfhjdskhffgdsjhdskfhjdskhffgdsjhdskfhjdskhf",
-
-                                                            cubit
-                                                                    .ordersListForReports[
-                                                                        index]
-                                                                    .result![0]
-                                                                    .date
-                                                                    .toString() ??
-                                                                "",
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .bodySmall,
-                                                          ),
-                                                        ],
+                                                      Text(
+                                                        cubit.getOrderName(cubit
+                                                                .ordersListForReports[
+                                                                    index]
+                                                                .result![0]
+                                                                .displayName) ??
+                                                            "",
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .bodySmall,
                                                       ),
-                                                    ),
-                                                    Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          "الإجمالي",
-                                                          style: TextStyle(
-                                                              color: AppColors
-                                                                  .yellow),
-                                                        ),
-                                                        Text(
-                                                          //   "fgdsjhdskfhjdskhffgdsjhdskfhjdskhffgdsjhdskfhjdskhffgdsjhdskfhjdskhffgdsjhdskfhjdskhffgdsjhdskfhjdskhf",
-
-                                                          cubit
-                                                                  .ordersListForReports[
-                                                                      index]
-                                                                  .result![0]
-                                                                  .priceTotal
-                                                                  .toString() ??
-                                                              "",
-                                                          style:
-                                                              Theme.of(context)
-                                                                  .textTheme
-                                                                  .bodySmall,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
+                                                    ],
+                                                  ),
                                                 ),
-                                                const SizedBox(
-                                                  height: 5,
+                                                Flexible(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        "الحالة",
+                                                        style: TextStyle(
+                                                            color: AppColors
+                                                                .yellow),
+                                                      ),
+                                                      Text(
+                                                        cubit
+                                                                .ordersListForReports[
+                                                                    index]
+                                                                .result![0]
+                                                                .state ??
+                                                            "",
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .bodySmall,
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ],
                                             ),
-                                          ),
-                                        );
-                                      }),
-                                ],
-                              ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Flexible(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        "التاريخ",
+                                                        style: TextStyle(
+                                                            color: AppColors
+                                                                .yellow),
+                                                      ),
+                                                      Text(
+                                                        //  "fgdsjhdskfhjdskhffgdsjhdskfhjdskhffgdsjhdskfhjdskhffgdsjhdskfhjdskhffgdsjhdskfhjdskhffgdsjhdskfhjdskhf",
+
+                                                        cubit
+                                                                .ordersListForReports[
+                                                                    index]
+                                                                .result![0]
+                                                                .date
+                                                                .toString() ??
+                                                            "",
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .bodySmall,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      "الإجمالي",
+                                                      style: TextStyle(
+                                                          color:
+                                                              AppColors.yellow),
+                                                    ),
+                                                    Text(
+                                                      //   "fgdsjhdskfhjdskhffgdsjhdskfhjdskhffgdsjhdskfhjdskhffgdsjhdskfhjdskhffgdsjhdskfhjdskhffgdsjhdskfhjdskhf",
+                                                      price.toString(),
+                                                      // cubit
+                                                      //         .ordersListForReports[
+                                                      //             index]
+                                                      //         .result![0]
+                                                      //         .priceTotal
+                                                      //         .toString() ??
+                                                      //     "",
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodySmall,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }),
                             ))
             ],
           ),

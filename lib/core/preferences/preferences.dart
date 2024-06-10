@@ -48,6 +48,17 @@ Future<void> setDataBaseName(String db) async {
     String? database = preferences.getString('database');
     return database;
   }
+Future<void> setOdooUrl(String url) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString('odooUrl', url);
+    print("sessionIdTrueUser = $url");
+  }
+  
+  Future<String?> getOdooUrl() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? url = preferences.getString('odooUrl');
+    return url;
+  }
 
   Future<void> setUserName(String userName) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();

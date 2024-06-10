@@ -22,4 +22,7 @@ class LoadingCreateInvoiceState extends PaymentsState {}
 class FailureInvoiceLinesState extends PaymentsState {}
 class SuccessInvoiceLinesState extends PaymentsState {}
 class LoadingInvoiceLinesState extends PaymentsState {}
+class LoadingUpdatePaymentState extends PaymentsState {}
+class FailureUpdatePaymentState extends PaymentsState {}
+class SuccessUpdatePaymentState extends PaymentsState {}
 

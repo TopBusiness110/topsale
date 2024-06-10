@@ -13,11 +13,12 @@ import 'package:topsale/features/home/cubit/home_tab_cubit/home_cubit.dart';
 import 'package:topsale/features/payments/cubit/payments_cubit.dart';
 import 'package:topsale/features/products/cubit/products_cubit.dart';
 import 'package:e_invoice_generator/e_invoice_generator.dart';
+import 'package:topsale/features/returns/cubit/returns_cubit.dart';
 import '../../../core/utils/app_assets.dart';
 import '../../../core/widgets/custom_button.dart';
 
-class ReceiptScreen extends StatelessWidget {
-  const ReceiptScreen({super.key});
+class ReceiptReturnScreen extends StatelessWidget {
+  const ReceiptReturnScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -135,19 +136,19 @@ class ReceiptScreen extends StatelessWidget {
                                             .displayLarge!
                                             .copyWith(color: AppColors.primary),
                                       ),
-                                      BlocBuilder<CreateSalesOrderCubit,
-                                              CreateSalesOrderState>(
+                                      BlocBuilder<ReturnsCubit,
+                                              ReturnsState>(
                                           builder: (context, state) {
                                         return context
                                                     .read<
-                                                        CreateSalesOrderCubit>()
+                                                        ReturnsCubit>()
                                                     .invoiceDetailsModel ==
                                                 null
                                             ? SizedBox(
                                                 width: 1,
                                               )
                                             : Text(
-                                                "${context.read<CreateSalesOrderCubit>().invoiceDetailsModel!.name ?? "0"}",
+                                                "${context.read<ReturnsCubit>().invoiceDetailsModel!.name ?? "0"}",
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .displayLarge!
@@ -279,14 +280,10 @@ class ReceiptScreen extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-
                                   ListView.builder(
                                       shrinkWrap: true,
                                       physics: NeverScrollableScrollPhysics(),
-                                      itemCount: context
-                                          .read<ProductsCubit>()
-                                          .selectedProducts
-                                          .length,
+                                      itemCount:  context.read<ReturnsCubit>().getManOrderDetailsModel!.result!.length,
                                       itemBuilder: (context, index) {
                                         return Padding(
                                           padding: const EdgeInsets.symmetric(
@@ -300,9 +297,7 @@ class ReceiptScreen extends StatelessWidget {
                                               Flexible(
                                                 flex: 1,
                                                 child: Text(
-                                                  context
-                                                      .read<ProductsCubit>()
-                                                      .selectedProducts[index]
+                                                  context.read<ReturnsCubit>().getManOrderDetailsModel!.result![index]
                                                       .name!,
                                                   style: Theme.of(context)
                                                       .textTheme
@@ -318,10 +313,8 @@ class ReceiptScreen extends StatelessWidget {
                                               Flexible(
                                                 flex: 1,
                                                 child: Text(
-                                                  context
-                                                      .read<ProductsCubit>()
-                                                      .selectedProducts[index]
-                                                      .userOrderedQuantity
+                                                   context.read<ReturnsCubit>().getManOrderDetailsModel!.result![index]
+                                                      .userProductUomQty
                                                       .toString(),
                                                   style: Theme.of(context)
                                                       .textTheme
@@ -337,8 +330,7 @@ class ReceiptScreen extends StatelessWidget {
                                               Flexible(
                                                 flex: 1,
                                                 child: Text(
-                                                  "${context.read<ProductsCubit>().selectedProducts[index].userOrderedQuantity * context.read<ProductsCubit>().selectedProducts[index].listPrice!} ${context.read<HomeCubit>().currencyName}",
-
+                                                  "${ context.read<ReturnsCubit>().getManOrderDetailsModel!.result![index].userProductUomQty *  context.read<ReturnsCubit>().getManOrderDetailsModel!.result![index].userProductUomQty!} ${context.read<HomeCubit>().currencyName}",
                                                   //    context
                                                   //        .read<
                                                   //            CreateSalesOrderCubit>()
@@ -349,6 +341,7 @@ class ReceiptScreen extends StatelessWidget {
                                                   //     .selectedProducts[0]
                                                   //     .listPrice
                                                   //     .toString(),
+
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .bodyMedium!

@@ -17,10 +17,12 @@ import 'package:topsale/core/models/get_partner_orders_model.dart';
 import 'package:topsale/core/models/get_payment_by_id.dart';
 import 'package:topsale/core/models/get_payment_with_id_model.dart';
 import 'package:topsale/core/models/get_taxes_model.dart';
+import 'package:topsale/core/models/invoice_details_model.dart';
 import 'package:topsale/core/models/order_details_model.dart';
 import 'package:topsale/core/models/partner_latlong_model.dart';
 import 'package:topsale/core/models/update_payment_state_model.dart';
 import 'package:topsale/core/models/user_data_model.dart';
+import 'package:topsale/core/models/ware_house_model.dart';
 
 import '../api/base_api_consumer.dart';
 import '../api/end_points.dart';
@@ -40,7 +42,8 @@ class ServiceApi {
       String? sessionId = await Preferences.instance.getSessionId();
 
       final response = await dio.get(
-        EndPoints.allProducts + "page=$page",
+        EndPoints.allProducts +
+            '?filter=[["detailed_type","=","product"]]&query={id,name,categ_id,list_price,currency_id,taxes_id,uom_name,uom_id,description_sale,qty_available,image_1920}&page_size=10&limit=10&page=$page',
         options: Options(
           headers: {"Cookie": "frontend_lang=en_US;session_id=$sessionId"},
         ),
@@ -60,7 +63,7 @@ class ServiceApi {
 
       final response = await dio.get(
         EndPoints.allProducts +
-            'page=$page&filter=[["name", "=like", "%$name%"]]',
+            '?filter=[["detailed_type","=","product"],["name", "=like", "%$name%"]]&query={id,name,categ_id,list_price,currency_id,taxes_id,uom_name,uom_id,description_sale,qty_available,image_1920}&page_size=10&limit=10&page=$page',
         options: Options(
           headers: {"Cookie": "frontend_lang=en_US;session_id=$sessionId"},
         ),
@@ -233,7 +236,7 @@ class ServiceApi {
       String? sessionId = await Preferences.instance.getSessionId();
       final response = await dio.get(
         EndPoints.getAllPartners +
-            '&page_size=$pageSize&page=$page&filter=[["user_id", "=",${authModel.result!.userContext!.uid}]]',
+            'page_size=$pageSize&page=$page&filter=[["user_id", "=",${authModel.result!.userContext!.uid}]]',
         options: Options(
           headers: {"Cookie": "frontend_lang=en_US;session_id=$sessionId"},
         ),
@@ -536,37 +539,42 @@ class ServiceApi {
 //     }
 //   }
 
-  Future<Either<Failure, DefaultModel>> createSaleOrder(int userId) async {
+  Future<Either<Failure, DefaultModel>> createSaleOrder(
+      int partnerId, String? wareHouseId) async {
     String? sessionId = await Preferences.instance.getSessionId();
     AuthModel authModel = await Preferences.instance.getUser();
     print("*****************************************************");
     print("session id  = $sessionId");
     print("partner id  = ${authModel.result!.partnerId!}");
     try {
-      final response = await dio.post(EndPoints.saleOrder,
-          options: Options(
-            headers: {"Cookie": "session_id=$sessionId"},
-          ),
-          body: {
-            "params": {
-              "data": {
-                "partner_id": userId,
-
-                "user_id": authModel.result!.userContext!.uid,
-                "state": "sale",
-                "type_name": "Sales Order",
-
-                //  "partner_id": authModel.result!.partnerId,
-                //   "pricelist_id": 1,
-                //  "user_id":userId
-                //"website_id": 1
-                // "partner_id":partnerId,
-                // "pricelist_id": 1,
-                // "team_id":2,
-                // "website_id":1
-              }
-            }
-          }).onError((error, stackTrace) {
+      final response = await dio
+          .post(EndPoints.saleOrder,
+              options: Options(
+                headers: {"Cookie": "session_id=$sessionId"},
+              ),
+              body: wareHouseId != ""
+                  ? {
+                      "params": {
+                        "data": {
+                          "partner_id": partnerId,
+                          "user_id": authModel.result!.userContext!.uid,
+                          "state": "sale",
+                          "type_name": "Sales Order",
+                          "warehouse_id": wareHouseId
+                        }
+                      }
+                    }
+                  : {
+                      "params": {
+                        "data": {
+                          "partner_id": partnerId,
+                          "user_id": authModel.result!.userContext!.uid,
+                          "state": "sale",
+                          "type_name": "Sales Order"
+                        }
+                      }
+                    })
+          .onError((error, stackTrace) {
         print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
         print(error.toString());
       });
@@ -645,7 +653,6 @@ class ServiceApi {
             "params": {
               "data": {
                 "partner_id": partnerId,
-                "journal_id": 1,
                 "invoice_user_id": authModel.result!.userContext!.uid,
                 "move_type": "out_invoice"
               }
@@ -685,6 +692,8 @@ class ServiceApi {
       required String mobile,
       required String street}) async {
     String? sessionId = await Preferences.instance.getSessionId();
+    AuthModel authModel = await Preferences.instance.getUser();
+    final companyId = authModel.result!.userCompanies!.currentCompany;
     try {
       final response = await dio.post(EndPoints.addPartner,
           options: Options(
@@ -695,9 +704,16 @@ class ServiceApi {
               "data": {
                 "name": name,
                 "mobile": mobile,
+                "company_id": companyId,
                 "street": street,
-                //  "country_id": "2"
+                "user_id": authModel.result!.userContext!.uid
               }
+              // "data": {
+              //   "name": name,
+              //   "mobile": mobile,
+              //   "company_id": 1,
+              //   "street": street,
+              // }
             }
           });
       return Right(DefaultModel.fromJson(response));
@@ -713,6 +729,7 @@ class ServiceApi {
       required int partnerId,
       required String street}) async {
     AuthModel authModel = await Preferences.instance.getUser();
+    final companyId = authModel.result!.userCompanies!.currentCompany;
     String? sessionId = await Preferences.instance.getSessionId();
     try {
       final response = await dio.post(EndPoints.newLead,
@@ -728,6 +745,7 @@ class ServiceApi {
                 "street": street,
                 "expected_revenue": 0,
                 "description": description,
+                "company_id": companyId,
                 "user_id": authModel.result!.userContext!.uid
               }
             }
@@ -774,13 +792,31 @@ class ServiceApi {
     }
   }
 
+  Future<Either<Failure, WareHouseModelResponse>> getWareHouses() async {
+    AuthModel authModel = await Preferences.instance.getUser();
+    String? sessionId = await Preferences.instance.getSessionId();
+    try {
+      final response = await dio.get(
+        EndPoints.wareHouse +
+            '?query={id,name,user_id}&filter=[["user_id", "=",${authModel.result!.userContext!.uid}]]',
+        // '?query={id,partner_id,display_name,state,write_date,amount_total}&filter=[["user_id", "=",1]]',
+        options: Options(
+          headers: {"Cookie": "session_id=$sessionId"},
+        ),
+      );
+      return Right(WareHouseModelResponse.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
   Future<Either<Failure, GetOrderDetailsModel>> getOrderDetails(
       int orderId) async {
     String? sessionId = await Preferences.instance.getSessionId();
     try {
       final response = await dio.get(
         EndPoints.saleOrderLine +
-            '?query={name,product_uom_qty,price_tax,price_total,price_subtotal,display_name,create_date,order_id,order_partner_id}&filter=[["order_id", "=", $orderId]]',
+            '?query={state,name,product_uom_qty,price_tax,price_total,price_subtotal,display_name,create_date,order_id,order_partner_id}&filter=[["order_id", "=", $orderId]]',
         options: Options(
           headers: {"Cookie": "session_id=$sessionId"},
         ),
@@ -848,7 +884,7 @@ class ServiceApi {
     try {
       final response = await dio.get(
         EndPoints.saleOrderLine +
-            '?filter=[["order_id", "=",$orderId]]&query={id,name,display_name,product_id,product_uom_qty,order_id}',
+            '?filter=[["order_id", "=",$orderId]]&query={id,name,display_name,product_id,product_uom_qty,order_id,price_tax,price_total,price_subtotal,price_unit,tax_id}',
         options: Options(
           headers: {"Cookie": "session_id=$sessionId"},
         ),
@@ -975,7 +1011,7 @@ class ServiceApi {
       final userId = authModel.result!.userContext!.uid;
       final response = await dio.get(
         EndPoints.saleOrder +
-            '?filter=[["user_id", "=",$userId]]&query={id,partner_id,display_name,state,write_date,amount_total}&page_size=$pageSize&page=$page',
+            '?filter=[["user_id", "=",$userId],["state", "!=","cancel"]]&query={id,partner_id,display_name,state,write_date,amount_total}&page_size=$pageSize&page=$page',
         options: Options(
           headers: {"Cookie": "session_id=$sessionId"},
         ),
@@ -993,9 +1029,12 @@ class ServiceApi {
   Future<Either<Failure, GetAllJournalsModel>> getAllJournals() async {
     try {
       String? sessionId = await Preferences.instance.getSessionId();
-
+      AuthModel authModel = await Preferences.instance.getUser();
+      final userId = authModel.result!.userContext!.uid;
+      // final companyId = authModel.result!.userCompanies!.currentCompany;
       final response = await dio.get(
-        EndPoints.getAllJournals,
+        EndPoints.getAllJournals +
+            '&filter=[["payment_sequence", "=","true"],["user_id", "=", [$userId]]]',
         options: Options(
           headers: {"Cookie": "session_id=$sessionId"},
         ),
@@ -1070,10 +1109,71 @@ class ServiceApi {
               "filter": [
                 ["id", "=", paymentId]
               ],
-              "data": {"state": "posted"}
+              "data": {"state": "paid"}
             }
           });
       return Right(UpdatePaymentStateModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+  Future<Either<Failure, DefaultModel>> orderRelation({
+    required int orderId,
+  }) async {
+    String? sessionId = await Preferences.instance.getSessionId();
+    try {
+      final response = await dio
+          .post(EndPoints.objectSaleOrder + '$orderId/_create_invoices/',
+              options: Options(
+                headers: {"Cookie": "session_id=$sessionId"},
+              ),
+              body: {});
+      return Right(DefaultModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+  Future<Either<Failure, DefaultModel>> confirmInvoice({
+    required String accountMoveNumber,
+    required partnerId,
+  }) async {
+    String? sessionId = await Preferences.instance.getSessionId();
+    AuthModel authModel = await Preferences.instance.getUser();
+    try {
+      final response = await dio
+          .post(EndPoints.objectAccountMove + '$accountMoveNumber/action_post/',
+              options: Options(
+                headers: {"Cookie": "session_id=$sessionId"},
+              ),
+              body: {
+            "params": {
+              "data": {
+                "partner_id": partnerId,
+                "invoice_user_id": authModel.result!.userContext!.uid,
+                "move_type": "out_invoice"
+              }
+            }
+          });
+      return Right(DefaultModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+  Future<Either<Failure, InvoiceDetailsModel>> getInvoiceDetails({
+    required String accountMoveNumber,
+  }) async {
+    String? sessionId = await Preferences.instance.getSessionId();
+    try {
+      final response = await dio.get(
+        EndPoints.createInvoice + '$accountMoveNumber/?query={id, name}',
+        options: Options(
+          headers: {"Cookie": "session_id=$sessionId"},
+        ),
+      );
+      return Right(InvoiceDetailsModel.fromJson(response));
     } on ServerException {
       return Left(ServerFailure());
     }
