@@ -24,7 +24,9 @@ class ReceiptReturnScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<ReceiptCubit, ReceiptState>(
       listener: (context, state) {
-        // TODO: implement listener
+
+        
+     
       },
       builder: (context, state) {
         
@@ -172,14 +174,14 @@ class ReceiptReturnScreen extends StatelessWidget {
                                   SizedBox(
                                     height: 1.h,
                                   ),
-                                  Text(
-                                    "${context.read<PaymentsCubit>().selectedValue ?? "آجل"}",
-                                    // "لم يتم الدفع",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displayLarge!
-                                        .copyWith(color: AppColors.primary),
-                                  ),
+                                  // Text(
+                                  //   "${context.read<PaymentsCubit>().selectedValue ?? "آجل"}",
+                                  //   // "لم يتم الدفع",
+                                  //   style: Theme.of(context)
+                                  //       .textTheme
+                                  //       .displayLarge!
+                                  //       .copyWith(color: AppColors.primary),
+                                  // ),
                                   SizedBox(
                                     height: 1.h,
                                   ),
@@ -241,81 +243,14 @@ class ReceiptReturnScreen extends StatelessWidget {
                                     child: Divider(),
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          "اسم المنتج",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium!
-                                              .copyWith(
-                                                  color: AppColors.primary),
-                                        ),
-                                        // SizedBox(
-                                        //   width: 30.w,
-                                        // ),
-                                        Text(
-                                          "كمية",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium!
-                                              .copyWith(
-                                                  color: AppColors.primary),
-                                        ),
-                                        //   SizedBox(
-                                        //     width: 5.w,
-                                        //   ),
-                                        Text(
-                                          "اجمالي",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium!
-                                              .copyWith(
-                                                  color: AppColors.primary),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  ListView.builder(
-                                      shrinkWrap: true,
-                                      physics: NeverScrollableScrollPhysics(),
-                                      itemCount:  context.read<ReturnsCubit>().getManOrderDetailsModel!.result!.length,
-                                      itemBuilder: (context, index) {
-                                        return Padding(
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 8.0),
                                           child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
                                             children: [
-                                              Flexible(
-                                                flex: 1,
+                                              Expanded(
                                                 child: Text(
-                                                  context.read<ReturnsCubit>().getManOrderDetailsModel!.result![index]
-                                                      .name!,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyMedium!
-                                                      .copyWith(
-                                                          color: AppColors
-                                                              .primary),
-                                                ),
-                                              ),
-                                              //  SizedBox(
-                                              //    width: 20.w,
-                                              //  ),
-                                              Flexible(
-                                                flex: 1,
-                                                child: Text(
-                                                   context.read<ReturnsCubit>().getManOrderDetailsModel!.result![index]
-                                                      .userProductUomQty
-                                                      .toString(),
+                                                  "اسم المنتج",
+                                                  textAlign: TextAlign.start,
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .bodyMedium!
@@ -325,23 +260,27 @@ class ReceiptReturnScreen extends StatelessWidget {
                                                 ),
                                               ),
                                               // SizedBox(
-                                              //   width: 5.w,
+                                              //   width: 30.w,
                                               // ),
-                                              Flexible(
-                                                flex: 1,
+                                              Expanded(
                                                 child: Text(
-                                                  "${ context.read<ReturnsCubit>().getManOrderDetailsModel!.result![index].userProductUomQty *  context.read<ReturnsCubit>().getManOrderDetailsModel!.result![index].userProductUomQty!} ${context.read<HomeCubit>().currencyName}",
-                                                  //    context
-                                                  //        .read<
-                                                  //            CreateSalesOrderCubit>()
-                                                  //        .sum
-                                                  //        .toString(),
-                                                  // context
-                                                  //     .read<ProductsCubit>()
-                                                  //     .selectedProducts[0]
-                                                  //     .listPrice
-                                                  //     .toString(),
-
+                                                  "كمية",
+                                                  textAlign: TextAlign.center,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium!
+                                                      .copyWith(
+                                                          color: AppColors
+                                                              .primary),
+                                                ),
+                                              ),
+                                              //   SizedBox(
+                                              //     width: 5.w,
+                                              //   ),
+                                              Expanded(
+                                                child: Text(
+                                                  "اجمالي",
+                                                  textAlign: TextAlign.end,
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .bodyMedium!
@@ -352,8 +291,85 @@ class ReceiptReturnScreen extends StatelessWidget {
                                               ),
                                             ],
                                           ),
-                                        );
-                                      }),
+                                        ),
+
+                                        
+                                  Padding(
+                                          padding: const EdgeInsets.all(3.0),
+                                    child: ListView.builder(
+                                        shrinkWrap: true,
+                                        physics: NeverScrollableScrollPhysics(),
+                                        itemCount:  context.read<ReturnsCubit>().getManOrderDetailsModel!.result!.length,
+                                        itemBuilder: (context, index) {
+                                          return Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+
+ Expanded(
+                                                      flex: 1,
+                                                      child: Container(
+                                                        alignment: Alignment
+                                                            .centerRight,
+                                                        child: Text(
+                                                          context.read<ReturnsCubit>().getManOrderDetailsModel!.result![index]
+                                                      .name!,
+                                                          style: Theme.of(
+                                                                  context)
+                                                              .textTheme
+                                                              .bodyMedium!
+                                                              .copyWith(
+                                                                  color: AppColors
+                                                                      .primary),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                 
+
+   Expanded(
+                                                      flex: 1,
+                                                      child: Container(
+                                                        alignment:
+                                                            Alignment.center,
+                                                        child: Text(
+                                                          context.read<ReturnsCubit>().getManOrderDetailsModel!.result![index]
+                                                      .userProductUomQty
+                                                      .toString(),
+                                                          style: Theme.of(
+                                                                  context)
+                                                              .textTheme
+                                                              .bodyMedium!
+                                                              .copyWith(
+                                                                  color: AppColors
+                                                                      .primary),
+                                                        ),
+                                                      ),
+                                                    ),
+                                              Expanded(
+                                                      flex: 1,
+                                                      child: Container(
+                                                        alignment: Alignment
+                                                            .centerLeft,
+                                                        child: Text(
+                                                  "${ context.read<ReturnsCubit>().getManOrderDetailsModel!.result![index].userProductUomQty *  context.read<ReturnsCubit>().getManOrderDetailsModel!.result![index].userProductUomQty!} ${context.read<HomeCubit>().currencyName}",
+
+                                                         style: Theme.of(
+                                                                  context)
+                                                              .textTheme
+                                                              .bodyMedium!
+                                                              .copyWith(
+                                                                  color: AppColors
+                                                                      .primary),
+                                                        ),
+                                                      ),
+                                                    ),
+                                             
+                                            ],
+                                          );
+                                        }),
+                                  ),
 
                                   Padding(
                                     padding:

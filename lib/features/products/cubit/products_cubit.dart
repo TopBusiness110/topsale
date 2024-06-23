@@ -46,12 +46,13 @@ class ProductsCubit extends Cubit<ProductsState> {
   }
 
   removeProduct({required ProductModelData product}) {
-    if (product.userOrderedQuantity > 0) {
+    if (product.userOrderedQuantity >= 1) {
       product.userOrderedQuantity = product.userOrderedQuantity - 1;
       emit(RemoveProductsState());
-    } else if (product.userOrderedQuantity == 0) {
+    }
+    if (product.userOrderedQuantity == 0) {
       selectedProducts.remove(product);
-      emit(RemoveProductsState());
+      emit(DeletProductsState());
     }
   }
 

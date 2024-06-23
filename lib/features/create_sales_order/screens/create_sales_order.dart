@@ -338,7 +338,7 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                                                               ),
                                                               Flexible(
                                                                 child: Text(
-                                                                  "${context.read<HomeCubit>().currencyName} ${widget.selectedProducts?.products[index].listPrice}",
+                                                                  "${context.read<HomeCubit>().currencyName} ${widget.selectedProducts?.products[index].listPrice!.toStringAsFixed(2)}",
                                                                   textDirection:
                                                                       TextDirection
                                                                           .ltr,
@@ -364,7 +364,7 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                                                                     horizontal:
                                                                         8.0),
                                                                 child: Text(
-                                                                  "الإجمالي: ${widget.selectedProducts!.products[index].listPrice! * widget.selectedProducts!.products[index].userOrderedQuantity} ${context.read<HomeCubit>().currencyName}",
+                                                                  "الإجمالي: ${double.parse(widget.selectedProducts!.products[index].listPrice!.toStringAsFixed(2)) * widget.selectedProducts!.products[index].userOrderedQuantity} ${context.read<HomeCubit>().currencyName}",
                                                                   style: Theme.of(
                                                                           context)
                                                                       .textTheme
@@ -748,7 +748,6 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                       if (state is SuccessCreateSaleOrderLineState) {
                         print('sssss');
                         Navigator.pop(context);
-                        context.read<ProductsCubit>().getAllProducts();
 
                         //context.read<ProductsCubit>().selectedProducts.clear();
 
@@ -757,6 +756,7 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                             MaterialPageRoute(
                               builder: (context) => PaymentScreen(
                                 sum: cubit.sum,
+                                //sum: cubit.sum + context.read<ProductsCubit>().taxesSum,
                                 partnerId: cubit.currentClientId,
                                 productId: productCubit.selectedProducts[0].id!,
                                 quantity: productCubit
@@ -764,6 +764,7 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                                 onPressed: () {},
                               ),
                             ));
+                        context.read<ProductsCubit>().getAllProducts();
                       }
 
                       // if (state is SuccessCreateSaleOrderLineState) {

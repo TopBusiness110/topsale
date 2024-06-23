@@ -37,8 +37,9 @@ class ProductGridItem extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 2),
                 child: Text(product.name ?? '',
-                    maxLines: 1,
-                    textAlign: TextAlign.start,
+                    maxLines: 2,
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.bodySmall),
               ),
               Row(
@@ -54,7 +55,8 @@ class ProductGridItem extends StatelessWidget {
                           .copyWith(fontSize: 10),
                     ),
                   ),
-                  Text("${product.listPrice.toString()} ${context.read<HomeCubit>().currencyName}",
+                  Text(
+                      "${product.listPrice!.toStringAsFixed(2)} ${context.read<HomeCubit>().currencyName}",
                       maxLines: 1,
                       style: Theme.of(context)
                           .textTheme

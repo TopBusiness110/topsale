@@ -65,3 +65,7 @@ class CalculatingTotalPriceState extends ReturnsState {}
 class FailureGetTaxesState extends ReturnsState {}
 class SuccessGetTaxesState extends ReturnsState {}
 class LoadingGetTaxesState extends ReturnsState {}
+class LoadingUpdatePaymentState extends ReturnsState {}
+class FailureUpdatePaymentState extends ReturnsState {}
+class SuccessUpdatePaymentState extends ReturnsState {}
+

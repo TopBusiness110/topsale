@@ -8,6 +8,7 @@ class ProductsInitial extends ProductsState {}
 class AddProductsState extends ProductsState {}
 
 class RemoveProductsState extends ProductsState {}
+class DeletProductsState extends ProductsState {}
 
 class SearchingState extends ProductsState {}
 

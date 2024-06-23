@@ -123,7 +123,10 @@ class _SalesOrderedListScreenState extends State<SalesOrderedListScreen> {
                                         ),
                                       ));
                                   cubit.getOrderDetails(
-                                      cubit.ordersModel?.result![index].id);
+                                      cubit.ordersModel?.result![index].id,
+                                      cubit.ordersModel?.result![index].displayName!
+                                      
+                                      );
                                   cubit.getPartnerName(cubit
                                       .ordersModel?.result![index].partnerId);
                                 },

@@ -5,8 +5,10 @@ import 'package:topsale/core/models/all_journals_model.dart';
 import 'package:topsale/core/models/all_prodyucts_model.dart';
 import 'package:topsale/core/models/allusers_model.dart';
 import 'package:topsale/core/models/defaul_model.dart';
+import 'package:topsale/core/models/get_payment_with_id_model.dart';
 import 'package:topsale/core/models/invoice_details_model.dart';
 import 'package:topsale/core/models/product_model.dart';
+import 'package:topsale/core/models/update_payment_state_model.dart';
 import 'package:topsale/core/models/ware_house_model.dart';
 import 'package:topsale/core/remote/service_api.dart';
 import 'package:topsale/features/products/cubit/products_cubit.dart';
@@ -39,7 +41,7 @@ class CreateSalesOrderCubit extends Cubit<CreateSalesOrderState> {
         "hhhhhhhhhhhhhhhhhhhhhhhhhhhhh${context.read<ProductsCubit>().selectedProducts.length}");
     final response = await api.createSaleOrder(
         context.read<CreateSalesOrderCubit>().currentClientId,
-        wareHouseSelectedValue??'');
+        wareHouseSelectedValue ?? '');
     response.fold((l) {
       print('gggggggg');
       emit(FailureCreateSaleOrderState());
@@ -55,6 +57,8 @@ class CreateSalesOrderCubit extends Cubit<CreateSalesOrderState> {
                   .read<ProductsCubit>()
                   .selectedProducts[i]
                   .userOrderedQuantity,
+              price:
+                  context.read<ProductsCubit>().selectedProducts[i].listPrice,
               orderId: r.result!);
         }
       } else {}
@@ -69,11 +73,13 @@ class CreateSalesOrderCubit extends Cubit<CreateSalesOrderState> {
   createSaleOrderLine(BuildContext context,
       {required int orderId,
       required int productId,
+      required price,
       required productQuantity}) async {
     emit(LoadingCreateSaleOrderLineState());
     final response = await api.createSaleOrderLines(
         orderId: orderId,
         productId: productId,
+        price: price,
         productQuantity: productQuantity);
     response.fold((l) {
       emit(FailureCreateSaleOrderLineState());
@@ -101,7 +107,8 @@ class CreateSalesOrderCubit extends Cubit<CreateSalesOrderState> {
   }
 
   DefaultModel? orderRelationModel;
-  orderRelation(BuildContext context, {required partnerId}) async {
+  orderRelation(BuildContext context,
+      {required partnerId, bool isPayment = false}) async {
     emit(LoadingOrderRelationState());
     if (createOrderModel != null) {
       final response = await api.orderRelation(
@@ -117,6 +124,7 @@ class CreateSalesOrderCubit extends Cubit<CreateSalesOrderState> {
               context,
               partnerId: partnerId,
               accountMoveNumber: getAccountMoveNumber(r.result.toString()),
+              isPayment: isPayment,
             );
           }
           emit(SuccessOrderRelationState());
@@ -127,9 +135,20 @@ class CreateSalesOrderCubit extends Cubit<CreateSalesOrderState> {
     }
   }
 
+  UpdatePaymentStateModel? updatePaymentStateModel;
+  updatePaymentStates(String moveId) async {
+    emit(LoadingUpdatePaymentState());
+    final response = await api.updatePaymentState(moveId: int.parse(moveId));
+    response.fold((l) => emit(FailureUpdatePaymentState()), (r) {
+      emit(SuccessUpdatePaymentState());
+    });
+  }
+
   DefaultModel? confirmInvoiceModel;
   confirmInvoice(BuildContext context,
-      {required accountMoveNumber, required partnerId}) async {
+      {required accountMoveNumber,
+      required partnerId,
+      bool isPayment = false}) async {
     emit(LoadingConfirmInvoiceState());
     if (createOrderModel != null) {
       final response = await api.confirmInvoice(
@@ -146,7 +165,10 @@ class CreateSalesOrderCubit extends Cubit<CreateSalesOrderState> {
             getInvoiceDetails(
                 accountMoveNumber: getAccountMoveNumber(
                     orderRelationModel!.result.toString()));
-
+       // if (isPayment) {
+       //   updatePaymentStates(
+       //       getAccountMoveNumber(orderRelationModel!.result.toString())!);
+       // }
           Navigator.pushReplacementNamed(context, Routes.receiptRoute);
           emit(SuccessConfirmInvoiceState());
         } else {}
@@ -176,6 +198,14 @@ class CreateSalesOrderCubit extends Cubit<CreateSalesOrderState> {
       print("nullll");
     }
   }
+
+
+
+
+
+
+
+
 // createSaleOrder(
 //   BuildContext context,
 // ) async {
@@ -329,8 +359,7 @@ class CreateSalesOrderCubit extends Cubit<CreateSalesOrderState> {
     response.fold((l) => emit(FailureGetJournalsState()), (r) {
       emit(SuccessGetJournalsState());
       allJournalsModel = r;
-      if(r.result!.isNotEmpty)
-      selectPaymentMethod(r.result![0].id.toString());
+      if (r.result!.isNotEmpty) selectPaymentMethod(r.result![0].id.toString());
       print("***************************************************");
       print(r.toString());
       print("**************************${r.result.toString()}");

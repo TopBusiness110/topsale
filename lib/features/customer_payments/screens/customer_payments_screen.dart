@@ -66,7 +66,7 @@ class _CustomerPaymentsScreenState extends State<CustomerPaymentsScreen> {
   Widget build(BuildContext context) {
     return BlocConsumer<CustomerPaymentsCubit, CustomerPaymentsState>(
       listener: (context, state) {
-        if (state is SuccessUpdatePaymentState) {
+        if (state is SuccessUpdatePaymentState1) {
           Navigator.pushReplacementNamed(context, Routes.catchReceiptRoute,
               arguments: CatchReceiptModel(
                   number: context.read<CreateSalesOrderCubit>().billingNumber,
@@ -348,6 +348,7 @@ class _CustomerPaymentsScreenState extends State<CustomerPaymentsScreen> {
                                     makeToast("ادخل جميل البيانات");
                                   } else {
                                     cubit.createPaymentMethod(
+                                        context: context,
                                         partnerId: clientCubit.currentClientId);
                                   }
 

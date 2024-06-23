@@ -59,6 +59,7 @@ class OrdersData {
   String? writeDate;
   String? partnerName;
   dynamic? amountTotal;
+  dynamic? amountTotalunTax;
 
   OrdersData({
     this.id,
@@ -67,7 +68,7 @@ class OrdersData {
     this.state,
     this.writeDate,
     this.partnerName='',
-    this.amountTotal,
+    this.amountTotal,this.amountTotalunTax
   });
 
   factory OrdersData.fromJson(Map<String, dynamic> json) => OrdersData(
@@ -77,6 +78,7 @@ class OrdersData {
         state: json["state"],
         writeDate: json["write_date"],
         amountTotal: json["amount_total"],
+        amountTotalunTax: json["amount_untaxed"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -86,5 +88,6 @@ class OrdersData {
         "state": state,
         "write_date": writeDate,
         "amount_total": amountTotal,
+        "amount_untaxed": amountTotalunTax
       };
 }

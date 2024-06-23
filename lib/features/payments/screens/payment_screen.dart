@@ -196,6 +196,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                       )),
                                       value: cubit.selectedValue,
                                       onChanged: (value) {
+                                        // Find the selected item based on its ID
+                                        final selectedItem = cubit
+                                            .allJournalsModel!.result!
+                                            .firstWhere((item) =>
+                                                item.id.toString() == value);
+                                        // Set selectedJournal to the displayName of the selected item
+                                        cubit.selectPaymentJornal(
+                                            selectedItem.displayName);
                                         cubit.selectPaymentMethod(value);
                                       },
                                       isExpanded: true,
@@ -322,51 +330,51 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                   padding: EdgeInsets.only(bottom: 0.3.h),
                                   child: BlocConsumer<CreateSalesOrderCubit,
                                           CreateSalesOrderState>(
-                                      listener: (context, state) {},
-                                      builder: (context, state) {
-                                        return CustomButton(
-                                            backgroundColor: AppColors.yellow,
-                                            textColor: AppColors.white,
-                                            text: "confirm".tr(),
-                                            onPressed: () {
-                                              context
-                                                  .read<CreateSalesOrderCubit>()
-                                                  .orderRelation(
-                                                    context,
-                                                    partnerId: widget.partnerId,
-                                                  );
-                                              if (cubit.selectedRadioValue ==
-                                                  1) {
-                                                print("payment type: أجل");
-                                              } else if (cubit
-                                                      .selectedRadioValue ==
-                                                  2) {
-                                                if (cubit.selectedValue ==
-                                                    null) {
-                                                  makeToast(
-                                                      "من فضلك اخر وسيلة الدفع");
+                                      listener: (context, state) {
+                                    if (state is SuccessConfirmInvoiceState) {
+ if (cubit.selectedRadioValue == 1) {
+                                            print("payment type: أجل");
+                                          } else if (cubit.selectedRadioValue ==
+                                              2) {
+                                            if (cubit.selectedValue == null) {
+                                              makeToast(
+                                                  "من فضلك اخر وسيلة الدفع");
 
-                                                  print(
-                                                      "please select payment method");
-                                                } else {
-                                                  print("payment type: كاش");
-                                                  cubit.createPayment(context,
-                                                      partnerId:
-                                                          widget.partnerId,
-                                                      amount: widget.sum,
-                                                      moveId: context
-                                                          .read<
-                                                              CreateSalesOrderCubit>()
-                                                          .getAccountMoveNumber(context
-                                                              .read<
-                                                                  CreateSalesOrderCubit>()
-                                                              .orderRelationModel!
-                                                              .result
-                                                              .toString())!);
-                                                }
-                                              }
-                                            });
-                                      }),
+                                              print(
+                                                  "please select payment method");
+                                            } else {
+                                              print("payment type: كاش");
+                                              cubit.createPayment(
+                                                context,
+                                                partnerId: widget.partnerId,
+                                                
+                                                amount: widget.sum,
+                                                moveId: context
+                                              .read<CreateSalesOrderCubit>()
+                                              .getAccountMoveNumber(context
+                                              .read<CreateSalesOrderCubit>()
+                                              .orderRelationModel!.result.toString()),
+                                              );
+                                            }
+                                          }
+                                      
+                                    }
+                                  }, builder: (context, state) {
+                                    return CustomButton(
+                                        backgroundColor: AppColors.yellow,
+                                        textColor: AppColors.white,
+                                        text: "confirm".tr(),
+                                        onPressed: () {
+                                          context
+                                              .read<CreateSalesOrderCubit>()
+                                              .orderRelation(context,
+                                                  partnerId: widget.partnerId,
+                                                  isPayment: cubit
+                                                          .selectedRadioValue !=
+                                                      1);
+                                         
+                                        });
+                                  }),
                                   // Row(
                                   //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   //   children: [

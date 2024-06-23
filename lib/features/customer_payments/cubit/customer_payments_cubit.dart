@@ -125,6 +125,7 @@ class CustomerPaymentsCubit extends Cubit<CustomerPaymentsState> {
 
   DefaultModel? createPaymentMethodModel;
   createPaymentMethod({
+    required BuildContext context,
     required int partnerId,
   }) async {
     emit(LoadingCreatePaymentMethodState());
@@ -139,11 +140,22 @@ class CustomerPaymentsCubit extends Cubit<CustomerPaymentsState> {
     response.fold((l) => emit(FailureCreatePaymentMethodState()), (r) {
       emit(SuccessCreatePaymentMethodState());
       createPaymentMethodModel = r;
+      confirmPayment(context, paymentId: r.result);
       getMovieId();
       print("***************************************************");
       print(r.toString());
       print("**************************${r.result.toString()}");
       // r.result!.map((e) => print(e.image1920));
+    });
+  }
+
+  confirmPayment(BuildContext context, {required paymentId}) async {
+    emit(LoadingConfirmPaymentState());
+    final response = await api.confirmPayment(paymentId: paymentId);
+    response.fold((l) {
+      emit(FailureConfirmPaymentState());
+    }, (r) async {
+      emit(SuccessConfirmPaymentState());
     });
   }
 
@@ -178,13 +190,13 @@ class CustomerPaymentsCubit extends Cubit<CustomerPaymentsState> {
 
   UpdatePaymentStateModel? updatePaymentStateModel;
   updatePaymentStates() async {
-    emit(LoadingUpdatePaymentState());
+    emit(LoadingUpdatePaymentState1());
 
     // authModel = await Preferences.instance.getUserModel2();
     final response = await api.updatePaymentState(
-        paymentId: getMoveIdModel!.result![0].moveId!);
-    response.fold((l) => emit(FailureUpdatePaymentState()), (r) {
-      emit(SuccessUpdatePaymentState());
+        moveId: getMoveIdModel!.result![0].moveId!);
+    response.fold((l) => emit(FailureUpdatePaymentState1()), (r) {
+      emit(SuccessUpdatePaymentState1());
       updatePaymentStateModel = r;
       getPaymentById();
       // r.result!.map((e) => print(e.image1920));

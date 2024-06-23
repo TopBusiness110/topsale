@@ -41,6 +41,7 @@ class EndPoints {
   static String saleOrderLine = '$baseUrl/api/sale.order.line';
   static String getSaleOrder = '$baseUrl/api/sale.order/';
   static String createPayment = '$baseUrl/api/account.payment/';
+  static String confirmPayment = '$baseUrl/object/account.payment/';
   static String createInvoice = '$baseUrl/api/account.move/';
   static String invoiceLine = '$baseUrl/api/account.move.line';
   static String getAllJournals =

@@ -218,7 +218,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                         ? cubit.productsModel!.result![index]
                                         : cubit.searchedproductsModel!
                                             .result![index]
-
                                     // product: cubit.matches.isEmpty
                                     //     ? cubit.productsModel!.result![index]
                                     //     : cubit.matches[index]

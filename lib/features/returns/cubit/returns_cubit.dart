@@ -11,6 +11,7 @@ import 'package:topsale/core/models/get_partner_orders_model.dart';
 import 'package:topsale/core/models/get_taxes_model.dart';
 import 'package:topsale/core/models/invoice_details_model.dart';
 import 'package:topsale/core/models/selected_products.dart';
+import 'package:topsale/core/models/update_payment_state_model.dart';
 import 'package:topsale/core/remote/service_api.dart';
 import 'package:topsale/features/create_sales_order/cubit/create_sales_order_cubit.dart';
 
@@ -128,43 +129,48 @@ class ReturnsCubit extends Cubit<ReturnsState> {
 
   // DefaultModel? createOrderModel;
 
-  createSaleOrder(BuildContext context, int orderId) async {
+  createSaleOrder(BuildContext context, int orderId,
+      {bool isPayment = false}) async {
     emit(LoadingCreateSaleOrderState());
-
-    // final response = await api
-    //     .createSaleOrder(context.read<CreateSalesOrderCubit>().currentClientId);
-    // response.fold((l) {
-    //   print('gggggggg');
-    //   emit(FailureCreateSaleOrderState());
-    // }, (r) async {
-    //   if (r.result != null) {
-    //   createOrderModel = r;
 
     for (int i = 0; i < getManOrderDetailsModel!.result!.length; i++) {
       await createSaleOrderLine(context,
           productId: getManOrderDetailsModel!.result![i].productId!,
           productQuantity:
               -getManOrderDetailsModel!.result![i].userProductUomQty,
+          productPrice: getManOrderDetailsModel!.result![i].priceTotal,
           orderId: orderId);
     }
-    orderRelation(context, orderId);
+    // orderRelation(context, orderId, isPayment: isPayment);
+
     // } else {}
     // });
-
+    Navigator.pushNamed(context, Routes.homeRoute);
     emit(SuccessCreateSaleOrderState());
-    
+  }
+
+  UpdatePaymentStateModel? updatePaymentStateModel;
+  updatePaymentStates(String moveId) async {
+    emit(LoadingUpdatePaymentState());
+
+    final response = await api.updatePaymentState(moveId: int.parse(moveId));
+    response.fold((l) => emit(FailureUpdatePaymentState()), (r) {
+      emit(SuccessUpdatePaymentState());
+    });
   }
 
   DefaultModel? createOrderLineModel;
   createSaleOrderLine(BuildContext context,
       {required int orderId,
       required int productId,
+      productPrice,
       required productQuantity}) async {
     emit(LoadingCreateSaleOrderLineState());
     final response = await api.createSaleOrderLines(
         orderId: orderId,
         productId: productId,
-        productQuantity: productQuantity);
+        productQuantity: productQuantity,
+        price: productPrice);
     response.fold((l) {
       print('gggggggg');
       emit(FailureCreateSaleOrderLineState());
@@ -176,6 +182,7 @@ class ReturnsCubit extends Cubit<ReturnsState> {
       } else {}
     });
   }
+
   String? getAccountMoveNumber(String result) {
     RegExp regExp = RegExp(r'\((\d+),\)');
     Match? match = regExp.firstMatch(result);
@@ -191,7 +198,8 @@ class ReturnsCubit extends Cubit<ReturnsState> {
   }
 
   DefaultModel? orderRelationModel;
-  orderRelation(BuildContext context, int orderId) async {
+  orderRelation(BuildContext context, int orderId,
+      {bool isPayment = false}) async {
     emit(LoadingOrderRelationState());
     // if (createOrderModel != null) {
     final response = await api.orderRelation(
@@ -208,6 +216,9 @@ class ReturnsCubit extends Cubit<ReturnsState> {
             partnerId: context.read<CreateSalesOrderCubit>().currentClientId,
             accountMoveNumber: getAccountMoveNumber(r.result.toString()),
           );
+          if (isPayment) {
+            updatePaymentStates(getAccountMoveNumber(r.result.toString())!);
+          }
         }
         emit(SuccessOrderRelationState());
       } else {}
@@ -245,6 +256,7 @@ class ReturnsCubit extends Cubit<ReturnsState> {
     //   print("nullll");
     // }
   }
+
   InvoiceDetailsModel? invoiceDetailsModel;
   getInvoiceDetails({required dynamic accountMoveNumber}) async {
     emit(LoadingGetInvoiceDetailsState());

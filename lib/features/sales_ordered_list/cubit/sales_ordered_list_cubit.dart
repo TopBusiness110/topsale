@@ -1,10 +1,13 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:topsale/core/models/all_journals_model.dart';
 import 'package:topsale/core/models/all_partners_for_reports_model.dart';
 import 'package:topsale/core/models/allusers_model.dart';
 import 'package:topsale/core/models/get_all_orders.dart';
 import 'package:topsale/core/models/get_partner_model.dart';
+import 'package:topsale/core/models/get_payment_with_id_model.dart';
 import 'package:topsale/core/models/order_details_model.dart';
+import 'package:topsale/core/models/order_invoice_details.dart';
 import 'package:topsale/core/models/partner_latlong_model.dart';
 import 'package:topsale/core/remote/service_api.dart';
 
@@ -33,6 +36,7 @@ class SalesOrderedListCubit extends Cubit<SalesOrderedListState> {
         total: total));
     emit(NewSalesOrderAdded());
   }
+
   GetAllPartnersReportsModel? allUsersModel;
   getAllPartners({
     int pageId = 1,
@@ -61,10 +65,13 @@ class SalesOrderedListCubit extends Cubit<SalesOrderedListState> {
 
   double sumTax = 0;
   double totlalPrice = 0;
+  double totalAmount = 0;
+
   GetOrderDetailsModel? getOrderDetailsModel;
-  getOrderDetails(int? orderId) async {
+  getOrderDetails(int? orderId, String? orderName) async {
     sumTax = 0;
     totlalPrice = 0;
+    totalAmount = 0;
     emit(LoadingOrderDetailsState());
 
     final response = await api.getOrderDetails(orderId!);
@@ -72,12 +79,50 @@ class SalesOrderedListCubit extends Cubit<SalesOrderedListState> {
       emit(SuccessOrderDetailsState());
       r.result?.forEach((element) {
         sumTax += element.priceTax!;
-        totlalPrice += element.priceTotal!;
+        totlalPrice += element.priceSubtotal!;
+        totalAmount = sumTax + totlalPrice;
       });
       getOrderDetailsModel = r;
-      print("***************************************************");
-      print(r.toString());
-      print("**************************${r.result.toString()}");
+
+      getOrderInvoiceDetails(orderName!);
+    });
+  }
+
+  OrderInvoiceDetailsModel? orderInvoiceDetailsModel;
+  getOrderInvoiceDetails(String orderName) async {
+    allJournalsModel = null;
+    emit(LoadingOrderDetailsState());
+    final response = await api.getOrderInvoiceDetails(orderName: orderName);
+    response.fold((l) => emit(FailureOrderDetailsState()), (r) {
+      emit(SuccessOrderDetailsState());
+      orderInvoiceDetailsModel = r;
+      print("kkkkkkkkkkkk" + r.result!.first.paymentId.toString());
+      if (r.result!.first.paymentId.toString() != "false") {
+        getPaymentWithId(r.result!.first.paymentId);
+      }
+    });
+  }
+
+  GetPaymentWithIdModel? getPaymentWithIdModel;
+  getPaymentWithId(int paymentId) async {
+    emit(LoadingGetPaymentState());
+    // authModel = await Preferences.instance.getUserModel2();
+    final response = await api.getPaymentWithId(paymentId);
+    response.fold((l) => emit(FailureGetPaymentState()), (r) {
+      emit(SuccessGetPaymentState());
+      getPaymentWithIdModel = r;
+      getAllJournals(r.result!.first.journalId!);
+    });
+  }
+
+  GetAllJournalsModel? allJournalsModel;
+  getAllJournals(int journalId) async {
+    emit(LoadingGetJournalState());
+    // authModel = await Preferences.instance.getUserModel2();
+    final response = await api.getJournalById(journalId);
+    response.fold((l) => emit(FailureGetJournalState()), (r) {
+      emit(SuccessGetJournalState());
+      allJournalsModel = r;
     });
   }
 
@@ -87,7 +132,10 @@ class SalesOrderedListCubit extends Cubit<SalesOrderedListState> {
     emit(LoadingOrderDetailsState());
 
     final response = await api.getOrderDetails(orderId!);
-    response.fold((l) => emit(FailureOrderDetailsState()), (r) {
+    response.fold((l) {
+      skipped++;
+      emit(FailureOrderDetailsState());
+    }, (r) {
       emit(SuccessOrderDetailsState());
       if (r.result!.isNotEmpty) {
         ordersListForReports.add(r);

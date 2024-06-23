@@ -332,9 +332,10 @@ class _PaymentReturnScreenState extends State<PaymentReturnScreen> {
                                               context
                                                   .read<ReturnsCubit>()
                                                   .createSaleOrder(
-                                                    context,
-                                                    widget.orderId,
-                                                  );
+                                                      context, widget.orderId,
+                                                      isPayment: cubit
+                                                              .selectedRadioValue !=
+                                                          1);
                                               if (cubit.selectedRadioValue ==
                                                   1) {
                                                 print("payment type: أجل");
@@ -353,20 +354,12 @@ class _PaymentReturnScreenState extends State<PaymentReturnScreen> {
                                                   if (context
                                                           .read<ReturnsCubit>()
                                                           .orderRelationModel !=
-                                                      null)
-                                                    cubit.createPayment(context,
-                                                        partnerId:
-                                                            widget.partnerId,
-                                                        amount: widget.sum,
-                                                        moveId: context
-                                                            .read<
-                                                                ReturnsCubit>()
-                                                            .getAccountMoveNumber(context
-                                                                .read<
-                                                                    ReturnsCubit>()
-                                                                .orderRelationModel!
-                                                                .result
-                                                                .toString())!);
+                                                      null) {}
+                                                  // cubit.createPayment(context,
+                                                  //     partnerId:
+                                                  //         widget.partnerId,
+                                                  //     amount: widget.sum,
+                                                  //     );
                                                 }
                                               }
                                             });

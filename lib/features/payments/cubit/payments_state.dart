@@ -15,9 +15,17 @@ class FailureCreatePaymentState extends PaymentsState {}
 class SuccessCreatePaymentState extends PaymentsState {}
 class LoadingCreatePaymentState extends PaymentsState {}
 
+class FailureConfirmPaymentState extends PaymentsState {}
+class SuccessConfirmPaymentState extends PaymentsState {}
+class LoadingConfirmPaymentState extends PaymentsState {}
+
 class FailureCreateInvoiceState extends PaymentsState {}
 class SuccessCreateInvoiceState extends PaymentsState {}
 class LoadingCreateInvoiceState extends PaymentsState {}
+
+class LoadingGetPaymentByIdState extends PaymentsState {}
+class SuccessGetPaymentByIdState extends PaymentsState {}
+class FailureGetPaymentByIdState extends PaymentsState {}
 
 class FailureInvoiceLinesState extends PaymentsState {}
 class SuccessInvoiceLinesState extends PaymentsState {}

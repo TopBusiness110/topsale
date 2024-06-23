@@ -182,7 +182,11 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                                 cubit.getOrderDetails(cubit
                                                     .ordersModel
                                                     ?.result![index]
-                                                    .id);
+                                                    .id,
+                                                    cubit
+                                                    .ordersModel
+                                                    ?.result![index].displayName
+                                                    );
                                                 cubit.getPartnerName(cubit
                                                     .ordersModel
                                                     ?.result![index]

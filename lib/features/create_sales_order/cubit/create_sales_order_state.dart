@@ -67,3 +67,7 @@ class SuccessGetInvoiceDetailsState extends CreateSalesOrderState {}
 
 class FailureGetInvoiceDetailsState extends CreateSalesOrderState {}
 class ChangingWareHouseState extends CreateSalesOrderState {}
+class LoadingUpdatePaymentState extends CreateSalesOrderState {}
+class SuccessUpdatePaymentState extends CreateSalesOrderState {}
+class FailureUpdatePaymentState extends CreateSalesOrderState {}
+
