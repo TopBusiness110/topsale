@@ -6,7 +6,7 @@ import 'package:topsale/core/models/selected_products.dart';
 import 'package:topsale/core/widgets/custom_textfield.dart';
 import 'package:topsale/features/product_of_category/screen/products_of_category.dart';
 import 'package:topsale/features/products/cubit/products_cubit.dart';
-
+import 'package:easy_debounce/easy_debounce.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/get_size.dart';
 import '../components/product_grid_item.dart';
@@ -119,9 +119,14 @@ class _ProductsScreenState extends State<ProductsScreen> {
               children: [
                 CustomTextField(
                   onchange: (keyValue) {
-                    cubit.searchProducts(
+                    EasyDebounce.debounce(
+    'search',                 // <-- An ID for this particular debouncer
+    Duration(seconds: 1),    // <-- The debounce duration
+    () =>  cubit.searchProducts(
                       productName: keyValue,
-                    );
+                    )               // <-- The target method
+);
+                   
                   },
                   textColor: AppColors.white.withOpacity(0.5),
                   borderSide: BorderSide(color: AppColors.lightBlue, width: 2),

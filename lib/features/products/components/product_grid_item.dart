@@ -45,16 +45,19 @@ class ProductGridItem extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Flexible(
-                    child: Text(
-                      product.uomId.toString(),
-                      maxLines: 1,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall!
-                          .copyWith(fontSize: 10),
-                    ),
+                  SizedBox(
+                    width: 1,
                   ),
+                  // Flexible(
+                  //   child: Text(
+                  //     product.uomId.toString(),
+                  //     maxLines: 1,
+                  //     style: Theme.of(context)
+                  //         .textTheme
+                  //         .bodySmall!
+                  //         .copyWith(fontSize: 10),
+                  //   ),
+                  // ),
                   Text(
                       "${product.listPrice!.toStringAsFixed(2)} ${context.read<HomeCubit>().currencyName}",
                       maxLines: 1,

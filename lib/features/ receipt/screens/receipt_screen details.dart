@@ -287,7 +287,7 @@ class ReceiptScreenDetails extends StatelessWidget {
                                               //   ),
                                               Expanded(
                                                 child: Text(
-                                                  "اجمالي",
+                                                  " اجمالي شامل الضريبة",
                                                   textAlign: TextAlign.end,
                                                   style: Theme.of(context)
                                                       .textTheme
@@ -347,13 +347,7 @@ class ReceiptScreenDetails extends StatelessWidget {
                                                         alignment:
                                                             Alignment.center,
                                                         child: Text(
-                                                          cubit
-                                                                  .getOrderDetailsModel
-                                                                  ?.result![
-                                                                      index2]
-                                                                  .productUomQty
-                                                                  .toString() ??
-                                                              '',
+                                                          "${cubit.getOrderDetailsModel?.result![index2].productUomQty.toInt()}X ${cubit.getOrderDetailsModel?.result![index2].priceTotal / cubit.getOrderDetailsModel?.result![index2].productUomQty}",
                                                           style: Theme.of(
                                                                   context)
                                                               .textTheme

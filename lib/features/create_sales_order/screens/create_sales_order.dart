@@ -745,7 +745,7 @@ class _CreateSalesOrderState extends State<CreateSalesOrder> {
                   children: [
                     BlocConsumer<CreateSalesOrderCubit, CreateSalesOrderState>(
                         listener: (context, state) {
-                      if (state is SuccessCreateSaleOrderLineState) {
+                      if (state is AllTasksDoneState) {
                         print('sssss');
                         Navigator.pop(context);
 

@@ -61,6 +61,7 @@ class CreateSalesOrderCubit extends Cubit<CreateSalesOrderState> {
                   context.read<ProductsCubit>().selectedProducts[i].listPrice,
               orderId: r.result!);
         }
+        emit(AllTasksDoneState());
       } else {}
     });
 
